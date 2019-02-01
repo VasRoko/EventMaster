@@ -4,11 +4,25 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
+  font-size: 12px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.main.container {
+  margin-top: 7em;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.logo {
+  margin-right: 1em !important;
+  margin-left: 1em !important;
+}
+
+.auth_buttons .button {
+  font-weight: bold !important;
+  margin-left: 0.5em !important;
 }
