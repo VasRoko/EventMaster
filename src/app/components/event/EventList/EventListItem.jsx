@@ -31,6 +31,7 @@ class EventListItem extends Component {
           </List>
         </Segment>
         <Segment clearing>
+          <span>Description Here</span>
           <Button as="a" color="blue" floated="right" content="View" />
         </Segment>
     </Segment.Group> 
