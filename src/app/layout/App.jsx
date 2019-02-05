@@ -9,7 +9,6 @@ class App extends Component {
       <div>
           <NavBar />
           <Container className="main" >
-              <h1>Master Events</h1>
               <EventDashboard />
           </Container>
       </div>
