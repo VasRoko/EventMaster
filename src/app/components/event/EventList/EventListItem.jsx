@@ -17,7 +17,7 @@ class EventListItem extends Component {
                 </Item.Description>
               </Item.Content>
             </Item.Group>
-        </Segment>
+        </Segment> 
         <Segment>
           <span>
               <Icon name="clock" /> {event.date} |
