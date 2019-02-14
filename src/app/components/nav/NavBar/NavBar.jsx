@@ -18,7 +18,6 @@ class NavBar extends Component {
                     <Button as={Link} to='/createEvent' positive content="Create Event" />
                 </Menu.Item> 
                 <Menu.Item position="right" className="auth_buttons">
-                    <Button basic positive content="Login" />
                     <Button basic positive content="Sign Out" />
                 </Menu.Item>
             </Container>

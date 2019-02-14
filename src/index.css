@@ -26,3 +26,13 @@ code {
   font-weight: bold !important;
   margin-left: 0.5em !important;
 }
+
+.masthead-main {
+  background-image: url('/assets/img/head/home_placeholder.jpg') !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+}
+
+.masthead-main > .menu {
+  border: 0px !important;
+}
