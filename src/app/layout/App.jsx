@@ -21,17 +21,17 @@ class App extends Component {
         <Route path='/(.+)' render={() => (
           <div>
             <NavBar />
-              <Container className="main" >
-                  <Switch>
-                    <Route path='/' component={HomePage} exact={true}/>
-                    <Route path='/events' component={EventDashboard} />
-                    <Route path='/event/:id' component={EventDetailedPage} />
-                    <Route path='/people' component={PeopleDashboard} />
-                    <Route path='/profile/:id' component={UserDetailedPage} />
-                    <Route path='/settings' component={SettingsDashboard} />
-                    <Route path='/createEvent' component={EventForm} />
-                  </Switch>
-              </Container>
+            <Container className="main" >
+                <Switch>
+                  <Route path='/' component={HomePage} exact={true}/>
+                  <Route path='/events' component={EventDashboard} />
+                  <Route path='/event/:id' component={EventDetailedPage} />
+                  <Route path='/people' component={PeopleDashboard} />
+                  <Route path='/profile/:id' component={UserDetailedPage} />
+                  <Route path='/settings' component={SettingsDashboard} />
+                  <Route path='/createEvent' component={EventForm} />
+                </Switch>
+            </Container>
           </div>
         )}/>
       </div>

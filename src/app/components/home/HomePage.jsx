@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { NavLink, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   Button,
   Container,
@@ -8,7 +8,6 @@ import {
   Grid,
   Header,
   Icon,
-  Image,
   List,
   Menu,
   Responsive,
@@ -16,6 +15,7 @@ import {
   Sidebar,
   Visibility,
 } from 'semantic-ui-react'
+import NavBar from '../nav/NavBar/NavBar';
 
 // Heads up!
 // We using React Static to prerender our docs with server side rendering, this is a quite simple solution.
@@ -30,7 +30,7 @@ const getWidth = () => {
 /* Heads up! HomepageHeading uses inline styling, however it's not the best practice. Use CSS or styled components for
  * such things.
  */
-const HomepageHeading = ({ mobile }) => (
+const HomepageHeading = ({ mobile, history }) => (
   <Container text>
     <Header
       as='h2'
@@ -41,7 +41,6 @@ const HomepageHeading = ({ mobile }) => (
         fontWeight: 'normal',
         marginTop: mobile ? '1.5em' : '5em',
       }}
-      
     />
     <Button as={Link} to='events' primary size='huge'>
       Get Started
@@ -82,28 +81,22 @@ class DesktopContainer extends Component {
             vertical
             className="masthead-main"
           >
-            <Menu
-              fixed={fixed ? 'top' : null}
-              inverted={!fixed}
-              pointing={!fixed}
-              secondary={!fixed}
-              size='large'
-            >
-              <Container>
-                <Menu.Item as={ NavLink } to='/'>
-                    <img src="assets/img/logo.png" className="logo" alt="logo"></img>
-                    Master Events
-                </Menu.Item>
-                <Menu.Item position='right'>
-                  <Button as='a' inverted={!fixed}>
-                    Log in
-                  </Button>
-                  <Button as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
-                    Sign Up
-                  </Button>
-                </Menu.Item>
-              </Container>
-            </Menu>
+              <Menu fixed={fixed ? 'top' : null} inverted={!fixed} pointing={!fixed} secondary={!fixed} size='large'>
+                <Container>
+                    <Menu.Item as={ Link } to='/' className="nav_logo">
+                        <img src="assets/img/logo.png" className="logo" alt="logo"></img>
+                        Master Events
+                    </Menu.Item>
+                    <Menu.Item position='right'>
+                    {/* <Button onClick={this.handleRedirect} inverted={!fixed}>
+                        Log in
+                    </Button>
+                    <Button as='a' inverted={!fixed} primary={fixed} style={{ marginLeft: '0.5em' }}>
+                      Sign Up
+                    </Button> */}
+                    </Menu.Item>
+                </Container>
+            </Menu> 
             <HomepageHeading />
           </Segment>
         </Visibility>
@@ -143,14 +136,6 @@ class MobileContainer extends Component {
           vertical
           visible={sidebarOpened}
         >
-          <Menu.Item as={NavLink} to='/' active>
-            Home
-          </Menu.Item>
-          <Menu.Item as={NavLink} to='/work'>Work</Menu.Item>
-          <Menu.Item as='a'>Company</Menu.Item>
-          <Menu.Item as='a'>Careers</Menu.Item>
-          <Menu.Item as='a'>Log in</Menu.Item>
-          <Menu.Item as='a'>Sign Up</Menu.Item>
         </Sidebar>
 
         <Sidebar.Pusher dimmed={sidebarOpened}>
@@ -159,6 +144,7 @@ class MobileContainer extends Component {
             textAlign='center'
             style={{ minHeight: 350, padding: '1em 0em' }}
             vertical
+            className="masthead-main"
           >
             <Container>
               <Menu inverted pointing secondary size='large'>
@@ -222,7 +208,7 @@ const Homepage = () => (
           horizontal
           style={{ margin: '3em 0em', textTransform: 'uppercase' }}
         >
-          <a href='#'>Case Studies</a>
+          <Link to='#'>Case Studies</Link>
         </Divider>
 
         <Header as='h3' style={{ fontSize: '2em' }}>
@@ -265,9 +251,7 @@ const Homepage = () => (
               <Header as='h4' inverted>
                 Footer Header
               </Header>
-              <p>
-                Extra space for a call to action inside the footer that could help re-engage users.
-              </p>
+              <p>Extra space for a call to action inside the footer that could help re-engage users.</p>
             </Grid.Column>
           </Grid.Row>
         </Grid>
