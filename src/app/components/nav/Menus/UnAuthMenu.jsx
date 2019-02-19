@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Container, Menu } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
 
-const UnAuthMenu = ({singIn, fixed, homaPage}) => {
+const UnAuthMenu = ({singIn}) => {
     return (
         <Menu segment={ true ? 1 : 0} fixed="top" className="masthead">
             <Container>
@@ -19,4 +19,4 @@ const UnAuthMenu = ({singIn, fixed, homaPage}) => {
     )   
 }
 
-export default UnAuthMenu;
+export default UnAuthMenu;  
