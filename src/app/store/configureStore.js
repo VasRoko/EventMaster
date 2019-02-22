@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension'
-// import rootReducer from '../reducers/rootReducer';
+import rootReducer from '../reducers/rootReducer';
 
 export const configureStore = (preloadedState) => {
     const moddlewares = [];
@@ -9,7 +9,7 @@ export const configureStore = (preloadedState) => {
     const storeEnhancers = [moddlewareEnhancer];
     const composedEnhancer = composeWithDevTools(...storeEnhancers);
     const store = createStore(
-        //rootReducer,
+        rootReducer,
         preloadedState,
         composedEnhancer,
 

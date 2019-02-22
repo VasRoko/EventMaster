@@ -1,78 +1,33 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Grid, Button } from 'semantic-ui-react';
 import EventList from '../EventList/EventList';
 import EventForm from '../EventForm/EventForm';
+import { createEvent, updateEvent, deleteEvent } from '../../../actions/eventActions';
 import cuid from 'cuid';
 
+const mapState = (state) => ({
+  events: state.events
+})
 
- const data = [
-  {
-    id: '1',
-    title: 'Trip to Tower of London',
-    date: '2018-03-27',
-    category: 'culture',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.',
-    city: 'London, UK',
-    venue: "Tower of London, St Katharine's & Wapping, London",
-    hostedBy: 'Bob',
-    hostPhotoURL: 'https://randomuser.me/api/portraits/men/20.jpg',
-    attendees: [
-      {
-        id: 'a',
-        name: 'Bob',
-        photoURL: 'https://randomuser.me/api/portraits/men/20.jpg'
-      },
-      {
-        id: 'b',
-        name: 'Tom',
-        photoURL: 'https://randomuser.me/api/portraits/men/22.jpg'
-      }
-    ]
-  },
-  {
-    id: '2',
-    title: 'Trip to Punch and Judy Pub',
-    date: '2018-03-28',
-    category: 'drinks',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.',
-    city: 'London, UK',
-    venue: 'Punch & Judy, Henrietta Street, London, UK',
-    hostedBy: 'Tom',
-    hostPhotoURL: 'https://randomuser.me/api/portraits/men/22.jpg',
-    attendees: [
-      {
-        id: 'b',
-        name: 'Tom',
-        photoURL: 'https://randomuser.me/api/portraits/men/22.jpg'
-      },
-      {
-        id: 'a',
-        name: 'Bob',
-        photoURL: 'https://randomuser.me/api/portraits/men/20.jpg'
-      }
-    ]
-  }
-
- ]
+const actions ={
+  createEvent,
+  updateEvent,
+  deleteEvent
+}
 
 class EventDashboard extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      events: data,
       isOpen: false,
       selectedEvent: null
     }
   }
 
   handleDeleteEvent = (eventId) => () => {
-    const updatedEvents = this.state.events.filter(evt => evt.id !== eventId);
-    this.setState({
-      events: updatedEvents
-    })
+    this.props.deleteEvent(eventId);
   }
 
   handleFormOpen = () => {
@@ -89,15 +44,8 @@ class EventDashboard extends Component {
   }
 
   handleUpdateEvent = (updatedEvent) => {
+    this.props.updateEvent(updatedEvent);
     this.setState({
-      events: this.state.events.map(event => {
-        if(event.id === updatedEvent.id) {
-          return Object.assign({}, updatedEvent);
-        } else {
-          return event
-        }
-      }),
-
       isOpen: false,
       selectedEvent: null
     })
@@ -113,16 +61,16 @@ class EventDashboard extends Component {
   handleCreateEvent = (newEvent) => {
     newEvent.id = cuid();
     newEvent.hostPhotoURL = '/assets/img/user.png';
-    const updatedEvents = [...this.state.events, newEvent]
+    this.props.createEvent(newEvent);
 
     this.setState({
-      events: updatedEvents,
       isOpen: false
     })
   }
   
   render() {
     const {selectedEvent} = this.state;
+    const {events} = this.props;
     return (
       <Grid>
           <Grid.Column width={6}>
@@ -130,11 +78,11 @@ class EventDashboard extends Component {
             { this.state.isOpen && <EventForm selectedEvent={selectedEvent} createEvent={this.handleCreateEvent} handleCancel={this.handleCancel} updateEvent={this.handleUpdateEvent} /> }
           </Grid.Column>
           <Grid.Column width={10}>
-            <EventList onEventEdit={this.handleEditEvent} events={this.state.events} deleteEvent={this.handleDeleteEvent}/>
+            <EventList onEventEdit={this.handleEditEvent} events={events} deleteEvent={this.handleDeleteEvent}/>
           </Grid.Column>
       </Grid>
     )
   }
 }
 
-export default EventDashboard;  
+export default connect(mapState, actions)(EventDashboard);  
