@@ -15,7 +15,6 @@ import {
   Sidebar,
   Visibility,
 } from 'semantic-ui-react'
-import NavBar from '../nav/NavBar/NavBar';
 
 // Heads up!
 // We using React Static to prerender our docs with server side rendering, this is a quite simple solution.
