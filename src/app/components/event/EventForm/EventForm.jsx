@@ -1,42 +1,55 @@
 import React, { Component } from 'react'
 import { Segment, Form, Button } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { createEvent, updateEvent } from '../../../actions/eventActions';
+import cuid from 'cuid';
 
-const initialState = { 
-    title: '',
-    date: '',
-    city: '',
-    venue: '',
-    hostedBy: ''
+
+const mapState = (state, ownProps) => {
+    const eventId = ownProps.match.params.id;
+
+    let event = {
+        title: '',
+        date: '',
+        city: '',
+        venue: '',
+        hostedBy: ''
+    }
+
+    if (eventId && state.events.length > 0) {
+        event = state.events.find(event => event.id === eventId);
+    } 
+
+    return {
+        event
+    }
+
+}
+
+const actions = {
+    createEvent,
+    updateEvent
 }
 
 class EventForm extends Component {
 
     state = {
-        event: initialState 
-    }
-
-    componentDidMount() {
-        if(this.props.selectedEvent !== null) {
-            this.setState({
-                event: this.props.selectedEvent
-            });
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.selectedEvent !== this.props.selectedEvent) {
-            this.setState({
-                event: nextProps.selectedEvent || initialState
-            });
-        }
+        event: Object.assign({}, this.props.event)
     }
 
     onFormSubmit = (e) => {
         e.preventDefault();
         if(this.state.event.id){
             this.props.updateEvent(this.state.event);
+            this.props.history.goBack();
         } else {
+            const newEvent = {
+                ...this.state.event,
+                id: cuid(),
+                hostPhotoURL: '/assets/img/user.png'
+            } 
             this.props.createEvent(this.state.event);
+            this.props.history.push('/events');
         }
     }
 
@@ -96,11 +109,11 @@ class EventForm extends Component {
                         placeholder="Enter the name of person hosting" />
                 </Form.Field>
                 <Button positive type="submit">Submit</Button>
-                <Button type="button" onClick={handleCancel}>Cancel</Button>
+                <Button type="button" onClick={this.props.history.goBack}>Cancel</Button>
           </Form>
       </Segment>
     )
   }
 }
 
-export default EventForm;
+export default connect(mapState, actions)(EventForm);

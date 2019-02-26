@@ -18,11 +18,6 @@ const initialState = [
           id: 'a',
           name: 'Bob',
           photoURL: 'https://randomuser.me/api/portraits/men/20.jpg'
-        },
-        {
-          id: 'b',
-          name: 'Tom',
-          photoURL: 'https://randomuser.me/api/portraits/men/22.jpg'
         }
       ]
     },

@@ -1,13 +1,25 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Grid } from 'semantic-ui-react';
 import EventDetailedHeader from './EventDetailedHeader';
 import EventDetailedInfo from './EventDetailedInfo';
 import EventDetailedChat from './EventDetailedChat';
 import EventDetailedSidebar from './EventDetailedSidebar';
 
-const event = {};
+const mapState = (state, ownProps) => {
+    const eventId = ownProps.match.params.id;
+    let event = {};
 
-const EventDetailed = () => {
+    if(eventId && state.events.length > 0) {
+        event = state.events.find( event => event.id === eventId);
+    }
+
+    return {
+        event
+    }
+}
+
+const EventDetailed = ({event}) => {
     return (
         <Grid>
             <Grid.Column width={10}>
@@ -22,4 +34,4 @@ const EventDetailed = () => {
     )
 }
 
-export default EventDetailed;
+export default connect(mapState)(EventDetailed);
