@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { Segment, Form, Button } from 'semantic-ui-react';
+import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 import { createEvent, updateEvent } from '../../../actions/eventActions';
+import TextInput from '../../../common/form/TextInput';
 import cuid from 'cuid';
-
 
 const mapState = (state, ownProps) => {
     const eventId = ownProps.match.params.id;
@@ -67,6 +68,7 @@ class EventForm extends Component {
     return (
       <Segment>
             <Form onSubmit={this.onFormSubmit}>
+                <Field name='title' type='text' component={TextInput} placeholder='Event Title' />
                 <Form.Field>
                     <label>Event Title</label>
                     <input 
@@ -116,4 +118,4 @@ class EventForm extends Component {
   }
 }
 
-export default connect(mapState, actions)(EventForm);
+export default connect(mapState, actions)(reduxForm({form: 'eventForm'})(EventForm));
