@@ -5,7 +5,7 @@
     return (
         <Form.Field error={touched && !!error } width={width}>
             <textarea { ...input} placeholder={placeholder} rows={rows} />
-            {touched && error && <Label basic color='red'>{error}</Label>}
+            {touched && error && <Label basic color='red' pointing>{error}</Label>}
         </Form.Field>
     )
   }

@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
-import { Segment, Form, Button, Grid, Header } from 'semantic-ui-react';
+import { Segment, Form, Button, Grid, Header, Divider } from 'semantic-ui-react';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
+import cuid from 'cuid';
 import { createEvent, updateEvent } from '../../../actions/eventActions';
 import TextInput from '../../../common/form/TextInput';
-import cuid from 'cuid';
 import TextArea from '../../../common/form/TextArea';
 import SelectInput from '../../../common/form/SelectInput';
+import DateInput from '../../../common/form/DateInput';
+import { composeValidators, combineValidators, isRequired, hasLengthGreaterThan  } from 'revalidate';
 
 const mapState = (state, ownProps) => {
     const eventId = ownProps.match.params.id;
@@ -37,6 +39,17 @@ const category = [
     {key: 'travel', text: 'Travel', value: 'travel'},  
 ];
 
+const validate = combineValidators({
+    title: isRequired({message: 'Event title is required'}),
+    category: isRequired({message: 'Please provide a category'}),
+    description: composeValidators(
+        isRequired({message: 'Please enter a description'}),
+        hasLengthGreaterThan(5)({message: 'Description need to be at least 5 charaters'})
+    )(),
+    city: isRequired('city'),
+    venue: isRequired('venue')
+})
+
 class EventForm extends Component {
  
     state = {
@@ -63,6 +76,7 @@ class EventForm extends Component {
     }
 
   render() {
+    const { invalid, submitting, pristine} = this.props;
     return (
       <Grid>
           <Grid.Column width={10}>
@@ -74,11 +88,19 @@ class EventForm extends Component {
                         <Field name='category' type='text' options={category} component={SelectInput} placeholder='Event Category' />
                         <Field name='description' type='text' rows={4} component={TextArea} placeholder='Event Description' />
                         <Header sub color='teal' content='Event Location Details' /> 
-                        <br />
+                        <Divider />
                         <Field name='city' type='text' component={TextInput} placeholder='Event City' />
                         <Field name='venue' type='text' component={TextInput} placeholder='Event Venue' />
-                        <Field name='date' type='text' component={TextInput} placeholder='Event Date' />
-                        <Button positive type="submit">Submit</Button>
+                        <Field name='date' 
+                            type='text' 
+                            component={DateInput} 
+                            showTimeSelect
+                            timeFormat="HH:mm"
+                            timeIntervals={15}
+                            dateFormat="MMMM d, yyyy h:mm aa"
+                            timeCaption="time"
+                            placeholder='Date and Time of Event' />
+                        <Button positive disabled={ invalid || submitting || pristine } type="submit">Submit</Button>
                         <Button type="button" onClick={this.handleCancel}>Cancel</Button>
                     </Form>
                 </Segment>
@@ -88,4 +110,4 @@ class EventForm extends Component {
   }
 }
 
-export default connect(mapState, actions)(reduxForm({form: 'eventForm', enableReinitialize: true})(EventForm));
+export default connect(mapState, actions)(reduxForm({form: 'eventForm', enableReinitialize: true, validate})(EventForm));

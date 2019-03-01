@@ -11,7 +11,7 @@ const SelectInput = ({ input, type, placeholder, multiple, options, meta: { touc
             options={options}
             multiple={multiple}
         />
-        {touched && error && <Label basic color='red'>{error}</Label>}
+        {touched && error && <Label basic color='red' pointing>{error}</Label>}
     </Form.Field>
   )
 }
