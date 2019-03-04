@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Segment, Form, Button, Grid, Header, Divider } from 'semantic-ui-react';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import cuid from 'cuid';
 import { createEvent, updateEvent } from '../../../actions/eventActions';
 import TextInput from '../../../common/form/TextInput';
@@ -9,6 +10,7 @@ import TextArea from '../../../common/form/TextArea';
 import SelectInput from '../../../common/form/SelectInput';
 import DateInput from '../../../common/form/DateInput';
 import { composeValidators, combineValidators, isRequired, hasLengthGreaterThan  } from 'revalidate';
+import { __values } from 'tslib';
 
 const mapState = (state, ownProps) => {
     const eventId = ownProps.match.params.id;
@@ -47,7 +49,8 @@ const validate = combineValidators({
         hasLengthGreaterThan(5)({message: 'Description need to be at least 5 charaters'})
     )(),
     city: isRequired('city'),
-    venue: isRequired('venue')
+    venue: isRequired('venue'),
+    date: isRequired('date')
 })
 
 class EventForm extends Component {
@@ -57,6 +60,7 @@ class EventForm extends Component {
     }
 
     onFormSubmit = (evtVal) => {
+        evtVal.date = moment(evtVal.date).format()
         if(this.props.initialValues.id){
             this.props.updateEvent(evtVal);
             this.props.history.goBack();

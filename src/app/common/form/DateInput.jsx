@@ -4,15 +4,15 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 
-function DateInput({ input, width, placeholder, meta: {touched, error}, ...rest}) {
-    console.log(input.onChange);
+function DateInput({ input: { value, onChange, ...restInput}, width, placeholder, meta: {touched, error}, ...rest}) {
   return (
     <Form.Field error={touched && !!error} width={width}>
         <DatePicker 
             {...rest}
             placeholderText={placeholder}
-            selected={input.value ? new Date(input.value) : null }
-            onChange={input.onChange}
+            selected={value ? new Date(value) : null }
+            onChange={onChange}
+            {...restInput}
         />
         {touched && error && <Label basic color='red' pointing>{error}</Label>}
     </Form.Field>
