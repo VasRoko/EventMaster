@@ -1,36 +1,45 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import {connect}  from 'react-redux';
 import AuthMenu from '../Menus/AuthMenu';
 import UnAuthMenu from '../Menus/UnAuthMenu';
 import { withRouter } from 'react-router-dom';
+import { openModal } from '../../../actions/modalActions';
+import { logout } from '../../../actions/authActions';
+
+const actions = {
+    openModal,
+    logout
+}
+
+const mapState = (state) => ({
+    auth: state.auth
+})
+
+
 class NavBar extends Component {
-    state = {
-        authenticated: false
-    }
 
     handleSignIn = () => {
-        this.setState({
-            authenticated: true
-        });
-        this.props.history.push('/events');
+        this.props.openModal('LoginModal');
+    }
 
+    handleRegister = () => {
+        this.props.openModal('RegisterModal');
     }
 
     handleSignOut = () => {
-        this.setState({
-            authenticated: false
-        });
+        this.props.logout();
         this.props.history.push('/');
     }
 
     render() {
-        const { authenticated } = this.state;
-        const { fixed } = this.props;
+        const { fixed, auth } = this.props;
+        const authenticated = auth.authenticated;
         return (
             <div>        
-                {authenticated ? ( <AuthMenu singOut={this.handleSignOut} /> ) : ( <UnAuthMenu singIn={this.handleSignIn} fixed={fixed} /> ) }
+                {authenticated ? ( <AuthMenu currentuser={auth.currentUser} singOut={this.handleSignOut} /> ) : ( <UnAuthMenu singIn={this.handleSignIn} register={this.handleRegister} fixed={fixed} /> ) }
             </div>
         )
     }
 }
 
-export default withRouter(NavBar);
+export default withRouter(connect(mapState, actions)(NavBar));

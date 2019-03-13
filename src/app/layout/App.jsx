@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
-
 import NavBar from '../components/nav/NavBar/NavBar';
 import HomePage from '../components/home/HomePage';
 import EventDashboard from '../components/event/EventDashboard/EventDashboard';
@@ -11,11 +10,14 @@ import UserDetailedPage from '../components/user/UserDetailed/UserDetailedPage';
 import SettingsDashboard from '../components/user/Settings/SettingsDashboard';
 import EventForm from '../components/event/EventForm/EventForm';
 import TestComponent from '../components/test/TestComponent';
+import ModelManager from '../modals/ModalManager';
 
 class App extends Component {
+
   render() {
     return (
       <div>
+        <ModelManager />
         <Switch>
           <Route path='/' component={HomePage} exact={true}/>
         </Switch>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Container, Menu } from 'semantic-ui-react'
 import { Link } from 'react-router-dom';
 
-const UnAuthMenu = ({singIn}) => {
+const UnAuthMenu = ({singIn, register}) => {
     return (
         <Menu segment={ true ? 1 : 0} fixed="top" className="masthead">
             <Container>
@@ -12,7 +12,7 @@ const UnAuthMenu = ({singIn}) => {
                 </Menu.Item>
                 <Menu.Item position="right" className="auth_buttons">
                     <Button basic positive onClick={singIn} content="Sign In" />
-                    <Button basic positive content="Sign Up" />
+                    <Button basic positive onClick={register} content="Sign Up" />
                 </Menu.Item>
             </Container>
         </Menu>
