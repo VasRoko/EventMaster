@@ -7,8 +7,10 @@ import './index.css';
 import App from './app/layout/App';
 import * as serviceWorker from './serviceWorker';
 import { configureStore } from './app/store/configureStore';
+import { loadEvents } from './app/actions/eventActions';
 
 const store = configureStore();
+store.dispatch(loadEvents());
 
 const rootEl = document.getElementById('root');
 let render = () => {
