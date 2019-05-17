@@ -41,7 +41,6 @@ export const loadEvents = () => {
         try {
             dispatch(asyncActionStart());
             let events = await fetchSampleData();
-            console.log(events);
             dispatch(fetchEvents(events))
             dispatch(asyncActionFinish());
         } catch (error) {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Segment, List, Item, Label, Image } from 'semantic-ui-react';
+import { Segment, List, Item, Label, Image, Link } from 'semantic-ui-react';
 
 const EventDetailedSidebar = ({ attendees }) => {
     return (
@@ -23,7 +23,7 @@ const EventDetailedSidebar = ({ attendees }) => {
                             <Image size='tiny' src={ attendee.photoURL } />
                             <Item.Content verticalAlign="middle">
                                 <Item.Header as="h3">
-                                    <a>{ attendee.name }</a>
+                                    <a href="/">{ attendee.name }</a>
                                 </Item.Header>
                             </Item.Content>
                         </Item>
