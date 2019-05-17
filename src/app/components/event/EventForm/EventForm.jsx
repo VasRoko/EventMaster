@@ -6,7 +6,6 @@ import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import cuid from 'cuid';
-import Script from 'react-load-script';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import { createEvent, updateEvent } from '../../../actions/eventActions';
 import TextInput from '../../../common/form/TextInput';
@@ -122,10 +121,6 @@ class EventForm extends Component {
     const { invalid, submitting, pristine} = this.props;
     return (
         <div>
-        <Script 
-            url='https://maps.googleapis.com/maps/api/js?key=AIzaSyCj3910ZM5ZSZz78mGcPxWjxxRfMz14SGA&libraries=places' 
-            onLoad={this.handleScriptLoaded}
-        />
         <Grid>
             <Grid.Column width={10}>
                 <Segment>

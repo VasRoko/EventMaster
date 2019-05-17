@@ -6,7 +6,6 @@ const initialState = {
 }
 
 export const loginUser = (state, payload) => {
-    console.log(payload);
     return {
         ...state,
         authenticated: true,

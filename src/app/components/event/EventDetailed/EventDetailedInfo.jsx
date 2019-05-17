@@ -9,12 +9,17 @@ class EventDetailedInfo extends Component {
   }
   
   mapToggle = () => {
-      console.log(this.state.showMap);
       this.setState(prevState => ({
         showMap: !prevState.showMap
       }))
   }
   
+  componentWillUnmount() {
+    this.setState({
+        showMap: false
+    })
+  }
+
   render() {
     const { event } = this.props;
     return (
