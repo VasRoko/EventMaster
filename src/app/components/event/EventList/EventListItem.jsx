@@ -22,7 +22,7 @@ class EventListItem extends Component {
         </Segment> 
         <Segment>
           <span>
-              <Icon name="clock" /> { format(event.date, 'dddd Do MMMM')} at { format(event.date, 'h:mm A')} |
+              <Icon name="clock" /> { format(event.date.toDate(), 'dddd Do MMMM')} at { format(event.date.toDate(), 'h:mm A')} |
               <Icon name="marker" /> {event.venue}
           </span>
         </Segment>
@@ -38,7 +38,7 @@ class EventListItem extends Component {
         </Segment>
         <Segment clearing>
           <Button as={Link} to={`/event/${event.id}`} color="blue" floated="right" content="View" />
-          {/* <Button as="a" color="red" floated="right" onClick={deleteEvent(event.id)} content="Delete" /> */}
+          <Button as="a" color="red" floated="right" onClick={deleteEvent(event.id)} content="Delete" />
         </Segment>
     </Segment.Group> 
     )
