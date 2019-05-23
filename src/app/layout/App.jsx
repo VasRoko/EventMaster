@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
+import ReduxToastr from 'react-redux-toastr'
+
 import NavBar from '../components/nav/NavBar/NavBar';
 import HomePage from '../components/home/HomePage';
 import EventDashboard from '../components/event/EventDashboard/EventDashboard';
@@ -17,6 +19,14 @@ class App extends Component {
     return (
       <div>
         <ModelManager />
+        <ReduxToastr
+                timeOut={4000}
+                newestOnTop={false}
+                preventDuplicates
+                position="bottom-right"
+                transitionIn="fadeIn"
+                transitionOut="fadeOut"
+                closeOnToastrClick/>
         <Switch>
           <Route path='/' component={HomePage} exact={true}/>
         </Switch>
