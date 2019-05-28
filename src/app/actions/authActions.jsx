@@ -1,10 +1,17 @@
-import { LOGIN_USER, SIGN_OUT_USER } from '../auth/authConst';
-// import { closeModal } from './modalActions'
+import { SIGN_OUT_USER } from '../auth/authConst';
+import { toastr } from 'react-redux-toastr';
+import { closeModal } from './modalActions'
 
 export const login = (credentials) => {
-    return dispatch => {
-        dispatch({type: LOGIN_USER, payload: {credentials}})
-       // dispatch(closeModal());
+    return async (dispatch, getState, {getFirebase}) => {
+        const firebase = getFirebase();
+        try {
+            await firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password);
+            toastr.success("You have successfully logged in!");
+            dispatch(closeModal());
+        } catch(e) {
+            toastr.error(e.message);
+        }
     }
 }
 

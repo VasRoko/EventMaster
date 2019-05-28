@@ -48,5 +48,5 @@ class EventDashboard extends Component {
 }
 
 export default connect(mapState, actions)(
-  firestoreConnect((prop) => [{collection: 'events'}])(EventDashboard)
+  firestoreConnect([{collection: 'events'}])(EventDashboard)
 );  
