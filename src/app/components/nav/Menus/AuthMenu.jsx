@@ -16,7 +16,7 @@ const AuthMenu = ({singOut, auth}) => {
                 <Button as={Link} to='/createEvent' positive content="Create Event" />
             </Menu.Item> 
             <Menu.Item position="right">
-                <Image avatar spaced="right" src="/assets/img/user.png" />
+                <Image avatar spaced="right" src={ auth.photoURL ? auth.photoURL : "/assets/img/user.png" } />
                 <Dropdown pointing="top left" text={auth.displayName}>
                     <Dropdown.Menu>
                         <Dropdown.Item as={Link} to='createEvent' text="Create Event" icon="plus"></Dropdown.Item>

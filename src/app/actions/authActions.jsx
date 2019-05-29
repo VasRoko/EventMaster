@@ -48,6 +48,19 @@ export const login = (credentials) => {
     }
 }
 
+export const socialLogin = (selectedProvider) => 
+    async (dispatch, getState, {getFirebase}) => {
+    const firebase = getFirebase();
+    try {
+        await firebase.login({
+            provider: selectedProvider,
+            type: 'popup'
+        })
+    } catch(e) {
+        throw new Error(e);
+    }
+}
+
 export const logout = () => {
     return {
         type: SIGN_OUT_USER
