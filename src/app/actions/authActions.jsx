@@ -7,26 +7,22 @@ export const Register = (user) =>
     async (dispatch, getState, {getFirebase, getFirestore}) => {
         const firebase = getFirebase();
         const firestore = getFirestore();
-
         try {
             let createdUser = await firebase.auth().createUserWithEmailAndPassword(user.email, user.password);
-            
-            console.log(createdUser);
-
             await createdUser.user.updateProfile({
-                dispalyName: user.displayName
+                dispalyName: user.nickname
             });
 
             let newUser = {
-                displayName: user.displayName,
+                displayName: user.nickname,
                 createdAt: firestore.FieldValue.serverTimestamp()
             }
 
-            await firestore.set(`user/${createdUser.user.uid}`, {...newUser});
+            await firestore.set(`users/${createdUser.user.uid}`, {...newUser});
+            
             dispatch(closeModal());
         } catch(e) {
             toastr.error(e.message);
-            console.log(e);
         }
     }
 export const login = (credentials) => {
