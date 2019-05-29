@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form, Button, Label, Grid, Icon } from 'semantic-ui-react';
+import { Form, Button, Label, Icon } from 'semantic-ui-react';
 import { Field, reduxForm } from 'redux-form';
 import TextInput from '../../common/form/TextInput';
 import { login } from '../../actions/authActions';

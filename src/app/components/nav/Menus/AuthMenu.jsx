@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Container, Menu, Dropdown, Image } from 'semantic-ui-react'
 import { NavLink, Link } from 'react-router-dom';
 
-const AuthMenu = ({singOut, currentuser}) => {
+const AuthMenu = ({singOut, auth}) => {
   return (
     <Menu segment={ true ? 1 : 0} fixed="top" className="masthead">
         <Container>
@@ -17,7 +17,7 @@ const AuthMenu = ({singOut, currentuser}) => {
             </Menu.Item> 
             <Menu.Item position="right">
                 <Image avatar spaced="right" src="/assets/img/user.png" />
-                <Dropdown pointing="top left" text={currentuser}>
+                <Dropdown pointing="top left" text={auth.email}>
                     <Dropdown.Menu>
                         <Dropdown.Item text="Create Event" icon="plus"></Dropdown.Item>
                         <Dropdown.Item text="My Events" icon="calendar"></Dropdown.Item>

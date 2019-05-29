@@ -26,6 +26,7 @@ class App extends Component {
                 position="bottom-right"
                 transitionIn="fadeIn"
                 transitionOut="fadeOut"
+                
                 closeOnToastrClick/>
         <Switch>
           <Route path='/' component={HomePage} exact={true}/>

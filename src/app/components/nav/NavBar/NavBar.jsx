@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withFirebase } from 'react-redux-firebase';
 import {connect}  from 'react-redux';
 import AuthMenu from '../Menus/AuthMenu';
 import UnAuthMenu from '../Menus/UnAuthMenu';
@@ -12,7 +13,7 @@ const actions = {
 }
 
 const mapState = (state) => ({
-    auth: state.auth
+    auth: state.firebase.auth
 })
 
 
@@ -27,19 +28,19 @@ class NavBar extends Component {
     }
 
     handleSignOut = () => {
-        this.props.logout();
+        this.props.firebase.logout();
         this.props.history.push('/');
     }
 
     render() {
         const { fixed, auth } = this.props;
-        const authenticated = auth.authenticated;
+        const authenticated = auth.isLoaded && !auth.isEmpty;
         return (
             <div>        
-                {authenticated ? ( <AuthMenu currentuser={auth.currentUser} singOut={this.handleSignOut} /> ) : ( <UnAuthMenu singIn={this.handleSignIn} register={this.handleRegister} fixed={fixed} /> ) }
+                {authenticated ? ( <AuthMenu auth={auth} singOut={this.handleSignOut} /> ) : ( <UnAuthMenu singIn={this.handleSignIn} register={this.handleRegister} fixed={fixed} /> ) }
             </div>
         )
     }
 }
 
-export default withRouter(connect(mapState, actions)(NavBar));
+export default withRouter(withFirebase(connect(mapState, actions)(NavBar)));
