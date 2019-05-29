@@ -9,30 +9,38 @@ export const Register = (user) =>
         const firestore = getFirestore();
         try {
             let createdUser = await firebase.auth().createUserWithEmailAndPassword(user.email, user.password);
-            await createdUser.user.updateProfile({
-                dispalyName: user.nickname
-            });
-
-            let newUser = {
-                displayName: user.nickname,
-                createdAt: firestore.FieldValue.serverTimestamp()
+            
+            if (createdUser) {
+                await createdUser.user.updateProfile({
+                    displayName: user.displayName
+                });
             }
 
-            await firestore.set(`users/${createdUser.user.uid}`, {...newUser});
+            let newUser = {
+                displayName: user.displayName,
+                createdAt: firestore.FieldValue.serverTimestamp()
+            }
             
+            await firestore.set(`users/${createdUser.user.uid}`, {...newUser});
             dispatch(closeModal());
+
         } catch(e) {
-            toastr.error(e.message);
+            toastr.error('Oops!', 'Something went wrong');
+            throw new SubmissionError({
+                _error: e.message
+            })
         }
     }
+
 export const login = (credentials) => {
     return async (dispatch, getState, {getFirebase}) => {
         const firebase = getFirebase();
         try {
             await firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password);
-            toastr.success("Successfully logged in!");
+            toastr.success('Welcome!', 'You have successfully logged in!');
             dispatch(closeModal());
         } catch(e) {
+            toastr.error('Oops!', 'Something went wrong');
             throw new SubmissionError({
                 _error: e.message
             })

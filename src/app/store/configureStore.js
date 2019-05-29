@@ -8,8 +8,9 @@ import ReduxThunk from 'redux-thunk';
 
 const ReactReduxFirebaseConf = {
     userProfile: 'users',
-    attachedAuthIsReady: true,
-    useFireStoreForProfile: true,
+    attachAuthIsReady: true,
+    useFirestoreForProfile: true,
+    updateProfileOnLogin: false
 }
 
 export const configureStore = (preloadedState) => {
