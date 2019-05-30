@@ -41,7 +41,7 @@ export const login = (credentials) => {
             dispatch(closeModal());
         } catch(e) {
             toastr.error('Oops!', 'Something went wrong');
-            throw new SubmissionError({
+            throw new Error({
                 _error: e.message
             })
         }
@@ -49,18 +49,31 @@ export const login = (credentials) => {
 }
 
 export const socialLogin = (selectedProvider) => 
-    async (dispatch, getState, {getFirebase}) => {
+    async (dispatch, getState, {getFirebase, getFirestore}) => {
     const firebase = getFirebase();
+    const firestore = getFirestore();
+
     try {
         dispatch(closeModal());
         let user = await firebase.login({
             provider: selectedProvider,
             type: 'popup'
         });
-        console.log(user);
+
+        if (user.additionalUserInfo.isNewUser) {
+            
+            await firestore.set(`users/${user.user.uid}`, {
+                displayName: user.profile.displayName,
+                photoUrl: user.profile.avatarUrl,
+                createdAt: firestore.FieldValue.serverTimestamp()
+            });
+        } 
+
+        toastr.success('Welcome!', 'You have successfully logged in!');
+
     } catch(e) {
         toastr.error('Oops!', 'Something went wrong');
-        throw new SubmissionError({
+        throw new Error({
             _error: e.message
         })
     }
