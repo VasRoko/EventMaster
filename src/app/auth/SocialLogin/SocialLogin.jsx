@@ -9,8 +9,8 @@ const SocialLogin = ({socialLogin}) => {
                 <Icon name='facebook' /> Login with Facebook
             </Button>
             <Divider fitted />
-            <Button fluid color='youtube'>
-                <Icon name='youtube' /> Login with Youtube
+            <Button onClick={() => socialLogin('google')} fluid color='google plus'>
+                <Icon name='google plus' /> Login with Google Plus
             </Button>
        </div>
     )

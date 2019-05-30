@@ -1,5 +1,5 @@
 import { SubmissionError } from 'redux-form';
-import { SIGN_OUT_USER } from '../auth/authConst';
+// import { SIGN_OUT_USER } from '../auth/authConst';
 import { toastr } from 'react-redux-toastr';
 import { closeModal } from './modalActions';
 
@@ -52,17 +52,20 @@ export const socialLogin = (selectedProvider) =>
     async (dispatch, getState, {getFirebase}) => {
     const firebase = getFirebase();
     try {
-        await firebase.login({
+        dispatch(closeModal());
+        let user = await firebase.login({
             provider: selectedProvider,
             type: 'popup'
-        })
+        });
+        console.log(user);
     } catch(e) {
-        throw new Error(e);
+        toastr.error('Oops!', 'Something went wrong');
+        throw new SubmissionError({
+            _error: e.message
+        })
     }
 }
 
-export const logout = () => {
-    return {
-        type: SIGN_OUT_USER
-    }
+export const logout = () =>  {
+
 }
