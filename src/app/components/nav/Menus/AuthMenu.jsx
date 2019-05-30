@@ -2,8 +2,8 @@ import React from 'react'
 import { Button, Container, Menu, Dropdown, Image } from 'semantic-ui-react'
 import { NavLink, Link } from 'react-router-dom';
 
-const AuthMenu = ({singOut, auth}) => {
-  return (
+const AuthMenu = ({singOut, profile}) => {
+    return (
     <Menu segment={ true ? 1 : 0} fixed="top" className="masthead">
         <Container>
             <Menu.Item as={Link} to='/'>
@@ -16,8 +16,8 @@ const AuthMenu = ({singOut, auth}) => {
                 <Button as={Link} to='/createEvent' positive content="Create Event" />
             </Menu.Item> 
             <Menu.Item position="right">
-                <Image avatar spaced="right" src={ auth.photoURL ? auth.photoURL : "/assets/img/user.png" } />
-                <Dropdown pointing="top left" text={auth.displayName}>
+                <Image avatar spaced="right" src={ profile.photoUrl || "/assets/img/user.png" } />
+                <Dropdown pointing="top left" text={profile.displayName}>
                     <Dropdown.Menu>
                         <Dropdown.Item as={Link} to='createEvent' text="Create Event" icon="plus"></Dropdown.Item>
                         <Dropdown.Item text="My Events" icon="calendar"></Dropdown.Item>

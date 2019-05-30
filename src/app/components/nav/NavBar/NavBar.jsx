@@ -13,7 +13,8 @@ const actions = {
 }
 
 const mapState = (state) => ({
-    auth: state.firebase.auth
+    auth: state.firebase.auth,
+    profile: state.firebase.profile
 })
 
 
@@ -33,11 +34,11 @@ class NavBar extends Component {
     }
 
     render() {
-        const { fixed, auth } = this.props;
+        const { fixed, auth, profile } = this.props;
         const authenticated = auth.isLoaded && !auth.isEmpty;
         return (
             <div>        
-                {authenticated ? ( <AuthMenu auth={auth} singOut={this.handleSignOut} /> ) : ( <UnAuthMenu singIn={this.handleSignIn} register={this.handleRegister} fixed={fixed} /> ) }
+                { authenticated ?  <AuthMenu profile={profile} singOut={this.handleSignOut} />  :  <UnAuthMenu singIn={this.handleSignIn} register={this.handleRegister} fixed={fixed} /> }
             </div>
         )
     }
