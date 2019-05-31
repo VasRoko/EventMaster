@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Header, Form, Label, Button, Divider, Icon } from 'semantic-ui-react';
+import { Segment, Header, Form, Message, Button, Divider, Icon } from 'semantic-ui-react';
 import { combineValidators, matchesField, isRequired, composeValidators } from 'revalidate';
 import { Field, reduxForm } from 'redux-form';
 import TextInput from '../../../common/form/TextInput';
@@ -12,17 +12,17 @@ const validate = combineValidators({
     )()
 });
 
-const AccountPage = ({error, invalid, submitting }) => {
+const AccountPage = ({error, invalid, submitting, handleSubmit, updatePassword }) => {
    return (
    <Segment>
        <Header dividing size="large" content="Account"/>
        <div>
            <Header color="teal" sub content="Change Password" />
            <p>Use this form to update your account settings</p>
-            <Form>
+           { error && <Message basic pointing="below" color="red">{ error }</Message> }
+           <Form onSubmit={handleSubmit(updatePassword)}>
                 <Field width={8} name="newPassword1" type="password" pointing="left" inline={true} component={TextInput} placeholder="New Password" />
                 <Field width={8} name="newPassword2" type="password" pointing="left" inline={true} component={TextInput} placeholder="Confirm Password" />
-                { error && (<Label basic color="red">{error}</Label> )}
                 <Button disabled={invalid || submitting} size="large" positive content="Update Password" />
             </Form>
        </div>

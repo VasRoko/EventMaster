@@ -1,7 +1,11 @@
-import { SubmissionError } from 'redux-form';
-// import { SIGN_OUT_USER } from '../auth/authConst';
+import { SubmissionError, reset } from 'redux-form';
 import { toastr } from 'react-redux-toastr';
 import { closeModal } from './modalActions';
+
+const OopsError = (header = 'Oops!', message = 'Something went wrong') => {
+    return  toastr.error(header, message);
+
+}
 
 export const Register = (user) =>
     async (dispatch, getState, {getFirebase, getFirestore}) => {
@@ -25,7 +29,7 @@ export const Register = (user) =>
             dispatch(closeModal());
 
         } catch(e) {
-            toastr.error('Oops!', 'Something went wrong');
+            OopsError();
             throw new SubmissionError({
                 _error: e.message
             })
@@ -40,8 +44,8 @@ export const login = (credentials) => {
             toastr.success('Welcome!', 'You have successfully logged in!');
             dispatch(closeModal());
         } catch(e) {
-            toastr.error('Oops!', 'Something went wrong');
-            throw new Error({
+            OopsError();
+            throw new SubmissionError({
                 _error: e.message
             })
         }
@@ -72,13 +76,42 @@ export const socialLogin = (selectedProvider) =>
         toastr.success('Welcome!', 'You have successfully logged in!');
 
     } catch(e) {
-        toastr.error('Oops!', 'Something went wrong');
-        throw new Error({
+        OopsError();
+        throw new SubmissionError({
             _error: e.message
         })
     }
 }
 
-export const logout = () =>  {
+export const updatePassword = (data) => 
+    async (dispatch, getState, {getFirebase}) => {
+        const firebase = getFirebase();
+        const user = firebase.auth().currentUser;
+        try {
+            await user.updatePassword(data.newPassword1).then(function() {
+                dispatch(reset('account'));
+                toastr.success('Success!', 'Your password has been changed!');
+            });
+        } catch (e) {
+            OopsError();
+            throw new SubmissionError({
+                _error: e.message
+            })
+        }
+    }
 
+export const resetPassword = (credential) => 
+async (dispatch, getState, { getFirebase }) => {
+    const firebase = getFirebase();        
+    try {
+        await firebase.auth().sendPasswordResetEmail(credential.email).then(function() {
+            toastr.success('Success!', 'Please check your email');
+            // dispatch(closeModal());
+        });
+    } catch (e) {
+        OopsError();
+        throw new SubmissionError({
+            _error: e.message
+        })
+    }
 }

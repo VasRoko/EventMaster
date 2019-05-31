@@ -5,11 +5,9 @@ import AuthMenu from '../Menus/AuthMenu';
 import UnAuthMenu from '../Menus/UnAuthMenu';
 import { withRouter } from 'react-router-dom';
 import { openModal } from '../../../actions/modalActions';
-import { logout } from '../../../actions/authActions';
 
 const actions = {
     openModal,
-    logout
 }
 
 const mapState = (state) => ({

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Form, Button, Message, Divider } from 'semantic-ui-react';
 import { combineValidators, isRequired } from 'revalidate';
@@ -18,8 +19,10 @@ const validate = combineValidators({
 });
 
 
-const LoginForm = ({login, socialLogin, error, handleSubmit, submitting}) => {
+
+const LoginForm = ({login, socialLogin, error, handleSubmit, submitting, passwordReset}) => {
   return (
+    <div>
     <Form size="large" loading={submitting} onSubmit={handleSubmit(login)}>
       { error &&
         <Message basic pointing="below" color="red">{ error }</Message>       
@@ -27,9 +30,14 @@ const LoginForm = ({login, socialLogin, error, handleSubmit, submitting}) => {
       <Field type="text" name="email" component={TextInput} placeholder="Email Address"/>
       <Field type="password" name="password" component={TextInput} placeholder="Password"/>
       <Button fluid size="large" color="teal">Login</Button>
+      <div>
+        <Divider />
+        <Link to='#'onClick={passwordReset}>Forgot your password ?</Link>
+      </div>
       <Divider horizontal> Or </Divider>
       <SocialLogin socialLogin={socialLogin} />
     </Form>
+    </div>
   )
 }
 
