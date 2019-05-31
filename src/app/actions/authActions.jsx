@@ -1,6 +1,6 @@
 import { SubmissionError, reset } from 'redux-form';
 import { toastr } from 'react-redux-toastr';
-import { closeModal } from './modalActions';
+import { openModal, closeModal } from './modalActions';
 
 const OopsError = (header = 'Oops!', message = 'Something went wrong') => {
     return  toastr.error(header, message);
@@ -106,7 +106,10 @@ async (dispatch, getState, { getFirebase }) => {
     try {
         await firebase.auth().sendPasswordResetEmail(credential.email).then(function() {
             toastr.success('Success!', 'Please check your email');
-            // dispatch(closeModal());
+            dispatch(openModal('InfoModal', {
+                header: 'Check Your Email',
+                message: 'We’ve sent you an email with a link to finish resetting your password.',
+            }));
         });
     } catch (e) {
         OopsError();

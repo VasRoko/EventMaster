@@ -14,15 +14,12 @@ const validate = combineValidators({
   email: isRequired('email'),
 });
 
-const PasswordRestForm = ({resetPassword, message, error, handleSubmit, submitting}) => {
-  console.log(message);
+const PasswordRestForm = ({resetPassword, error, handleSubmit, submitting}) => {
   return (
     <Form size="large" loading={submitting} onSubmit={handleSubmit(resetPassword)}>
       { error ? <Message basic pointing="below" color="red">{ error }</Message> :  <p>To reset your password, enter your Event Master email.</p> }
-      <div>
         <Field type="text" name="email" component={TextInput} placeholder="Email Address"/>
         <Button fluid size="large" color="teal">Send</Button>
-      </div>
     </Form>
   )
 }
