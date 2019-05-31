@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Form, Button, Message, Divider } from 'semantic-ui-react';
+import { Form, Button, Message } from 'semantic-ui-react';
 import { combineValidators, isRequired } from 'revalidate';
 import { Field, reduxForm } from 'redux-form';
 import TextInput from '../../common/form/TextInput';

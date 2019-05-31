@@ -12,21 +12,24 @@ const validate = combineValidators({
     )()
 });
 
-const AccountPage = ({error, invalid, submitting, handleSubmit, updatePassword }) => {
+const AccountPage = ({error, invalid, submitting, handleSubmit, updatePassword, providerId }) => {
    return (
    <Segment>
        <Header dividing size="large" content="Account"/>
-       <div>
-           <Header color="teal" sub content="Change Password" />
-           <p>Use this form to update your account settings</p>
-           { error && <Message basic pointing="below" color="red">{ error }</Message> }
-           <Form onSubmit={handleSubmit(updatePassword)}>
-                <Field width={8} name="newPassword1" type="password" pointing="left" inline={true} component={TextInput} placeholder="New Password" />
-                <Field width={8} name="newPassword2" type="password" pointing="left" inline={true} component={TextInput} placeholder="Confirm Password" />
-                <Button disabled={invalid || submitting} size="large" positive content="Update Password" />
-            </Form>
-       </div>
-       <Divider />
+       {providerId && providerId === 'password' &&
+        <div>
+            <Header color="teal" sub content="Change Password" />
+            <p>Use this form to update your account settings</p>
+            { error && <Message basic pointing="below" color="red">{ error }</Message> }
+            <Form onSubmit={handleSubmit(updatePassword)}>
+                    <Field width={8} name="newPassword1" type="password" pointing="left" inline={true} component={TextInput} placeholder="New Password" />
+                    <Field width={8} name="newPassword2" type="password" pointing="left" inline={true} component={TextInput} placeholder="Confirm Password" />
+                    <Button disabled={invalid || submitting} size="large" positive content="Update Password" />
+                </Form>
+            <Divider />
+        </div>
+       }
+       {providerId && providerId === 'facebook.com' &&
        <div>
            <Header color="teal" sub content="Facebook Account" />
            <p>Please visit Facebook to update your account settings</p>
@@ -34,14 +37,17 @@ const AccountPage = ({error, invalid, submitting, handleSubmit, updatePassword }
                 <Icon name="facebook" />Go to Facebook
             </Button>
        </div>
-       <Divider />
+       }
+       {providerId && providerId === 'google.com' &&
        <div>
+            <Divider />
            <Header color="teal" sub content="Google Plus Account" />
            <p>Please visit Facebook to update your account settings</p>
             <Button type="button" color="google plus">
                 <Icon name="google plus" />Go to Google Plus
             </Button>
        </div>
+       }
    </Segment>
    )
 };

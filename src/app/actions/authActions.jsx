@@ -87,6 +87,7 @@ export const updatePassword = (data) =>
     async (dispatch, getState, {getFirebase}) => {
         const firebase = getFirebase();
         const user = firebase.auth().currentUser;
+        
         try {
             await user.updatePassword(data.newPassword1).then(function() {
                 dispatch(reset('account'));

@@ -12,7 +12,11 @@ import { updatePassword } from "../../../actions/authActions";
 const actions = {
     updatePassword
 }
-const SettingsDashboard = ({ updatePassword }) => (
+
+const mapState = (state) => ({
+    providerId: state.firebase.auth.providerData[0].providerId
+})
+const SettingsDashboard = ({ updatePassword, providerId }) => (
     <Grid>
         <Grid.Column width={4}>
             <SettingsNav/> 
@@ -23,11 +27,11 @@ const SettingsDashboard = ({ updatePassword }) => (
                 <Route path='/settings/basic' component={BasicPage}/>
                 <Route path='/settings/about' component={AboutPage}/>
                 <Route path='/settings/photos' component={PhotosPage}/>
-                <Route path='/settings/account' render={() => <AccountPage updatePassword={updatePassword} />}/>
+                <Route path='/settings/account' render={() => <AccountPage updatePassword={updatePassword} providerId={providerId} />}/>
             </Switch>
         </Grid.Column>
 
     </Grid>
 );
 
-export default  connect(null, actions)(SettingsDashboard);
+export default  connect(mapState, actions)(SettingsDashboard);
