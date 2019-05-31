@@ -22,11 +22,11 @@ const AccountPage = ({error, invalid, submitting, handleSubmit, updatePassword, 
             <p>Use this form to update your account settings</p>
             { error && <Message basic pointing="below" color="red">{ error }</Message> }
             <Form onSubmit={handleSubmit(updatePassword)}>
-                    <Field width={8} name="newPassword1" type="password" pointing="left" inline={true} component={TextInput} placeholder="New Password" />
-                    <Field width={8} name="newPassword2" type="password" pointing="left" inline={true} component={TextInput} placeholder="Confirm Password" />
-                    <Button disabled={invalid || submitting} size="large" positive content="Update Password" />
-                </Form>
-            <Divider />
+                <Field width={8} name="newPassword1" type="password" pointing="left" inline={true} component={TextInput} placeholder="New Password" />
+                <Field width={8} name="newPassword2" type="password" pointing="left" inline={true} component={TextInput} placeholder="Confirm Password" />
+                <Divider />
+                <Button disabled={invalid || submitting} size="large" positive content="Update Password" />
+            </Form>
         </div>
        }
        {providerId && providerId === 'facebook.com' &&
@@ -40,7 +40,6 @@ const AccountPage = ({error, invalid, submitting, handleSubmit, updatePassword, 
        }
        {providerId && providerId === 'google.com' &&
        <div>
-            <Divider />
            <Header color="teal" sub content="Google Plus Account" />
            <p>Please visit Facebook to update your account settings</p>
             <Button type="button" color="google plus">
