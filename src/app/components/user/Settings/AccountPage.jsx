@@ -1,9 +1,18 @@
 import React from 'react';
 import { Segment, Header, Form, Label, Button, Divider, Icon } from 'semantic-ui-react';
+import { combineValidators, matchesField, isRequired, composeValidators } from 'revalidate';
 import { Field, reduxForm } from 'redux-form';
 import TextInput from '../../../common/form/TextInput';
 
-const AccountPage = ({error}) => {
+const validate = combineValidators({
+    newPassword1: isRequired({message: ' Please enter a password'}),
+    newPassword2: composeValidators(
+        isRequired({message: ' Please enter a password'}),
+        matchesField('newPassword1')({message: 'Passwords do not match'})
+    )()
+});
+
+const AccountPage = ({error, invalid, submitting }) => {
    return (
    <Segment>
        <Header dividing size="large" content="Account"/>
@@ -14,7 +23,7 @@ const AccountPage = ({error}) => {
                 <Field width={8} name="newPassword1" type="password" pointing="left" inline={true} component={TextInput} placeholder="New Password" />
                 <Field width={8} name="newPassword2" type="password" pointing="left" inline={true} component={TextInput} placeholder="Confirm Password" />
                 { error && (<Label basic color="red">{error}</Label> )}
-                <Button size="large" positive content="Update Password" />
+                <Button disabled={invalid || submitting} size="large" positive content="Update Password" />
             </Form>
        </div>
        <Divider />
@@ -37,4 +46,4 @@ const AccountPage = ({error}) => {
    )
 };
 
-export default reduxForm({form: 'account'})(AccountPage);
+export default reduxForm({form: 'account', validate})(AccountPage);
