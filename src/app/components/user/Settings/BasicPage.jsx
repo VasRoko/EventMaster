@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { Segment, Header, Form,Divider, Button } from 'semantic-ui-react';
 import {Field, reduxForm} from 'redux-form';
 import TextInput from '../../../common/form/TextInput';
-import DateInput from '../../../common/form/TextInput';
-import PlaceInput from '../../../common/form/TextInput';
+import DateInput from '../../../common/form/DateInput';
+import PlaceInput from '../../../common/form/PlaceInput';
 
 class BasicInfoPage extends Component {
 
@@ -27,4 +27,4 @@ class BasicInfoPage extends Component {
     }
 }
 
-export default reduxForm({ form: 'basicInfo'})(BasicInfoPage);
+export default reduxForm({ form: 'basicInfo', enableReinitialize: true })(BasicInfoPage);
