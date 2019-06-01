@@ -4,6 +4,8 @@ import {Field, reduxForm} from 'redux-form';
 import TextInput from '../../../common/form/TextInput';
 import DateInput from '../../../common/form/DateInput';
 import PlaceInput from '../../../common/form/PlaceInput';
+import RadioInput from '../../../common/form/RadioInput';
+
 
 class BasicInfoPage extends Component {
 
@@ -14,8 +16,9 @@ class BasicInfoPage extends Component {
                 <Header dividing size="large" content="Basic Information"></Header>
                 <Form>
                     <Field width={8} name="displayName" component={TextInput} placeholder="Your name" />
-                    <Form.Group> 
-
+                    <Form.Group inline> 
+                        <Field name="gender" type="radio" value="male" label="Male" component={RadioInput} />
+                        <Field name="gender" type="radio" value="female" label="Female" component={RadioInput} />
                     </Form.Group>
                     <Field width={8} name="dataOfBirth" component={DateInput} placeholder="Your date of birth" />
                     <Field width={8} name="city" options={{types: ['cities']}} label='Female' component={PlaceInput} placeholder="Your name" />
