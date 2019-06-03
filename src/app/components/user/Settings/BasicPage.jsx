@@ -21,7 +21,7 @@ class BasicInfoPage extends Component {
                     </Form.Group>
                     <Field 
                         width={8} 
-                        name="dateOfBirth" 
+                        name="dob" 
                         component={renderDateInput}
                         placeholder="Your date of birth"
                         dateFormat="dd/MM/YYYY" 

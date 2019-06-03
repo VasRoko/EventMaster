@@ -29,8 +29,8 @@ export const renderTextArea = ({ input, width, rows, placeholder, meta: { touche
 
 export const renderDateInput = ({ input: { value, onChange, ...restInput}, width, placeholder, meta: {touched, error}, ...rest}) => {
     return (
-      <Form.Field error={touched && !!error} width={width}>
-          <DatePicker 
+      <Form.Field error={touched && !!error} width={width} className="myDateWrapper"> 
+          <DatePicker className="myDateWrapper"
               {...rest}
               placeholderText={placeholder}
               selected={value ? new Date(value) : null }
@@ -43,7 +43,7 @@ export const renderDateInput = ({ input: { value, onChange, ...restInput}, width
   }
   
 
-export const renderSelectInput = ({ input, type, placeholder, multiple, options, meta: { touched, error }}) => {
+export const renderSelectInput = ({ input, placeholder, multiple, options, meta: { touched, error }}) => {
     return (
       <Form.Field error={ touched && !!error }>
           <Select 

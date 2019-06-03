@@ -10,7 +10,7 @@ const actions = {
 const InfoModal = ({closeModal, header, message}) => {
   return (
     <Modal size="mini" open={true} onClose={closeModal}>
-        <Modal.Header possitive>{ header || 'Info Modal' }</Modal.Header>
+        <Modal.Header positive>{ header || 'Info Modal' }</Modal.Header>
         <Modal.Content>
             <Modal.Description>
                 <p>{ message || 'Info Message' }</p>

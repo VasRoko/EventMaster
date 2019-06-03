@@ -4,7 +4,6 @@ import { openModal, closeModal } from './modalActions';
 
 const OopsError = (header = 'Oops!', message = 'Something went wrong') => {
     return  toastr.error(header, message);
-
 }
 
 export const Register = (user) =>
@@ -15,6 +14,8 @@ export const Register = (user) =>
             let createdUser = await firebase.auth().createUserWithEmailAndPassword(user.email, user.password);
             
             if (createdUser) {
+                createdUser.user.sendEmailVerification();
+                firebase.logout();
                 await createdUser.user.updateProfile({
                     displayName: user.displayName
                 });
@@ -26,7 +27,10 @@ export const Register = (user) =>
             }
             
             await firestore.set(`users/${createdUser.user.uid}`, {...newUser});
-            dispatch(closeModal());
+            dispatch(openModal('InfoModal', {
+                header: 'Check Your Email',
+                message: 'Please check and verify your Email address.',
+            }));
 
         } catch(e) {
             OopsError();
@@ -41,8 +45,21 @@ export const login = (credentials) => {
         const firebase = getFirebase();
         try {
             await firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password);
-            toastr.success('Welcome!', 'You have successfully logged in!');
-            dispatch(closeModal());
+            if(!firebase.auth().currentUser.emailVerified) {
+                firebase.logout();
+                dispatch(openModal('InfoModal', {
+                    header: 'Check Your Email',
+                    message: 'You have not verified your email! Please check and verify your email address.',
+                }));
+
+                throw new Error({
+                    message: 'Email is not verified!'
+                }); 
+
+            } else {
+                toastr.success('Welcome!', 'You have successfully logged in!');
+                dispatch(closeModal());
+            }
         } catch(e) {
             OopsError();
             throw new SubmissionError({
@@ -89,10 +106,9 @@ export const updatePassword = (data) =>
         const user = firebase.auth().currentUser;
         
         try {
-            await user.updatePassword(data.newPassword1).then(function() {
-                dispatch(reset('account'));
-                toastr.success('Success!', 'Your password has been changed!');
-            });
+            await user.updatePassword(data.newPassword1);
+            dispatch(reset('account'));
+            toastr.success('Success!', 'Your password has been changed!');
         } catch (e) {
             OopsError();
             throw new SubmissionError({
@@ -105,13 +121,12 @@ export const resetPassword = (credential) =>
 async (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();        
     try {
-        await firebase.auth().sendPasswordResetEmail(credential.email).then(function() {
+        await firebase.auth().sendPasswordResetEmail(credential.email);
             toastr.success('Success!', 'Please check your email');
             dispatch(openModal('InfoModal', {
                 header: 'Check Your Email',
                 message: 'We’ve sent you an email with a link to finish resetting your password.',
             }));
-        });
     } catch (e) {
         OopsError();
         throw new SubmissionError({

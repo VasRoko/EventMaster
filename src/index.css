@@ -41,8 +41,3 @@ code {
   border: 0px !important;
 }
 
-.toast-message {
-  -ms-word-wrap: break-word;
-  word-wrap: break-word;
-  padding: 10px !important;
-}
