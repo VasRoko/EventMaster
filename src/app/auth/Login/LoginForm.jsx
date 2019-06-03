@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Form, Button, Message, Divider } from 'semantic-ui-react';
 import { combineValidators, isRequired } from 'revalidate';
 import { Field, reduxForm } from 'redux-form';
-import TextInput from '../../common/form/TextInput';
+import { renderTextInput } from '../../common/form/formComponents';
 import { login, socialLogin } from '../../actions/authActions';
 import SocialLogin from '../SocialLogin/SocialLogin';
 
@@ -27,8 +27,8 @@ const LoginForm = ({login, socialLogin, error, handleSubmit, submitting, passwor
       { error &&
         <Message basic pointing="below" color="red">{ error }</Message>       
       }
-      <Field type="text" name="email" component={TextInput} placeholder="Email Address"/>
-      <Field type="password" name="password" component={TextInput} placeholder="Password"/>
+      <Field type="text" name="email" component={renderTextInput} placeholder="Email Address"/>
+      <Field type="password" name="password" component={renderTextInput} placeholder="Password"/>
       <Button fluid size="large" color="teal">Login</Button>
       <div>
         <Divider />

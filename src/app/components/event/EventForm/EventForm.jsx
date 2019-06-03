@@ -8,10 +8,7 @@ import moment from 'moment';
 import cuid from 'cuid';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import { createEvent, updateEvent } from '../../../actions/eventActions';
-import TextInput from '../../../common/form/TextInput';
-import TextArea from '../../../common/form/TextArea';
-import SelectInput from '../../../common/form/SelectInput';
-import DateInput from '../../../common/form/DateInput';
+import { renderDateInput, renderTextInput, renderSelectInput, renderTextArea  } from '../../../common/form/formComponents';
 import PlaceInput from '../../../common/form/PlaceInput';
 
 import { composeValidators, combineValidators, isRequired, hasLengthGreaterThan  } from 'revalidate';
@@ -127,9 +124,9 @@ class EventForm extends Component {
                     <Header sub color='teal' content='Event Details' /> 
                     <br />
                     <Form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
-                        <Field name='title' type='text' component={TextInput} placeholder='Event Title' />
-                        <Field name='category' type='text' options={category} component={SelectInput} placeholder='Event Category' />
-                        <Field name='description' type='text' rows={4} component={TextArea} placeholder='Event Description' />
+                        <Field name='title' type='text' component={renderTextInput} placeholder='Event Title' />
+                        <Field name='category' type='text' options={category} component={renderSelectInput} placeholder='Event Category' />
+                        <Field name='description' type='text' rows={4} component={renderTextArea} placeholder='Event Description' />
                         <Header sub color='teal' content='Event Location Details' /> 
                         <Divider />
                         <Field 
@@ -152,7 +149,7 @@ class EventForm extends Component {
                             placeholder='Event Venue' />}
                         <Field name='date' 
                             type='text' 
-                            component={DateInput} 
+                            component={renderDateInput} 
                             showTimeSelect
                             timeFormat="HH:mm"
                             timeIntervals={15}

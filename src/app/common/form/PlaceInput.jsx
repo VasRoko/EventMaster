@@ -23,7 +23,7 @@ class PlaceInput extends Component {
   render() {
     const {input, width, onSelect, placeholder, options, meta: { touched, error}} = this.props;
     return (
-        <Form.Field error={ touched && !!error } widht={width}>
+        <Form.Field error={ touched && !!error } width={width}>
             <Script 
                 url='https://maps.googleapis.com/maps/api/js?key=AIzaSyCj3910ZM5ZSZz78mGcPxWjxxRfMz14SGA&libraries=places' 
                 onLoad={this.handleScriptLoaded}
