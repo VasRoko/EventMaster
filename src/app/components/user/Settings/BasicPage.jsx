@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Segment, Header, Form, Divider, Button } from 'semantic-ui-react';
 import moment from 'moment';
 import {Field, reduxForm} from 'redux-form';
-import { renderRadio, renderDateInput, renderTextInput } from '../../../common/form/formComponents';
+import { Segment, Header, Form, Divider, Button } from 'semantic-ui-react';
 import PlaceInput from '../../../common/form/PlaceInput';
+import { renderRadio, renderDateInput, renderTextInput } from '../../../common/form/formComponents';
 
 
 class BasicInfoPage extends Component {
@@ -28,9 +28,9 @@ class BasicInfoPage extends Component {
                         showYearDropdown={true} 
                         showMonthDropdown={true}
                         dropdownMode="select" 
-                        // maxDate={addDays(new Date(), 5)}
+                        maxDate={moment().subtract(18, "years").toDate()}
                     />
-                    <Field width={8} name="city" options={{types: ['cities']}} component={PlaceInput} placeholder="City" />
+                    <Field width={8} name="city" options={{types: ['(cities)']}} component={PlaceInput} placeholder="City" />
                     <Divider />
                     <Button disabled={pristine || submitting} positive size="large" content="Update Profile" />
                 </Form>

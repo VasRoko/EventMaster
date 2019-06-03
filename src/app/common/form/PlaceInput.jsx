@@ -24,9 +24,9 @@ class PlaceInput extends Component {
     const {input, width, onSelect, placeholder, options, meta: { touched, error}} = this.props;
     return (
         <Form.Field error={ touched && !!error } width={width}>
-            <Script 
+            <Script
+                onLoad={this.handleScriptLoaded} 
                 url= {GoogleMapUrl} 
-                onLoad={this.handleScriptLoaded}
             />
             { this.state.scriptLoaded && <PlacesAutocomplete 
                 inputProps={{...input, placeholder}}
