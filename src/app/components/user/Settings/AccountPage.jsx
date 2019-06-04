@@ -5,19 +5,27 @@ import { Field, reduxForm } from 'redux-form';
 import { renderTextInput } from '../../../common/form/formComponents';
 
 const validate = combineValidators({
-    newPassword1: isRequired({message: ' Please enter a password'}),
+    // newPassword1: isRequired({message: ' Please enter a password'}),
     newPassword2: composeValidators(
-        isRequired({message: ' Please enter a password'}),
+        // isRequired({message: ' Please enter a password'}),
         matchesField('newPassword1')({message: 'Passwords do not match'})
     )()
 });
 
-const AccountPage = ({error, invalid, submitting, handleSubmit, updatePassword, providerId }) => {
+const AccountPage = ({error, invalid, submitting, handleSubmit, updatePassword, updateEmail, providerId }) => {
    return (
    <Segment>
        <Header dividing size="large" content="Account"/>
        {providerId && providerId === 'password' &&
         <div>
+            <Header color="teal" sub content="Change Email" />
+            <p>Use this form to update your account settings</p>
+            { error && <Message basic pointing="below" color="red">{ error }</Message> }
+            <Form onSubmit={handleSubmit(updateEmail)}>
+                <Field width={8} name="email" type="text" pointing="left" inline={true} component={renderTextInput} placeholder="New Email" />
+                <Divider />
+                <Button disabled={invalid || submitting} size="large" positive content="Update Email" />
+            </Form>
             <Header color="teal" sub content="Change Password" />
             <p>Use this form to update your account settings</p>
             { error && <Message basic pointing="below" color="red">{ error }</Message> }

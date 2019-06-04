@@ -117,6 +117,22 @@ export const updatePassword = (data) =>
         }
     }
 
+export const updateEmail = (data) => 
+    async (dispatch, getState, {getFirebase}) => {
+        const firebase = getFirebase();
+        const user = firebase.auth().currentUser;
+        
+        try {
+            await user.updateEmail(data.email);
+            toastr.success('Success!', 'Your email has been changed!');
+        } catch (e) {
+            OopsError();
+            throw new SubmissionError({
+                _error: e.message
+            })
+        }
+}
+
 export const resetPassword = (credential) => 
 async (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();        
