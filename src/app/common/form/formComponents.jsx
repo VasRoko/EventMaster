@@ -4,9 +4,15 @@ import DatePicker from 'react-datepicker';
 import { Form, Label, Select } from 'semantic-ui-react'
 import 'react-datepicker/dist/react-datepicker.css';
 
-export const renderRadio = ({input, label}) => {
+export const renderRadio = ({input, label, type }) => {
+
     return (
-        <Form.Radio {...input} label={label} />
+      <Form.Field>
+          <div className="ui radio checkbox">
+                <input {...input} type={type}/>
+                <label>{label}</label>
+          </div>
+      </Form.Field>
     )
 }
 

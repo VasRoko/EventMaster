@@ -4,7 +4,7 @@ import { toastr } from 'react-redux-toastr';
 export const updateProfile = (user) => 
     (dispatch, getState, {getFirebase}) => {
         const firebase = getFirebase();
-        console.log(user)
+
         if (user.dob) {
             user.dob = moment(user.dob).toDate();
         }

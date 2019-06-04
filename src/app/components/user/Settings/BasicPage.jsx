@@ -16,8 +16,8 @@ class BasicInfoPage extends Component {
                     <Field width={8} name="displayName" component={renderTextInput} placeholder="Your name" />   
                     <Form.Group inline >
                         <label>Gender: </label> 
-                        <Field name="gender"  value="male" label="Male" component={renderRadio} />
-                        <Field name="gender"  value="female" label="Female" component={renderRadio} />
+                        <Field name="gender" label="Male" type="radio" component={renderRadio} value="male"/>
+                        <Field name="gender" type="radio" label="Female" component={renderRadio} value="female"/>
                     </Form.Group>
                     <Field 
                         width={8} 
