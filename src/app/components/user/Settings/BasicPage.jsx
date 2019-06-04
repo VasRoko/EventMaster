@@ -8,11 +8,11 @@ import { renderRadio, renderDateInput, renderTextInput } from '../../../common/f
 
 class BasicInfoPage extends Component {
     render() {
-        const {pristine, submitting} = this.props;
+        const {pristine, submitting, handleSubmit, updateProfile} = this.props;
         return (
             <Segment>
                 <Header dividing size="large" content="Basic Information"></Header>
-                <Form>
+                <Form onSubmit={handleSubmit(updateProfile)}>
                     <Field width={8} name="displayName" component={renderTextInput} placeholder="Your name" />   
                     <Form.Group inline >
                         <label>Gender: </label> 
@@ -24,7 +24,6 @@ class BasicInfoPage extends Component {
                         name="dob" 
                         component={renderDateInput}
                         placeholder="Your date of birth"
-                        dateFormat="dd/MM/YYYY" 
                         showYearDropdown={true} 
                         showMonthDropdown={true}
                         dropdownMode="select" 

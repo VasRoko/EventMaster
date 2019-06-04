@@ -1,22 +1,19 @@
 import moment from 'moment';
-import toastr from 'react-redux-toastr';
-
-const OopsError = (header = 'Oops!', message = 'Something went wrong') => {
-    return  toastr.error(header, message);
-}
+import { toastr } from 'react-redux-toastr';
 
 export const updateProfile = (user) => 
-    async (dispatch, getState, {getFirebase}) => {
+    (dispatch, getState, {getFirebase}) => {
         const firebase = getFirebase();
+        console.log(user)
         if (user.dob) {
-            user.dob = moment(user.dbo).toDate();
+            user.dob = moment(user.dob).toDate();
         }
 
         try {
-            await firebase.updateProfile(user);
+            firebase.updateProfile(user);
             toastr.success('Success', 'You profile updated');
         } catch (e) {
-            OopsError();
+            toastr.error('Oops!', 'Something went wrong');
             throw new Error({
                 _error: e.message
             })

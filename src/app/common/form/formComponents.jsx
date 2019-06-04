@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import { Form, Label, Select } from 'semantic-ui-react'
 import 'react-datepicker/dist/react-datepicker.css';
@@ -27,14 +28,18 @@ export const renderTextArea = ({ input, width, rows, placeholder, meta: { touche
     )
 }
 
-export const renderDateInput = ({ input: { value, onChange, ...restInput}, width, placeholder, meta: {touched, error}, ...rest}) => {
+export const renderDateInput = ({ input: { value, onChange, onBlur, ...restInput}, width, placeholder, meta: {touched, error}, ...rest}) => {
+    if(value) {
+        value = moment(value, 'X')
+    }
     return (
-      <Form.Field error={touched && !!error} width={width} className="myDateWrapper"> 
-          <DatePicker className="myDateWrapper"
+      <Form.Field error={touched && !!error} width={width} > 
+          <DatePicker 
               {...rest}
               placeholderText={placeholder}
               selected={value ? new Date(value) : null }
               onChange={onChange}
+              onBlur={() => onBlur()}
               {...restInput}
           />
           {touched && error && <Label basic color='red' pointing>{error}</Label>}
