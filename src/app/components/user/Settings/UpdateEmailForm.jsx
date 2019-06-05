@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Form, Message, Button, Divider, Icon, Segment } from 'semantic-ui-react';
+import { Header, Form, Message, Button, Divider, Segment } from 'semantic-ui-react';
 import { Field, reduxForm } from 'redux-form';
 import { renderTextInput } from '../../../common/form/formComponents';
 
@@ -18,4 +18,4 @@ const UpdateEmailForm = ({error, invalid, submitting, handleSubmit, updateEmail 
    )
 };
 
-export default reduxForm({form: 'accountEmail'})(UpdateEmailForm);
+export default reduxForm({form: 'accountEmail', enableReinitialize: true })(UpdateEmailForm);

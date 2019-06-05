@@ -18,10 +18,12 @@ const actions = {
 
 const mapState = (state) => ({
     providerId: state.firebase.auth.providerData[0].providerId,
-    user: state.firebase.profile
+    user: state.firebase.profile,
+    account: state.firebase.auth
 })
-const SettingsDashboard = ({ updateEmail, updatePassword, providerId, user, updateProfile }) => (
-    <Grid>
+const SettingsDashboard = ({ updateEmail, updatePassword, providerId, account, user, updateProfile }) => {
+    return (
+        <Grid>
         <Grid.Column width={4}>
             <SettingsNav/> 
         </Grid.Column>
@@ -31,11 +33,11 @@ const SettingsDashboard = ({ updateEmail, updatePassword, providerId, user, upda
                 <Route path='/settings/basic' render={() => <BasicPage initialValues={user} updateProfile={updateProfile} />}/>
                 <Route path='/settings/about' component={AboutPage}/>
                 <Route path='/settings/photos' component={PhotosPage}/>
-                <Route path='/settings/account' render={() => <AccountPage updatePassword={updatePassword} updateEmail={updateEmail} providerId={providerId} />}/>
+                <Route path='/settings/account' render={() => <AccountPage updatePassword={updatePassword} updateEmail={updateEmail} initialValues={account} providerId={providerId} />}/>
             </Switch>
         </Grid.Column>
-
     </Grid>
-);
+    );
+};
 
 export default  connect(mapState, actions)(SettingsDashboard);

@@ -1,20 +1,19 @@
 import React from 'react';
-import { Segment, Header, Form, Message, Button, Divider, Icon } from 'semantic-ui-react';
+import { Segment, Header, Form, Message, Button, Divider } from 'semantic-ui-react';
 import { combineValidators, matchesField, isRequired, composeValidators } from 'revalidate';
 import { Field, reduxForm } from 'redux-form';
 import { renderTextInput } from '../../../common/form/formComponents';
-import UpdateEmail from './UpdateEmailForm';
 
 const validate = combineValidators({
-    // newPassword1: isRequired({message: ' Please enter a password'}),
+    newPassword1: isRequired({message: ' Please enter a password'}),
     newPassword2: composeValidators(
-        // isRequired({message: ' Please enter a password'}),
+        isRequired({message: ' Please enter a password'}),
         matchesField('newPassword1')({message: 'Passwords do not match'})
     )()
 });
 
-const UpdatePasswordForm = ({error, invalid, submitting, handleSubmit, updatePassword, updateEmail, providerId }) => {
-   return (
+const UpdatePasswordForm = ({ error, invalid, submitting, handleSubmit, updatePassword }) => {
+    return (
     <Segment>
         <Header color="teal" sub content="Change Password" />
         <p>Use this form to update your account settings</p>
@@ -29,4 +28,4 @@ const UpdatePasswordForm = ({error, invalid, submitting, handleSubmit, updatePas
    )
 };
 
-export default reduxForm({form: 'accountPassword', validate})(UpdatePasswordForm);
+export default reduxForm({form: 'accountPassword', validate, enableReinitialize: true })(UpdatePasswordForm);

@@ -3,14 +3,13 @@ import { Header, Button, Icon, Segment } from 'semantic-ui-react';
 import UpdateEmailForm from './UpdateEmailForm';
 import UpdatePasswordForm from './UpdatePasswordForm';
 
-const AccountPage = ({updatePassword, updateEmail, providerId }) => {
+const AccountPage = ({ account, updatePassword, updateEmail, providerId }) => {
    return (
    <div>
        <Header dividing size="large" content="Account"/>
        {providerId && providerId === 'password' &&
         <div>
-            
-            <UpdateEmailForm updateEmail={updateEmail} />
+            <UpdateEmailForm updateEmail={updateEmail} initialValues={account} />
             <UpdatePasswordForm updatePassword={updatePassword} />
         </div>
        }
