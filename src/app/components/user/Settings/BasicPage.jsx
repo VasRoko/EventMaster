@@ -38,4 +38,4 @@ class BasicInfoPage extends Component {
     }
 }
 
-export default reduxForm({ form: 'basicInfo', enableReinitialize: true })(BasicInfoPage);
+export default reduxForm({ form: 'basicInfo', enableReinitialize: true, destroyOnUnmount: false })(BasicInfoPage);
