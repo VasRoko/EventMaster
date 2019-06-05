@@ -13,12 +13,13 @@ const categories = [
     {key: 'travel', text: 'Travel', value: 'travel'},  
 ];
 
-const AboutPage = ({ pristine, submitting }) => {
+const AboutPage = ({ pristine, submitting, handleSubmit, updateProfile }) => {
+
     return (
         <Segment>
             <Header dividing size="large" content="About Me" />
             <p>Complete your profile to get the most out of this site</p>
-            <Form>
+            <Form onSubmit={handleSubmit(updateProfile)}>
                 <Form.Group inline>
                     <label>Tell us your status: </label>
                     <Field name="status" type="radio" label="Single"  component={renderRadio} value="single"/>
@@ -36,4 +37,4 @@ const AboutPage = ({ pristine, submitting }) => {
     )
 }
 
-export default reduxForm({form: 'aboutForm', enableReintialize: true})(AboutPage);
+export default reduxForm({ form: 'basicInfo', enableReinitialize: true })(AboutPage);
