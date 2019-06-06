@@ -41,3 +41,8 @@ code {
   border: 0px !important;
 }
 
+.dropzone {
+  border: 2px dashed;
+  padding: 20px;
+  text-align: center;
+}

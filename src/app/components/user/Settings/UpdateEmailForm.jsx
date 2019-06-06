@@ -3,7 +3,7 @@ import { Header, Form, Message, Button, Divider, Segment } from 'semantic-ui-rea
 import { Field, reduxForm } from 'redux-form';
 import { renderTextInput } from '../../../common/form/formComponents';
 
-const UpdateEmailForm = ({error, invalid, submitting, handleSubmit, updateEmail }) => {
+const UpdateEmailForm = ({ pristine, error, invalid, submitting, handleSubmit, updateEmail }) => {
    return (
         <Segment>
             <Header color="teal" sub content="Change Email" />
@@ -12,7 +12,7 @@ const UpdateEmailForm = ({error, invalid, submitting, handleSubmit, updateEmail 
             <Form onSubmit={handleSubmit(updateEmail)}>
                 <Field width={8} name="email" type="text" pointing="left" inline={true} component={renderTextInput} placeholder="New Email" />
                 <Divider />
-                <Button disabled={invalid || submitting} size="large" positive content="Update Email" />
+                <Button disabled={ pristine || invalid || submitting} size="large" positive content="Update Email" />
             </Form>
         </Segment>
    )

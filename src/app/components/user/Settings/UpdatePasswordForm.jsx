@@ -12,7 +12,7 @@ const validate = combineValidators({
     )()
 });
 
-const UpdatePasswordForm = ({ error, invalid, submitting, handleSubmit, updatePassword }) => {
+const UpdatePasswordForm = ({ pristine, error, invalid, submitting, handleSubmit, updatePassword }) => {
     return (
     <Segment>
         <Header color="teal" sub content="Change Password" />
@@ -22,7 +22,7 @@ const UpdatePasswordForm = ({ error, invalid, submitting, handleSubmit, updatePa
             <Field width={8} name="newPassword1" type="password" pointing="left" inline={true} component={renderTextInput} placeholder="New Password" />
             <Field width={8} name="newPassword2" type="password" pointing="left" inline={true} component={renderTextInput} placeholder="Confirm Password" />
             <Divider />
-            <Button disabled={invalid || submitting} size="large" positive content="Update Password" />
+            <Button disabled={ pristine || invalid || submitting} size="large" positive content="Update Password" />
         </Form> 
     </Segment>
    )
