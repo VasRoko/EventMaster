@@ -42,7 +42,17 @@ code {
 }
 
 .dropzone {
-  border: 2px dashed;
+  border: 2px dashed #545454;
   padding: 20px;
   text-align: center;
+}
+
+.dropzone--isActive {
+  border: 2px dashed #21ba45;
+  box-shadow: 2px 2px 2px gainsboro;
+  color: #21ba45 !important;
+}
+
+.dropzone--isActive.ui.header {
+  color: #21ba45 !important;
 }

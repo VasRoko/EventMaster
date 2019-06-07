@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Segment, Header, Grid, Divider, Card, Image, Button, Icon } from 'semantic-ui-react';
-import Dropzone from 'react-dropzone';
+import { Segment, Header, Grid, Divider, Card, Image, Button } from 'semantic-ui-react';
+import DropzoneInput from './dropzone/DropzoneInput';
 
 class PhotosPage extends Component {
     
@@ -12,22 +12,7 @@ class PhotosPage extends Component {
                         <Grid.Row>
                             <Grid.Column width={4}>
                                 <Header color="teal" sub content="Step 1 - Add Photo" />
-                                <Dropzone  onDrop={files => console.log(files)}>
-                                    {({getRootProps, getInputProps}) => (
-                                        <div className="container">
-                                        <div
-                                            {...getRootProps({
-                                                className: 'dropzone',
-                                                onDrop: event => event.stopPropagation()
-                                            })}
-                                        >
-                                            <input {...getInputProps()} />
-                                            <Icon name="upload"  size="huge"/>
-                                            <Header sub content="Drag 'n' drop some files here, or click to select files" />
-                                        </div>
-                                        </div>
-                                    )}
-                                </Dropzone>
+                                <DropzoneInput />
                             </Grid.Column>
                             <Grid.Column width={1} />
                             <Grid.Column width={4}>
