@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Menu, Header } from 'semantic-ui-react';
 import {NavLink} from 'react-router-dom';
+
 const SettingsNav = () => (
    <Grid.Column width={4}>
         <Menu vertical>

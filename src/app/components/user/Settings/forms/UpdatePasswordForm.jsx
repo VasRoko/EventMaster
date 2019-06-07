@@ -1,8 +1,9 @@
 import React from 'react';
+import { Field, reduxForm } from 'redux-form';
+import { renderTextInput } from '../../../../common/form/formComponents';
 import { Segment, Header, Form, Message, Button, Divider } from 'semantic-ui-react';
 import { combineValidators, matchesField, isRequired, composeValidators } from 'revalidate';
-import { Field, reduxForm } from 'redux-form';
-import { renderTextInput } from '../../../common/form/formComponents';
+
 
 const validate = combineValidators({
     newPassword1: isRequired({message: ' Please enter a password'}),

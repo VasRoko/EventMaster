@@ -1,7 +1,7 @@
 import React from 'react';
-import { Header, Form, Message, Button, Divider, Segment } from 'semantic-ui-react';
 import { Field, reduxForm } from 'redux-form';
-import { renderTextInput } from '../../../common/form/formComponents';
+import { renderTextInput } from '../../../../common/form/formComponents';
+import { Header, Form, Message, Button, Divider, Segment } from 'semantic-ui-react';
 
 const UpdateEmailForm = ({ pristine, error, invalid, submitting, handleSubmit, updateEmail }) => {
    return (

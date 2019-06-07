@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import moment from 'moment';
+import { addYears } from 'date-fns';
 import {Field, reduxForm} from 'redux-form';
 import { Segment, Header, Form, Divider, Button } from 'semantic-ui-react';
 import PlaceInput from '../../../common/form/PlaceInput';
@@ -22,12 +22,13 @@ class BasicInfoPage extends Component {
                     <Field 
                         width={8} 
                         name="dob" 
+                        dateFormat='dd/MM/yyyy'
                         component={renderDateInput}
                         placeholder="Your date of birth"
                         showYearDropdown={true} 
                         showMonthDropdown={true}
                         dropdownMode="select" 
-                        maxDate={moment().subtract(18, "years").toDate()}
+                        maxDate={addYears(new Date(), -18)}
                     />
                     <Field width={8} name="city" options={{types: ['(cities)']}} component={PlaceInput} placeholder="City" />
                     <Divider />

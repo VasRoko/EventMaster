@@ -1,16 +1,13 @@
-import moment from 'moment';
 import { toastr } from 'react-redux-toastr';
 
 export const updateProfile = (user) => 
     (dispatch, getState, {getFirebase}) => {
+        
         const firebase = getFirebase();
-
-        if (user.dob) {
-            user.dob = moment(user.dob).toDate();
-        }
+        const { isLoaded, isEmpty, ...updatedUser } = user;
 
         try {
-            firebase.updateProfile(user);
+            firebase.updateProfile(updatedUser);
             toastr.success('Success', 'You profile updated');
         } catch (e) {
             toastr.error('Oops!', 'Something went wrong');

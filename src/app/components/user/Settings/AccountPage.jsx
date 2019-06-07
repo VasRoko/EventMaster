@@ -1,7 +1,7 @@
 import React from 'react';
 import { Header, Button, Icon, Segment } from 'semantic-ui-react';
-import UpdateEmailForm from './UpdateEmailForm';
-import UpdatePasswordForm from './UpdatePasswordForm';
+import UpdateEmailForm from './forms/UpdateEmailForm';
+import UpdatePasswordForm from './forms/UpdatePasswordForm';
 
 const AccountPage = ({ account, updatePassword, updateEmail, providerId }) => {
    return (
