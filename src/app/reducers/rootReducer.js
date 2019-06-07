@@ -5,7 +5,6 @@ import { firebaseReducer } from 'react-redux-firebase';
 import { firestoreReducer }  from 'redux-firestore';
 import eventReducer from './eventReducer';
 import modalReducer from './modalReducer';
-import authReducer from './authReduces';
 import asyncReducer from '../async/asyncReducer';
 
 const rootReducer = combineReducers({
@@ -14,7 +13,6 @@ const rootReducer = combineReducers({
     events: eventReducer,
     form: FormReducer,
     modals: modalReducer,
-    auth: authReducer,
     async: asyncReducer,
     toastr: toastrReducer
 })

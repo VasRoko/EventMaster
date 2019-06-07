@@ -7,7 +7,7 @@ import { deleteEvent } from '../../../actions/eventActions';
 import LoadingComponent from '../../loading/LoadingComponent';
 import EventActivity from '../EventActivity/EventActivity';
 
-const mapState = (state) => ({
+const mapStateToProps = (state) => ({
   events: state.firestore.ordered.events,
   loading: state.async.loading
 })
@@ -47,6 +47,6 @@ class EventDashboard extends Component {
   }
 }
 
-export default connect(mapState, actions)(
+export default connect(mapStateToProps, actions)(
   firestoreConnect([{collection: 'events'}])(EventDashboard)
 );  

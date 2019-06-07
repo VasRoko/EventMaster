@@ -14,6 +14,7 @@ const ReactReduxFirebaseConf = {
 }
 
 export const configureStore = (preloadedState) => {
+
     const moddlewares = [ReduxThunk.withExtraArgument({getFirebase, getFirestore})];
     const moddlewareEnhancer  = applyMiddleware(...moddlewares);
 
@@ -22,6 +23,7 @@ export const configureStore = (preloadedState) => {
         ...storeEnhancers, 
         reactReduxFirebase(firebase, ReactReduxFirebaseConf),
         reduxFirestore(firebase));
+        
     const store = createStore(
         rootReducer,
         preloadedState,
