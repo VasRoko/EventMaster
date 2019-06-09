@@ -2,15 +2,15 @@ import React, {useCallback} from 'react'
 import {useDropzone} from 'react-dropzone'
 import { Icon, Header } from 'semantic-ui-react';
 
-const DropzoneInput = () => {
+const DropzoneInput = ({ setFiles }) => {
   const onDrop = useCallback(acceptedFiles => {
-    
-  }, [])
+    setFiles(acceptedFiles);
+  }, [setFiles]);
   const {getRootProps, getInputProps, isDragActive} = useDropzone({
-      onDrop,
-      multiple: false,
-      accept: 'image/jpeg, image/png'
-    })
+    onDrop,
+    multiple: true,
+    accept: 'iamge/*'
+  })
 
   return (
     <div {...getRootProps()} className={'dropzone '  + (isDragActive && 'dropzone--isActive') }>
