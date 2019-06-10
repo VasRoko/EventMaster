@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Segment, Header, Grid, Divider, Card, Image, Button } from 'semantic-ui-react';
 import DropzoneInput from './dropzone/DropzoneInput';
 
 const PhotosPage = () => {
     const [files, setFiles] = useState([]);
+
+    useEffect(() => {
+        return () => {
+            files.forEach(file => URL.revokeObjectURL(file.preview));
+        }
+    }, [files]);
+
     return (
         <Segment>
             <Header dividing size="large" content="Your Photos" />
@@ -20,6 +27,7 @@ const PhotosPage = () => {
                         <Grid.Column width={1} />
                         <Grid.Column width={4}>
                             <Header color="teal" sub content="Step 3 - Preview and Upload" />
+                            { files.length > 0 && <Image src={files[0].preview} className="dropzone--preview--image" />       }
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

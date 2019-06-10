@@ -5,7 +5,10 @@ import { Icon, Header } from 'semantic-ui-react';
 const DropzoneInput = ({ setFiles }) => {
   
   const onDrop = useCallback(acceptedFiles => {
-    setFiles(acceptedFiles);
+    setFiles(acceptedFiles.map(file => Object.assign(file, {
+        preview: URL.createObjectURL(file)
+      })
+    ))
   }, [setFiles]);
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({

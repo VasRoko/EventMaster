@@ -56,3 +56,9 @@ code {
 .dropzone--isActive.ui.header {
   color: #21ba45 !important;
 }
+
+.dropzone--preview--image {
+  min-height: '200px' !important;
+  min-width: '200px' !important; 
+  display: 'cover' !important; 
+}
