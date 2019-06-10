@@ -1,5 +1,6 @@
 import { asyncActionStart, asyncActionFinish, asyncActionError } from '../async/asyncActions';
 import { successNotification, errorNotification } from '../common/notifications/notification';
+import cuid from 'cuid';
 
 export const updateProfile = (user) => 
     (dispatch, getState, {getFirebase}) => {
@@ -20,12 +21,13 @@ export const updateProfile = (user) =>
 
 export const uploadAvatar = (file, fileName) => 
     async (dispatch, getState, {getFirebase, getFirestore}) => {
+        const imageName = cuid();
         const firebase = getFirebase();
         const firestore = getFirestore();
         const user = firebase.auth().currentUser;
         const path = `${user.uid}/user_images`;
         const options = {
-            name: fileName 
+            name: imageName 
         }; 
 
         try {
@@ -56,7 +58,7 @@ export const uploadAvatar = (file, fileName) =>
                 doc: user.uid,
                 subcollections: [{collection: 'photos'}]
             }, {
-                name: fileName,
+                name: imageName,
                 url: photoURL
             });
 

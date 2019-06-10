@@ -46,6 +46,7 @@ const PhotosPage = ({ uploadAvatar, loading, photos, profile }) => {
         try {
             await uploadAvatar(image, files[0].name);
             successNotification('Success!', 'New photo has been uploaded.');
+            handleCancelCrop();
         } catch (e) {
             errorNotification();
             throw new Error({

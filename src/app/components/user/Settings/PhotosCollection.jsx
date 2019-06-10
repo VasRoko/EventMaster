@@ -11,7 +11,9 @@ const PhotosCollection = ({ photos, profile }) => {
                     <Image src={profile.photoURL } />
                     <Button positive>Main Photo</Button>
                 </Card>
-                { photos && photos.map(photo => 
+                { photos && photos.filter(photo => {
+                    return photo.url !== profile.photoURL
+                }).map(photo => 
                     <Card key={photo.id}>
                         <Image src={photo.url} />
                         <div className="ui two buttons"> 
