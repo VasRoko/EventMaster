@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Segment, Header, Grid, Divider, Card, Image, Button } from 'semantic-ui-react';
 import { uploadAvatar } from '../../../actions/userActions';
 import DropzoneInput from './dropzone/DropzoneInput';
 import CropperInput from './cropper/cropperInput';
-import { successNotification } from '../../../common/notifications/notification';
+import { successNotification, errorNotification } from '../../../common/notifications/notification';
+import LoadingComponent from '../../../components/loading/LoadingComponent';
 
 const actions = {
     uploadAvatar: uploadAvatar
 }
 
+const mapState = (state) => ({
+    loading: state.async.loading
+});
 
-
-const PhotosPage = ({ uploadAvatar }) => {
+const PhotosPage = ({ uploadAvatar, loading }) => {
     const [ files, setFiles] = useState([]);
     const [ image, setImage] = useState(null);
 
@@ -24,9 +27,11 @@ const PhotosPage = ({ uploadAvatar }) => {
 
     const handleAvatarUpload = async () => {
         try {
-
+            console.log(image, files[0].name)
+            await uploadAvatar(image, files[0].name);
+            successNotification('Success!', 'New photo has been uploaded.');
         } catch (e) {
-            successNotification();
+            errorNotification();
             throw new Error({
                 _error: e.message
             })
@@ -34,31 +39,42 @@ const PhotosPage = ({ uploadAvatar }) => {
     }
 
     const handleCancelCrop = () => {
-
+        setFiles([]);
+        setImage(null);
     }
 
     return (
-        <Segment>
+        <Fragment>
+            <Segment>
             <Header dividing size="large" content="Your Photos" />
+                {loading && <LoadingComponent content="Uploading... Please wait." /> }
                 <Grid>
                     <Grid.Row  style={{ textAlign: 'center' }}>
                         <Grid.Column width={4}>
-                            <Header color="teal" sub content="Step 1 - Add Photo" />
+                            <Header color="teal" sub content="Step 1 - Add Photo"  style={{ margin: '10px' }}/>
                             <DropzoneInput setFiles={setFiles}/>
                         </Grid.Column>
                         <Grid.Column width={1} />
                         <Grid.Column width={4}>
-                            <Header color="teal" sub content="Step 2 - Resize Image" />
+                            <Header color="teal" sub content="Step 2 - Resize Image" style={{ margin: '10px' }} />
                             { files.length > 0 && 
                                 <CropperInput setImage={setImage} imagePreview={files[0].preview}  />                            
                             }
                         </Grid.Column>
                         <Grid.Column width={1} />
                         <Grid.Column width={4} className="img-test">
-                            <Header color="teal" sub content="Step 3 - Preview and Upload" />
-                            { files.length > 0 && (<div className="img-preview" style={{ minHeight: '200px', minWidth: '200px', overflow: 'hidden' }} /> )}
+                            <Header color="teal" sub content="Step 3 - Preview and Upload" style={{ margin: '10px' }} />
+                            { files.length > 0 && (
+                            <Fragment>
+                                    <div className="img-preview" style={{ minHeight: '200px', minWidth: '200px', overflow: 'hidden' }} />
+                                    <Button.Group>
+                                        <Button onClick={handleAvatarUpload} style={{ width: '100px'}} positive icon="check"/>
+                                        <Button onClick={handleCancelCrop} style={{ width: '100px'}} negative icon="close"/>
+                                    </Button.Group>
+                            </Fragment> )}
                         </Grid.Column>
                     </Grid.Row>
+                
                 </Grid>
                 <Divider />
                 <Header sub color="teal" content="All Photos" />
@@ -76,8 +92,9 @@ const PhotosPage = ({ uploadAvatar }) => {
                         </div>
                     </Card>
                 </Card.Group>
-        </Segment>
+            </Segment>
+        </Fragment>
     )
 }
 
-export default connect(null, actions)(PhotosPage);
+export default connect(mapState, actions)(PhotosPage);

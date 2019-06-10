@@ -26,16 +26,21 @@ export const uploadAvatar = (file, fileName) =>
         const path = `${user.uid}/user_images`;
         const options = {
             name: fileName 
-        };
+        }; 
 
         try {
-            dispatch(asyncActionStart())
+            
+            dispatch(asyncActionStart());
             // Uploading the file to firebase storage
             let uploadedFile = await firebase.uploadFile(path, file, null, options);
+
             // get url of the image 
             let photoURL = await uploadedFile.uploadTaskSnapshot.ref.getDownloadURL();
+            
             // set photo as main if there are none
             let userDoc = await firestore.get(`users/${user.uid}`);
+
+
             if (!userDoc.data().photoURL) {
                 await firebase.updateProfile({
                     photoURL: photoURL
@@ -48,17 +53,16 @@ export const uploadAvatar = (file, fileName) =>
             // add image to firestore
             await firestore.add({
                 collection: 'users',
-                doc: user.id,
+                doc: user.uid,
                 subcollections: [{collection: 'photos'}]
             }, {
                 name: fileName,
                 url: photoURL
             });
+
             dispatch(asyncActionFinish())
-            successNotification('Success!', 'New photo has been uploaded.');
         } catch (e) {
             dispatch(asyncActionError());
-            errorNotification();
             throw new Error({
                 _error: e.message
             })

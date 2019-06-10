@@ -53,7 +53,6 @@ export const login = (credentials) => {
                 }); 
 
             } else {
-                debugger;
                 successNotification('Welcome!', 'You have successfully logged in!');
                 dispatch(closeModal());
             }
