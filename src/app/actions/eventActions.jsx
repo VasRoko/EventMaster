@@ -1,5 +1,5 @@
-import { toastr } from 'react-redux-toastr';
 import {CREATE_EVENT, DELETE_EVENT, UPDATE_EVENT } from '../../const';
+import { successNotification, errorNotification } from '../common/notifications/notification';
 
 export const createEvent = (event) => {
     return async dispatch => {
@@ -10,9 +10,9 @@ export const createEvent = (event) => {
                     event
                 }
             });
-            toastr.success('Success!', 'Event has been created');
+            successNotification('Success!', 'Event has been created');
         } catch (e) {
-            toastr.error('Oops!', 'Something went wrong');
+            errorNotification();
         }
     }
 }
@@ -26,9 +26,9 @@ export const updateEvent = (event) => {
                     event
                 }
             });
-            toastr.success('Success!', 'Event has been updated');
+            successNotification('Success!', 'Event has been updated');
         } catch (e) {
-            toastr.error('Oops!', 'Something went wrong');
+            errorNotification();
         }
     }
 }

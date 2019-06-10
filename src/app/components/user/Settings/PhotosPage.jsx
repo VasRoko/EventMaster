@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import { Segment, Header, Grid, Divider, Card, Image, Button } from 'semantic-ui-react';
+import { uploadAvatar } from '../../../actions/userActions';
 import DropzoneInput from './dropzone/DropzoneInput';
 import CropperInput from './cropper/cropperInput';
+import { successNotification } from '../../../common/notifications/notification';
 
-const PhotosPage = () => {
+const actions = {
+    uploadAvatar: uploadAvatar
+}
+
+
+
+const PhotosPage = ({ uploadAvatar }) => {
     const [ files, setFiles] = useState([]);
     const [ image, setImage] = useState(null);
 
@@ -12,6 +21,21 @@ const PhotosPage = () => {
             files.forEach(file => URL.revokeObjectURL(file.preview));
         }
     }, [files]);
+
+    const handleAvatarUpload = async () => {
+        try {
+
+        } catch (e) {
+            successNotification();
+            throw new Error({
+                _error: e.message
+            })
+        }
+    }
+
+    const handleCancelCrop = () => {
+
+    }
 
     return (
         <Segment>
@@ -56,4 +80,4 @@ const PhotosPage = () => {
     )
 }
 
-export default PhotosPage;
+export default connect(null, actions)(PhotosPage);

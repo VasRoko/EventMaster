@@ -1,10 +1,6 @@
 import { SubmissionError, reset } from 'redux-form';
-import { toastr } from 'react-redux-toastr';
 import { openModal, closeModal } from './modalActions';
-
-const OopsError = (header = 'Oops!', message = 'Something went wrong') => {
-    return  toastr.error(header, message);
-}
+import { errorNotification, successNotification } from '../common/notifications/notification';
 
 export const Register = (user) =>
     async (dispatch, getState, {getFirebase, getFirestore}) => {
@@ -33,7 +29,7 @@ export const Register = (user) =>
             }));
 
         } catch(e) {
-            OopsError();
+            
             throw new SubmissionError({
                 _error: e.message
             })
@@ -57,11 +53,12 @@ export const login = (credentials) => {
                 }); 
 
             } else {
-                toastr.success('Welcome!', 'You have successfully logged in!');
+                debugger;
+                successNotification('Welcome!', 'You have successfully logged in!');
                 dispatch(closeModal());
             }
         } catch(e) {
-            OopsError();
+            errorNotification();
             throw new SubmissionError({
                 _error: e.message
             })
@@ -90,10 +87,10 @@ export const socialLogin = (selectedProvider) =>
             });
         } 
 
-        toastr.success('Welcome!', 'You have successfully logged in!');
+        successNotification('Welcome!', 'You have successfully logged in!');
 
     } catch(e) {
-        OopsError();
+        errorNotification();
         throw new SubmissionError({
             _error: e.message
         })
@@ -108,9 +105,9 @@ export const updatePassword = (data) =>
         try {
             await user.updatePassword(data.newPassword1);
             dispatch(reset('account'));
-            toastr.success('Success!', 'Your password has been changed!');
+            successNotification('Success!', 'Your password has been changed!');
         } catch (e) {
-            OopsError();
+            errorNotification();
             throw new SubmissionError({
                 _error: e.message
             })
@@ -124,9 +121,9 @@ export const updateEmail = (data) =>
         
         try {
             await user.updateEmail(data.email);
-            toastr.success('Success!', 'Your email has been changed!');
+            successNotification('Success!', 'Your email has been changed!');
         } catch (e) {
-            OopsError();
+            errorNotification();
             throw new SubmissionError({
                 _error: e.message
             })
@@ -138,13 +135,13 @@ async (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();        
     try {
         await firebase.auth().sendPasswordResetEmail(credential.email);
-            toastr.success('Success!', 'Please check your email');
+        successNotification('Success!', 'Please check your email');
             dispatch(openModal('InfoModal', {
                 header: 'Check Your Email',
                 message: 'We’ve sent you an email with a link to finish resetting your password.',
             }));
     } catch (e) {
-        OopsError();
+        errorNotification();
         throw new SubmissionError({
             _error: e.message
         })
