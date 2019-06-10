@@ -70,3 +70,26 @@ export const uploadAvatar = (file, fileName) =>
             })
         }
     }      
+
+export const deletePhoto = (photo) => 
+    async (dispatch, getState, {getFirebase, getFirestore}) => {
+
+        const firebase = getFirebase();
+        const firestore = getFirestore();
+        const user = firebase.auth().currentUser;
+
+        try {
+            dispatch(asyncActionStart());
+            await firebase.deleteFile(`${user.uid}/user_images/${photo.name}`);
+            await firestore.delete({
+                collection: 'users',
+                doc: user.uid,
+                subcollections: [{ collection: 'photos', doc: photo.id }]
+            })
+            dispatch(asyncActionFinish());
+        } catch(e) {
+            throw new Error({
+                _error: e.message
+            })
+        }
+    }

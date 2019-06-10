@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { Segment, Header, Grid, Divider, Button } from 'semantic-ui-react';
-import { uploadAvatar } from '../../../actions/userActions';
+import { uploadAvatar, deletePhoto } from '../../../actions/userActions';
 import DropzoneInput from './dropzone/DropzoneInput';
 import CropperInput from './cropper/cropperInput';
 import { successNotification, errorNotification } from '../../../common/notifications/notification';
@@ -11,7 +11,8 @@ import LoadingComponent from '../../../components/loading/LoadingComponent';
 import PhotosCollection from './PhotosCollection';
 
 const actions = {
-    uploadAvatar: uploadAvatar
+    uploadAvatar: uploadAvatar,
+    deletePhoto: deletePhoto
 }
 
 const mapState = (state) => ({
@@ -32,7 +33,7 @@ const queryFirebase = ({ auth }) => {
     ]
 } 
 
-const PhotosPage = ({ uploadAvatar, loading, photos, profile }) => {
+const PhotosPage = ({ uploadAvatar, loading, photos, profile, deletePhoto }) => {
     const [ files, setFiles] = useState([]);
     const [ image, setImage] = useState(null);
 
@@ -49,15 +50,20 @@ const PhotosPage = ({ uploadAvatar, loading, photos, profile }) => {
             handleCancelCrop();
         } catch (e) {
             errorNotification();
-            throw new Error({
-                _error: e.message
-            })
         }
     }
 
     const handleCancelCrop = () => {
         setFiles([]);
         setImage(null);
+    }
+
+    const handleDeletePhoto = async (photo) => {
+        try {
+            await deletePhoto(photo)
+        } catch (e) {
+            errorNotification();
+        }
     }
 
     return (
@@ -93,7 +99,7 @@ const PhotosPage = ({ uploadAvatar, loading, photos, profile }) => {
                     </Grid.Row>
                 </Grid>
                 <Divider />
-                <PhotosCollection photos={photos} profile={profile} />
+                <PhotosCollection photos={photos} profile={profile} handleDeletePhoto={handleDeletePhoto} />
             </Segment>
         </Fragment>
     )
