@@ -3,7 +3,6 @@ import { Button, Container, Menu, Dropdown, Image } from 'semantic-ui-react'
 import { NavLink, Link } from 'react-router-dom';
 
 const AuthMenu = ({singOut, profile}) => {
-    console.log(profile.photoURL);
     return (
     <Menu segment={ true ? 1 : 0} fixed="top" className="masthead">
         <Container>

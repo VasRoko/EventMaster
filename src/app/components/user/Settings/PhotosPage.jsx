@@ -1,21 +1,38 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Segment, Header, Grid, Divider, Card, Image, Button } from 'semantic-ui-react';
+import { compose } from 'redux';
+import { firestoreConnect } from 'react-redux-firebase';
+import { Segment, Header, Grid, Divider, Button } from 'semantic-ui-react';
 import { uploadAvatar } from '../../../actions/userActions';
 import DropzoneInput from './dropzone/DropzoneInput';
 import CropperInput from './cropper/cropperInput';
 import { successNotification, errorNotification } from '../../../common/notifications/notification';
 import LoadingComponent from '../../../components/loading/LoadingComponent';
+import PhotosCollection from './PhotosCollection';
 
 const actions = {
     uploadAvatar: uploadAvatar
 }
 
 const mapState = (state) => ({
-    loading: state.async.loading
+    auth: state.firebase.auth,
+    profile: state.firebase.profile,
+    loading: state.async.loading,
+    photos: state.firestore.ordered.photos
 });
 
-const PhotosPage = ({ uploadAvatar, loading }) => {
+const queryFirebase = ({ auth }) => {
+    return [
+        { 
+            collection: 'users',
+            doc: auth.uid,
+            subcollections: [{ collection: 'photos' }],
+            storeAs: 'photos'
+        }
+    ]
+} 
+
+const PhotosPage = ({ uploadAvatar, loading, photos, profile }) => {
     const [ files, setFiles] = useState([]);
     const [ image, setImage] = useState(null);
 
@@ -27,7 +44,6 @@ const PhotosPage = ({ uploadAvatar, loading }) => {
 
     const handleAvatarUpload = async () => {
         try {
-            console.log(image, files[0].name)
             await uploadAvatar(image, files[0].name);
             successNotification('Success!', 'New photo has been uploaded.');
         } catch (e) {
@@ -74,27 +90,15 @@ const PhotosPage = ({ uploadAvatar, loading }) => {
                             </Fragment> )}
                         </Grid.Column>
                     </Grid.Row>
-                
                 </Grid>
                 <Divider />
-                <Header sub color="teal" content="All Photos" />
-                <Divider />
-                <Card.Group itemsPerRow={5}>
-                    <Card>
-                        <Image src="https://randomuser.me/api/portraits/men/20.jpg" />
-                        <Button positive>Main Photo</Button>
-                    </Card>
-                    <Card>
-                        <Image src="https://randomuser.me/api/portraits/men/20.jpg" />
-                        <div className="ui two buttons"> 
-                            <Button basic color="green">Main </Button>
-                            <Button basic color="red" icon="trash" />
-                        </div>
-                    </Card>
-                </Card.Group>
+                <PhotosCollection photos={photos} profile={profile} />
             </Segment>
         </Fragment>
     )
 }
 
-export default connect(mapState, actions)(PhotosPage);
+export default compose(
+    connect(mapState, actions),
+    firestoreConnect(auth => queryFirebase(auth))
+)(PhotosPage);
