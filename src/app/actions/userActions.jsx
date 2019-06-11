@@ -93,3 +93,17 @@ export const deletePhoto = (photo) =>
             })
         }
     }
+
+export const setMainPhoto = photo => 
+    async(dispatch, getState, {getFirebase}) => {
+        const firebase = getFirebase();
+        try {
+            return await firebase.updateProfile({
+                photoURL: photo.url
+            });
+        } catch (e) {
+            throw new Error({
+                _error: e.message
+            })
+        }
+    }

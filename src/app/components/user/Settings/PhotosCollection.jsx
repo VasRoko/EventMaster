@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Header, Divider, Card, Image, Button} from 'semantic-ui-react';
 
-const PhotosCollection = ({ photos, profile, handleDeletePhoto }) => {
+const PhotosCollection = ({ photos, profile, handleDeletePhoto, handleSetMainPhoto }) => {
     return (
         <Fragment>
             <Header sub color="teal" content="All Photos" />
@@ -16,10 +16,10 @@ const PhotosCollection = ({ photos, profile, handleDeletePhoto }) => {
                 }).map(photo => 
                     <Card key={photo.id}>
                         <Image src={photo.url} />
-                        <div className="ui two buttons"> 
-                            <Button basic color="green">Main </Button>
-                            <Button onClick={() => handleDeletePhoto(photo)} basic color="red" icon="trash" />
-                        </div>
+                        <Button.Group floated='left'>
+                            <Button onClick={() => handleSetMainPhoto(photo)} inverted color='green' >Main </Button>
+                            <Button onClick={() => handleDeletePhoto(photo)} inverted color='red' icon="trash" />
+                        </Button.Group>
                     </Card>
                 )}
             </Card.Group>

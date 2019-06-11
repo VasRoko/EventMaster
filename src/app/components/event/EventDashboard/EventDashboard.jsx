@@ -12,6 +12,7 @@ const mapStateToProps = (state) => ({
   loading: state.async.loading
 })
 
+
 const actions ={
   deleteEvent
 }
@@ -31,9 +32,11 @@ class EventDashboard extends Component {
 
   render() {
     const {events, loading} = this.props;
+
     if (loading) {
       return <LoadingComponent />
     } 
+
     return (
       <Grid>
           <Grid.Column width={6}>

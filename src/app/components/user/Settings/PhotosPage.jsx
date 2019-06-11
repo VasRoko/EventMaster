@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { Segment, Header, Grid, Divider, Button } from 'semantic-ui-react';
-import { uploadAvatar, deletePhoto } from '../../../actions/userActions';
+import { uploadAvatar, deletePhoto, setMainPhoto } from '../../../actions/userActions';
 import DropzoneInput from './dropzone/DropzoneInput';
 import CropperInput from './cropper/cropperInput';
 import { successNotification, errorNotification } from '../../../common/notifications/notification';
@@ -12,6 +12,7 @@ import PhotosCollection from './PhotosCollection';
 
 const actions = {
     uploadAvatar: uploadAvatar,
+    setMainPhoto: setMainPhoto,
     deletePhoto: deletePhoto
 }
 
@@ -33,7 +34,7 @@ const queryFirebase = ({ auth }) => {
     ]
 } 
 
-const PhotosPage = ({ uploadAvatar, loading, photos, profile, deletePhoto }) => {
+const PhotosPage = ({ uploadAvatar, loading, photos, profile, deletePhoto, setMainPhoto }) => {
     const [ files, setFiles] = useState([]);
     const [ image, setImage] = useState(null);
 
@@ -62,6 +63,16 @@ const PhotosPage = ({ uploadAvatar, loading, photos, profile, deletePhoto }) => 
         try {
             await deletePhoto(photo)
         } catch (e) {
+            errorNotification();
+        }
+    }
+
+    const handleSetMainPhoto = async (photo) => {
+        try {
+            await setMainPhoto(photo);
+            successNotification('Success!', 'New main photo has been changed!');
+        } catch (e) {
+            console.log(e.message);
             errorNotification();
         }
     }
@@ -99,7 +110,7 @@ const PhotosPage = ({ uploadAvatar, loading, photos, profile, deletePhoto }) => 
                     </Grid.Row>
                 </Grid>
                 <Divider />
-                <PhotosCollection photos={photos} profile={profile} handleDeletePhoto={handleDeletePhoto} />
+                <PhotosCollection photos={photos} profile={profile} handleSetMainPhoto={handleSetMainPhoto} handleDeletePhoto={handleDeletePhoto} />
             </Segment>
         </Fragment>
     )
