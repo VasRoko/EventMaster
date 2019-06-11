@@ -8,7 +8,7 @@ import HomePage from '../components/home/HomePage';
 import EventDashboard from '../components/event/EventDashboard/EventDashboard';
 import EventDetailedPage from '../components/event/EventDetailed/EventDetailed';
 import PeopleDashboard from '../components/user/PeopleDashboard/PeopleDashboard';
-import UserDetailedPage from '../components/user/UserDetailed/UserDetailedPage';
+import UserProfilePage from '../components/user/UserProfile/UserProfilePage';
 import SettingsDashboard from '../components/user/Settings/SettingsDashboard';
 import EventForm from '../components/event/EventForm/EventForm';
 import ModelManager from '../modals/ModalManager';
@@ -41,7 +41,7 @@ class App extends Component {
                   <Route path='/event/:id' component={EventDetailedPage} />
                   <Route path='/manage/:id' component={EventForm} />
                   <Route path='/people' component={PeopleDashboard} />
-                  <Route path='/profile/:id' component={UserDetailedPage} />
+                  <Route path='/profile/:id' component={UserProfilePage} />
                   <Route path='/settings' component={SettingsDashboard} />
                   <Route path='/createEvent' component={EventForm} />
                 </Switch>

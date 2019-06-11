@@ -36,7 +36,7 @@ class NavBar extends Component {
         const authenticated = auth.isLoaded && !auth.isEmpty;
         return (
             <div>        
-                { authenticated ?  <AuthMenu profile={profile} singOut={this.handleSignOut} />  :  <UnAuthMenu singIn={this.handleSignIn} register={this.handleRegister} fixed={fixed} /> }
+                { authenticated ?  <AuthMenu auth={auth} profile={profile} singOut={this.handleSignOut} />  :  <UnAuthMenu singIn={this.handleSignIn} register={this.handleRegister} fixed={fixed} /> }
             </div>
         )
     }

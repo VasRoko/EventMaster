@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Container, Menu, Dropdown, Image } from 'semantic-ui-react'
 import { NavLink, Link } from 'react-router-dom';
 
-const AuthMenu = ({singOut, profile}) => {
+const AuthMenu = ({ auth, profile, singOut }) => {
     return (
     <Menu segment={ true ? 1 : 0} fixed="top" className="masthead">
         <Container>
@@ -22,7 +22,7 @@ const AuthMenu = ({singOut, profile}) => {
                         <Dropdown.Item as={Link} to='createEvent' text="Create Event" icon="plus"></Dropdown.Item>
                         <Dropdown.Item text="My Events" icon="calendar"></Dropdown.Item>
                         <Dropdown.Item text="My Network" icon="users"></Dropdown.Item>
-                        <Dropdown.Item text="My Profile" icon="user"></Dropdown.Item>
+                        <Dropdown.Item as={ Link } to={`/profile/${auth.uid}`} text="My Profile" icon="user"></Dropdown.Item>
                         <Dropdown.Item as={ Link } to='/settings' text="Settings" icon="settings"></Dropdown.Item>
                         <Dropdown.Item onClick={singOut} text="Sign out" icon="power"></Dropdown.Item>
                     </Dropdown.Menu>

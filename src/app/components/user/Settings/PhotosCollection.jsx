@@ -8,7 +8,7 @@ const PhotosCollection = ({ photos, profile, handleDeletePhoto, handleSetMainPho
             <Divider /> 
             <Card.Group itemsPerRow={5}>
                 <Card>
-                    <Image src={profile.photoURL } />
+                    <Image src={profile.photoURL || '/assets/img/user.png' } />
                     <Button positive>Main Photo</Button>
                 </Card>
                 { photos && photos.filter(photo => {

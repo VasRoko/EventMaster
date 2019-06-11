@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
-import { Segment, Header, Grid, Divider, Button } from 'semantic-ui-react';
+import { Segment, Header, Grid, Button } from 'semantic-ui-react';
 import { uploadAvatar, deletePhoto, setMainPhoto } from '../../../actions/userActions';
 import DropzoneInput from './dropzone/DropzoneInput';
 import CropperInput from './cropper/cropperInput';
@@ -85,19 +85,19 @@ const PhotosPage = ({ uploadAvatar, loading, photos, profile, deletePhoto, setMa
                 <Grid>
                     <Grid.Row  style={{ textAlign: 'center' }}>
                         <Grid.Column width={4}>
-                            <Header color="teal" sub content="Step 1 - Add Photo"  style={{ margin: '10px' }}/>
+                            <Header color="teal" sub content="Add Photo"  style={{ margin: '10px' }}/>
                             <DropzoneInput setFiles={setFiles}/>
                         </Grid.Column>
                         <Grid.Column width={1} />
                         <Grid.Column width={4}>
-                            <Header color="teal" sub content="Step 2 - Resize Image" style={{ margin: '10px' }} />
+                            <Header color="teal" sub content="Resize Image" style={{ margin: '10px' }} />
                             { files.length > 0 && 
                                 <CropperInput setImage={setImage} imagePreview={files[0].preview}  />                            
                             }
                         </Grid.Column>
                         <Grid.Column width={1} />
                         <Grid.Column width={4} className="img-test">
-                            <Header color="teal" sub content="Step 3 - Preview and Upload" style={{ margin: '10px' }} />
+                            <Header color="teal" sub content="Preview & Upload" style={{ margin: '10px' }} />
                             { files.length > 0 && (
                             <Fragment>
                                     <div className="img-preview" style={{ minHeight: '200px', minWidth: '200px', overflow: 'hidden' }} />
@@ -109,7 +109,6 @@ const PhotosPage = ({ uploadAvatar, loading, photos, profile, deletePhoto, setMa
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
-                <Divider />
                 <PhotosCollection photos={photos} profile={profile} handleSetMainPhoto={handleSetMainPhoto} handleDeletePhoto={handleDeletePhoto} />
             </Segment>
         </Fragment>
