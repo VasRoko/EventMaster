@@ -1,17 +1,16 @@
-/* global google */
+/*global google*/
 
 import React, { Component } from 'react'
 import { Segment, Form, Button, Grid, Header, Divider } from 'semantic-ui-react';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
-import moment from 'moment';
-import cuid from 'cuid';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import { createEvent, updateEvent } from '../../../actions/eventActions';
 import { renderDateInput, renderTextInput, renderSelectInput, renderTextArea  } from '../../../common/form/formComponents';
 import PlaceInput from '../../../common/form/PlaceInput';
 
 import { composeValidators, combineValidators, isRequired, hasLengthGreaterThan  } from 'revalidate';
+import { errorNotification, successNotification } from '../../../common/notifications/notification';
 
 const mapState = (state, ownProps) => {
     const eventId = ownProps.match.params.id;
@@ -87,29 +86,23 @@ class EventForm extends Component {
         })
     }
 
-    onFormSubmit = (evtVal) => {
-        evtVal.date = moment(evtVal.date).format();
-        evtVal.venueLatLng = this.state.venueLatLng;
-
-        if (this.props.initialValues.id){
-            this.props.updateEvent(evtVal);
-            this.props.history.goBack();
-        } else {
-            const newEvent = {
-                ...evtVal,
-                id: cuid(),
-                hostPhotoURL: '/assets/img/user.png'
-            } 
-            this.props.createEvent(newEvent);
-            this.props.history.push('/events');
+    onFormSubmit = async (vales) => {
+        vales.venueLatLng = this.state.venueLatLng;
+        try {
+            if (this.props.initialValues.id){
+                this.props.updateEvent(vales);
+                this.props.history.goBack();
+            } else {
+                let createdEvent = await this.props.createEvent(vales);
+                this.props.history.push(`/events/${createdEvent.id}`);
+            }
+            successNotification('Success!', 'You have created a new event!');
+        } catch(e) {
+            console.log(e);
+            errorNotification();
         }
     }
 
-    
-    handleScriptLoaded = () => this.setState({
-        scriptLoaded: true
-    })
-    
     handleCancel = () => {
         this.props.history.push('/events');
     }
@@ -129,33 +122,31 @@ class EventForm extends Component {
                         <Field name='description' type='text' rows={4} component={renderTextArea} placeholder='Event Description' />
                         <Header sub color='teal' content='Event Location Details' /> 
                         <Divider />
-                        <Field 
+                            <Field 
                             name='city' type='text' 
                             component={PlaceInput} 
                             onSelect={this.handleCitySelect} 
                             options={{type: ['(cities)']}} 
                             placeholder='Event City' />
-                        {this.state.scriptLoaded &&
-                        <Field 
-                            name='venue' 
-                            type='text' 
-                            component={PlaceInput} 
-                            options={{
-                                location: new google.maps.LatLng(this.state.cityLatLng),
-                                radius: 1000,
-                                type: ['establishment']
-                            }} 
-                            onSelect={this.handleVenueSelect}
-                            placeholder='Event Venue' />}
-                        <Field name='date' 
-                            type='text' 
-                            component={renderDateInput} 
-                            showTimeSelect
-                            timeFormat="HH:mm"
-                            timeIntervals={15}
-                            dateFormat="MMMM d, yyyy h:mm aa"
-                            timeCaption="time"
-                            placeholder='Date and Time of Event' />
+                            <Field 
+                                name='venue' 
+                                type='text' 
+                                component={PlaceInput} 
+                                options={{
+                                    location: new google.maps.LatLng(this.state.cityLatLng),
+                                    radius: 1000,
+                                    type: ['establishment']
+                                }} 
+                                onSelect={this.handleVenueSelect}
+                                placeholder='Event Venue' />
+                            <Field 
+                                name='date'
+                                component={renderDateInput}
+                                dateFormat='dd LLL yyyy h:mm a'
+                                placeholder='Date and Time of Event'
+                                showTimeSelect
+                                timeFormat='HH:mm'                           
+                            />
                         <Button positive disabled={ invalid || submitting || pristine } type="submit">Submit</Button>
                         <Button type="button" onClick={this.handleCancel}>Cancel</Button>
                     </Form>

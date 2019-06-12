@@ -22,6 +22,7 @@ class PlaceInput extends Component {
 
   render() {
     const {input, width, onSelect, placeholder, options, meta: { touched, error}} = this.props;
+    console.log(window)
     return (
         <Form.Field error={ touched && !!error } width={width}>
             <Script

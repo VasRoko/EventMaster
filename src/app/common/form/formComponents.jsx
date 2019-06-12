@@ -41,8 +41,7 @@ export const renderDateInput = ({ input: { value, onChange, onBlur }, width, pla
               placeholderText={placeholder}
               selected={
               value ? 
-                (Object.prototype.toString.call(value)) !== '[object Date]' ? value.toDate() : value 
-              : null }
+                (Object.prototype.toString.call(value)) !== '[object Date]' ? value.toDate() : value : null }
               onChange={onChange}
               onBlur={(event, value) => onBlur(value)}
               onChangeRaw={(event) => event.preventDefault()}
