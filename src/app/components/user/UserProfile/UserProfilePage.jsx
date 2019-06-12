@@ -30,7 +30,14 @@ const queryFirebase = ({ auth }) => {
 class UserProfilePage extends Component {
     render() {
         const { photos, user } = this.props;
-        
+        let filteredPhotos;
+
+        if (photos) {
+            filteredPhotos = photos.filter( photo => {
+                return photo.url !== user.photoURL
+            })
+        }
+
         return (
             <Grid>
                 <Grid.Column width={16}>
@@ -44,10 +51,13 @@ class UserProfilePage extends Component {
                         <Button as={ Link } to="/settings/basic" icon="edit" positive fluid content="Edit Profile" />
                     </Segment>
                 </Grid.Column>
-                <Grid.Column width={12}>
                     {
-                        photos && <UserProfilePhotos photos={photos} />
+                        filteredPhotos && filteredPhotos.length > 0 && 
+                        <Grid.Column width={12}>
+                            <UserProfilePhotos photos={filteredPhotos} />
+                        </Grid.Column>
                     }
+                <Grid.Column width={12}>
                     <UserProfileEvents />
                 </Grid.Column>
             </Grid>

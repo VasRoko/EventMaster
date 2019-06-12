@@ -9,7 +9,7 @@ const UserProfileHeader = ({ user }) => {
             <Item>
                 <Item.Image size='small' rounded src={ user.photoURL || '/assets/img/user.png'} />
                 <Item.Content>
-                    <Item.Header as='a'>{ user.displayName || 'Unknown Name' }</Item.Header>
+                    <Item.Header as='a'>{ user.displayName || 'Unknown' }</Item.Header>
                     {/* <Item.Meta>About Me</Item.Meta> */}
                     <Divider/>
                     <Item.Description>
@@ -17,8 +17,8 @@ const UserProfileHeader = ({ user }) => {
                         <p><strong>Age: </strong>{ user.city ? differenceInYears(
                             new Date(),
                             new Date(user.dob.toDate())
-                        )  : 'Unknown age' }</p>
-                        <p><strong>Lives In: </strong>{ user.city || 'Unknown City' }</p>
+                        )  : 'Unknown' }</p>
+                        <p><strong>Lives In: </strong>{ user.city || 'Unknown' }</p>
 
                     </Item.Description>
                 </Item.Content>
