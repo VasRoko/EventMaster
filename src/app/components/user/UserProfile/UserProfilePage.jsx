@@ -1,24 +1,51 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { differenceInYears, format } from 'date-fns';
+import { compose } from 'redux';
+import { firestoreConnect } from 'react-redux-firebase';
 import { Grid, Image, Segment, Item, Divider, Button, Header, Icon, List, Menu, Card } from 'semantic-ui-react';
+
+
+const mapStateToProps = (state) => ({
+    auth: state.firebase.auth,
+    user: state.firebase.profile,
+    photos: state.firestore.ordered.photos
+})
+  
+const queryFirebase = ({ auth }) => {
+    return [
+        { 
+            collection: 'users',
+            doc: auth.uid,
+            subcollections: [{ collection: 'photos' }],
+            storeAs: 'photos'
+        }
+    ]
+} 
 
 class UserProfilePage extends Component {
     render() {
+        const { photos, user } = this.props;
+        console.log(user)
         return (
             <Grid>
                 <Grid.Column width={16}>
                     <Segment attached>
                         <Item.Group>
                         <Item>
-                            <Item.Image size='small' rounded src='/assets/img/user.png' />
-
+                            <Item.Image size='small' rounded src={ user.photoURL || '/assets/img/user.png'} />
                             <Item.Content>
-                                <Item.Header as='a'>First Name</Item.Header>
+                                <Item.Header as='a'>{ user.displayName || 'Unknown Name' }</Item.Header>
                                 {/* <Item.Meta>About Me</Item.Meta> */}
                                 <Divider/>
                                 <Item.Description>
-                                    <p>Occupation: </p>
-                                    <p>Age: </p>
-                                    <p>Lives In: </p>
+                                    <p><strong>Occupation: </strong> { user.occupation || 'Unknown' }</p>
+                                    <p><strong>Age: </strong>{ user.city ? differenceInYears(
+                                        new Date(),
+                                        new Date(user.dob.toDate())
+                                    )  : 'Unknown age' }</p>
+                                    <p><strong>Lives In: </strong>{ user.city || 'Unknown City' }</p>
 
                                 </Item.Description>
                             </Item.Content>
@@ -30,21 +57,26 @@ class UserProfilePage extends Component {
                     <Segment attached>
                         <Grid columns={2}>
                             <Grid.Column width={10}>
-                                <Header icon="user circle" content="About  Display Name" />
+                                <Header icon="user circle" content={`About ${user.displayName}`} />
                                 <Divider />
-                                <p>I am a: <strong>placeholder</strong></p>
-                                <p>Originally from: <strong>placeholder</strong></p>
-                                <p>Member Since: <strong>placeholder</strong></p>
-                                <p>Description: <strong>placeholder</strong></p>
+                                <p>I am a: <strong> { user.gender || 'Unknown' } </strong></p>
+                                <p>Originally from: <strong>{ user.origin || 'Unknown' }</strong></p>
+                                <p>Member Since: <strong> { user.createdAt ? format(user.createdAt.toDate().toString(), 'MMM YYYY') : 'Unknown' } </strong></p>
+                                <p>Description: <strong>{ user.about &&  user.about }</strong></p>
                             </Grid.Column>
                             <Grid.Column width={6}>
                                 <Header icon="info circle" content="Interests" />
                                 <Divider />
                                 <List>
-                                    <Item>
-                                        <Icon name="book" />
-                                        <Item.Content>Test</Item.Content>
-                                    </Item>
+                                    {
+                                        user.interests ? user.interests.map((val, index ) => 
+                                            <Item key={index}>
+                                                <Icon name="caret right" />
+                                                <Item.Content>{val.toUpperCase()}</Item.Content>
+                                                <Divider />
+                                            </Item>                                        
+                                        ) : "No interests"
+                                    }
                                 </List>
                             </Grid.Column>
                         </Grid>
@@ -52,21 +84,22 @@ class UserProfilePage extends Component {
                 </Grid.Column>
                 <Grid.Column width={4}>
                     <Segment attached>
-                        <Button icon="edit" positive fluid content="Edit Profile" />
+                        <Button as={ Link } to="/settings/basic" icon="edit" positive fluid content="Edit Profile" />
                     </Segment>
                 </Grid.Column>
-                <Grid.Column width={12}>
-                    <Segment attached>
-                        <Header icon="image" content="Photos"/>
-                        <Image.Group size="small">
-                            <Image src="https://randomuser.me/api/portraits/men/20.jpg" />
-                            <Image src="https://randomuser.me/api/portraits/men/22.jpg" />
-                            <Image src="https://randomuser.me/api/portraits/men/23.jpg" />
-                            <Image src="https://randomuser.me/api/portraits/men/24.jpg" />
-                            <Image src="https://randomuser.me/api/portraits/men/24.jpg" />
-                        </Image.Group>
-                    </Segment>
-                </Grid.Column>
+                {
+                    photos && <Grid.Column width={12}>
+                        <Segment attached>
+                            <Header icon="image" content="Photos"/>
+                            <Image.Group size="small">
+                                { photos.map(photo =>
+                                    <Image key={photo.id} src={photo.url} />
+                                )}
+                            </Image.Group>
+                        </Segment>
+                    </Grid.Column> 
+                }
+
                 <Grid.Column width={12}>
                     <Segment attached>
                         <Header icon="calendar alternate outline" content="Events"/>
@@ -97,4 +130,7 @@ class UserProfilePage extends Component {
     }
 }
 
-export default UserProfilePage;
+export default compose(
+    connect(mapStateToProps),
+    firestoreConnect(auth => queryFirebase(auth))
+)(UserProfilePage);
