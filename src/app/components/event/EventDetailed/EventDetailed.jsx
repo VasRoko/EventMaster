@@ -11,10 +11,10 @@ const mapState = (state, ownProps) => {
     const eventId = ownProps.match.params.id;
     let event = {};
 
-    if(eventId && state.events.length > 0) {
-        event = state.events.find( event => event.id === eventId);
+    if (state.firestore.ordered.events && state.firestore.ordered.events.length > 0) {
+        event = state.firestore.ordered.events.filter(event => event.id === eventId)[0];
     }
-
+    
     return {
         event
     }
@@ -30,6 +30,7 @@ class EventDetailed extends Component  {
     }
     render() {
         const {event} = this.props;
+        console.log(event)
         return (
             <Grid>
                 <Grid.Column width={10}>

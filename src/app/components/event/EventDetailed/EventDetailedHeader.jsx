@@ -30,8 +30,8 @@ const EventDetailedHeader = ({event}) => {
                                     content={event.title}
                                     style={{ color: 'white'}}
                                 />
-                                <p>{ format(event.date, 'dddd Do MMMM')}</p>
-                                <p>Hosted by<strong>{ event.hostedBy }</strong></p>
+                                <p>{ format(event.date.toDate(), 'dddd Do MMMM')}</p>
+                                <p>Hosted by <strong>{ event.hostedBy }</strong></p>
                             </Item.Content>
                         </Item>
                     </Item.Group>
