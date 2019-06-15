@@ -61,9 +61,6 @@ class EventForm extends Component {
     }
 
     handleCitySelect = (selectedCity) => {
-        this.setState({
-            scriptLoaded: true
-        })
         geocodeByAddress(selectedCity)
         .then(results => getLatLng(results[0]))
         .then(latlng => {
@@ -101,7 +98,7 @@ class EventForm extends Component {
             }
             successNotification('Success!', 'You have created a new event!');
         } catch(e) {
-            console.log(e);
+            console.log(e.message);
             errorNotification();
         }
     }
@@ -111,9 +108,9 @@ class EventForm extends Component {
     }
 
   render() {
-    const { invalid, scriptLoaded, submitting, pristine} = this.props;
+    const { invalid, submitting, pristine} = this.props;
+    
     return (
-        <div>
         <Grid>
             <Grid.Column width={10}>
                 <Segment>
@@ -131,8 +128,17 @@ class EventForm extends Component {
                             onSelect={this.handleCitySelect} 
                             options={{type: ['(cities)']}} 
                             placeholder='Event City' />
-
-                            { scriptLoaded ? console.log(scriptLoaded) : null }
+                            <Field 
+                                name='venue' 
+                                type='text' 
+                                component={PlaceInput} 
+                                options={{
+                                    location: new google.maps.LatLng(this.state.cityLatLng),
+                                    radius: 1000,
+                                    type: ['establishment']
+                                }} 
+                                onSelect={this.handleVenueSelect}
+                                placeholder='Event Venue' />
                             <Field 
                                 name='date'
                                 component={renderDateInput}
@@ -147,7 +153,6 @@ class EventForm extends Component {
                 </Segment>
             </Grid.Column>
         </Grid>
-        </div>
     )
   }
 }
