@@ -40,7 +40,7 @@ class EventDetailedInfo extends Component {
                     <Icon name="calendar alternate outline" size="large" color="teal" />
                 </Grid.Column>
                 <Grid.Column width={15}>
-                    <span>{ format(event.date.toDate(), 'dddd Do MMMM')} at { format(event.date, 'h:mm A')}</span>
+                    <span>{ format(event.date.toDate(), 'dddd Do MMMM')} at { format(event.date.toDate(), 'h:mm A')}</span>
                 </Grid.Column>
             </Grid>
         </Segment>
@@ -53,7 +53,7 @@ class EventDetailedInfo extends Component {
                     <span>{ event.venue }</span>
                 </Grid.Column>
                 <Grid.Column width={4} >
-                    <Button color='teal' onClick={this.mapToggle}> { this.state.showMap ? "Close map" : "Show map"}</Button>
+                    <Button color='teal' onClick={this.mapToggle}> { this.state.showMap ? "Hide map" : "Show map"}</Button>
                 </Grid.Column>
             </Grid>
         </Segment>

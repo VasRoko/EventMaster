@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, withRouter  } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 import ReduxToastr from 'react-redux-toastr'
 
@@ -12,41 +12,42 @@ import UserProfilePage from '../components/user/UserProfile/UserProfilePage';
 import SettingsDashboard from '../components/user/Settings/SettingsDashboard';
 import EventForm from '../components/event/EventForm/EventForm';
 import ModelManager from '../modals/ModalManager';
+import PageNotFound from '../components/pagenotfound/PageNotFound'
 
 class App extends Component {
 
   render() {
     return (
       <div>
-        <ModelManager />
-        <ReduxToastr
-                timeOut={4000}
-                newestOnTop={false}
-                preventDuplicates
-                position="bottom-right"
-                transitionIn="fadeIn"
-                transitionOut="fadeOut"
-                
-                closeOnToastrClick/>
         <Switch>
-          <Route path='/' component={HomePage} exact={true}/>
+          <Route path='/' component={HomePage} exact />
         </Switch>
         <Route path='/(.+)' render={() => (
-          <div>
-            <NavBar />
-            <Container className="main" >
+          <Container className="main">
+              <div>
+                <NavBar />
+                <ModelManager />
+                <ReduxToastr
+                        timeOut={4000}
+                        newestOnTop={false}
+                        preventDuplicates
+                        position="bottom-right"
+                        transitionIn="fadeIn"
+                        transitionOut="fadeOut"
+                        closeOnToastrClick/>
                 <Switch>
-                  <Route path='/' component={HomePage} exact={true}/>
-                  <Route path='/events' component={EventDashboard} />
+                  <Route path='/' component={HomePage} exact />
+                  <Route path='/events' component={EventDashboard} exact />
                   <Route path='/events/:id' component={EventDetailedPage} />
                   <Route path='/manage/:id' component={EventForm} />
                   <Route path='/people' component={PeopleDashboard} />
                   <Route path='/profile/:id' component={UserProfilePage} />
                   <Route path='/settings' component={SettingsDashboard} />
                   <Route path='/createEvent' component={EventForm} />
+                  <Route component={PageNotFound} />
                 </Switch>
-            </Container>
-          </div>
+              </div>
+          </Container>
         )}/>
       </div>
     );

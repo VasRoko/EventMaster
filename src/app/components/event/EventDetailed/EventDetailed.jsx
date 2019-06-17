@@ -6,6 +6,7 @@ import EventDetailedInfo from './EventDetailedInfo';
 import EventDetailedChat from './EventDetailedChat';
 import EventDetailedSidebar from './EventDetailedSidebar';
 import { withFirestore } from 'react-redux-firebase';
+import { errorNotification } from '../../../common/notifications/notification';
 
 const mapState = (state, ownProps) => {
     const eventId = ownProps.match.params.id;
@@ -22,15 +23,20 @@ const mapState = (state, ownProps) => {
 
 class EventDetailed extends Component  {
     async componentDidMount() {
-        const { firestore, match, history  }  = this.props;
-        let event = await firestore.get(`events/${match.params.id}`);
-        if (!event.exists) {
-            history.push('/events');
+        const {firestore, match, history  }  = this.props;
+        let storeEvent = await firestore.get(`events/${match.params.id}`);
+
+        if (storeEvent.exists !== true ) {
+            history.push('/events/');
+            errorNotification();
         }
-    }
+}
     render() {
         const {event} = this.props;
-        console.log(event)
+        const attendees = Object.entries(event.attendees).map(attendee => 
+            Object.assign({}, attendee[1], {id: attendee[0]})
+        );
+
         return (
             <Grid>
                 <Grid.Column width={10}>
@@ -39,7 +45,7 @@ class EventDetailed extends Component  {
                     <EventDetailedChat />
                 </Grid.Column>
                 <Grid.Column width={6}>
-                    <EventDetailedSidebar attendees={event.attendees} />
+                    <EventDetailedSidebar attendees={attendees} />
                 </Grid.Column>
             </Grid>
         )

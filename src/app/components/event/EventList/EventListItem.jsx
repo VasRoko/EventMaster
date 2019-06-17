@@ -15,7 +15,7 @@ class EventListItem extends Component {
                 <Item.Image as="a" size='tiny' circular src={event.hostPhotoURL} />
                 <Item.Content>
                   <br/>
-                  <Item.Header as={Link} to={`/event/${event.id}`}>{event.title}</Item.Header>
+                  <Item.Header as={Link} to={`/events/${event.id}`}>{event.title}</Item.Header>
                   <Item.Meta>
                       Hosted by <Link to="#">{event.hostedBy}</Link>
                   </Item.Meta>
@@ -32,15 +32,15 @@ class EventListItem extends Component {
         <Segment secondary>
           <List horizontal>
             {event.attendees && Object.values(event.attendees).map((attendee, index) => (
-                <EventListAttendee key={index} attendee={attendee}/>
-              ))}
+              <EventListAttendee key={index} attendee={attendee}/>
+            ))}
           </List>
         </Segment>
         <Segment>
           <span>{event.description}</span>
         </Segment>
         <Segment clearing>
-          <Button as={Link} to={`/events/${event.id}`} color="blue" floated="right" content="View" />
+          <Button as={ Link } to={`/events/${event.id}`} color="blue" floated="right" content="View" />
           <Button as="a" color="red" floated="right" onClick={deleteEvent(event.id)} content="Delete" />
         </Segment>
     </Segment.Group> 
