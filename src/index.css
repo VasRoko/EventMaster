@@ -66,6 +66,7 @@ code {
   display: 'cover' !important; 
 }
 
-.img-test {
+.evenImage image {
+  object-fit: cover !important;
 
 }

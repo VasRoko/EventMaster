@@ -39,10 +39,10 @@ class EventDashboard extends Component {
 
     return (
       <Grid>
-          <Grid.Column width={6}>
+          <Grid.Column width={3}>
             <EventActivity />
           </Grid.Column>
-          <Grid.Column width={10}>
+          <Grid.Column width={13}>
             <EventList events={events} deleteEvent={this.handleDeleteEvent}/>
           </Grid.Column>
       </Grid>
