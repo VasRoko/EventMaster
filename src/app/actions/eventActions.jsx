@@ -48,6 +48,7 @@ export const eventCancel = (cancelled, eventId) =>
             await firestore.update(`events/${eventId}`, {
                 cancelled: cancelled
             })
+            successNotification('Success!', 'Your have cancelled you event!');
         } catch(e) {
             throw Error({
                 _error: e.message

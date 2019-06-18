@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Header, Image, Dimmer, Grid, Icon, Button, Card } from 'semantic-ui-react';
+import { Header, Label, Image, Dimmer, Grid, Icon, Button, Card } from 'semantic-ui-react';
 import EventListAttendee from './EventListAttendee';
 import { Link } from 'react-router-dom';
 import format from 'date-fns/format';
@@ -8,12 +8,12 @@ class EventListItem extends Component {
   render() {
     const {event} = this.props;
     return (
-      <Card as={Link} to={`/events/${event.id}`}>
+      <Card>
         <Dimmer.Dimmable blurring>
           <Image 
               size='medium' 
               className="evenImage" 
-              label={{ corner: 'left' }}
+              label={{ corner: 'left', color: event.cancelled ? 'red' : 'green',  }}
               src={event.hostPhotoURL || '/assets/img/events.jpg' } />
           <Dimmer active={true} onClickOutside={this.handleHide}>
             <Header size="large" style={{ textAlign: 'center', color: '#fff' }} as={Link} to={`/events/${event.id}`}>{event.title}</Header>
@@ -32,6 +32,9 @@ class EventListItem extends Component {
           </Grid>
         </Card.Content>
         <Card.Content>
+          { event.cancelled && <Label color='red' ribbon>
+              This event has been cancelled 
+            </Label>}
           <Card.Description>
               { event.description.slice(0, 45) + ( event.description.length > 45 ? " ..." : "") }
           </Card.Description>

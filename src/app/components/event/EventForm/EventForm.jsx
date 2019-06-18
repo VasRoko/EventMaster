@@ -5,7 +5,7 @@ import { Segment, Form, Button, Grid, Header, Divider } from 'semantic-ui-react'
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
-import { createEvent, updateEvent } from '../../../actions/eventActions';
+import { createEvent, updateEvent, eventCancel } from '../../../actions/eventActions';
 import { renderDateInput, renderTextInput, renderSelectInput, renderTextArea  } from '../../../common/form/formComponents';
 import PlaceInput from '../../../common/form/PlaceInput';
 
@@ -23,13 +23,15 @@ const mapState = (state, ownProps) => {
     }
 
     return {
-        initialValues: event
+        initialValues: event,
+        event
     }
 }
 
 const actions = {
     createEvent,
-    updateEvent
+    updateEvent,
+    eventCancel
 }
 
 const category = [
@@ -120,8 +122,13 @@ class EventForm extends Component {
         this.props.history.push('/events/');
     }
 
+    handleCancelEvent = async (cancelled, eventId) => {
+        await this.props.eventCancel(cancelled, eventId);
+        this.props.history.push('/events/');
+    }
+
   render() {
-    const { invalid, submitting, pristine} = this.props;
+    const { invalid, submitting, pristine, event } = this.props;
     
     return (
         <Grid>
@@ -163,6 +170,14 @@ class EventForm extends Component {
                         <Button positive disabled={ invalid || submitting || pristine } type="submit">Submit</Button>
                         <Button type="button" onClick={this.handleCancel}>Cancel</Button>
                     </Form>
+                </Segment>
+            </Grid.Column>
+            <Grid.Column width={6}>
+                <Segment style={{ position: 'relative' }}>
+                    <Button 
+                        type="button" 
+                        color={event.cancelled ? 'green' : 'red'} 
+                        onClick={() => this.handleCancelEvent(!event.cancelled, event.id)}>{ event.cancelled ? 'Reactivate' : 'Cancel' } Event</Button>
                 </Segment>
             </Grid.Column>
         </Grid>
