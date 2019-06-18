@@ -9,6 +9,7 @@ import CropperInput from './cropper/cropperInput';
 import { successNotification, errorNotification } from '../../../common/notifications/notification';
 import LoadingComponent from '../../../components/loading/LoadingComponent';
 import PhotosCollection from './PhotosCollection';
+import { toastr } from 'react-redux-toastr';
 
 const actions = {
     uploadAvatar: uploadAvatar,
@@ -61,7 +62,9 @@ const PhotosPage = ({ uploadAvatar, loading, photos, profile, deletePhoto, setMa
 
     const handleDeletePhoto = async (photo) => {
         try {
-            await deletePhoto(photo)
+            toastr.confirm("Are you sure you want to delete this photo?", {
+                onOk: async () => await deletePhoto(photo)
+            })
         } catch (e) {
             errorNotification();
         }

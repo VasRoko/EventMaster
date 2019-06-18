@@ -12,6 +12,7 @@ import PlaceInput from '../../../common/form/PlaceInput';
 import { composeValidators, combineValidators, isRequired, hasLengthGreaterThan  } from 'revalidate';
 import { errorNotification } from '../../../common/notifications/notification';
 import { withFirestore } from 'react-redux-firebase';
+import { toastr } from 'react-redux-toastr';
 
 const mapState = (state, ownProps) => {
     const eventId = ownProps.match.params.id;
@@ -66,13 +67,7 @@ class EventForm extends Component {
 
     async componentDidMount() {
         const {firestore, match  }  = this.props;
-        let storeEvent = await firestore.get(`events/${match.params.id}`);
-
-        if (storeEvent.exists) {
-            this.setState({
-                venueLatLng: storeEvent.data().venueLatLng
-            })
-        }
+        await firestore.setListener(`events/${match.params.id}`);
     }
 
     handleCitySelect = (selectedCity) => {
@@ -101,15 +96,18 @@ class EventForm extends Component {
         })
     }
 
-    onFormSubmit = async (vales) => {
+    onFormSubmit = async (values) => {
         try {
-            vales.venueLatLng = this.state.venueLatLng;
+            values.venueLatLng = this.state.venueLatLng;
 
             if (this.props.initialValues.id){
-                this.props.updateEvent(vales);
+                if (Object.keys(values.venueLatLng).length === 0) {
+                    values.venueLatLng = this.props.event.venueLatLng;
+                }
+                this.props.updateEvent(values);
                 this.props.history.push('/events/');
             } else {
-                await this.props.createEvent(vales);
+                await this.props.createEvent(values);
                 this.props.history.push('/events/');
             }
         } catch(e) {
@@ -123,8 +121,11 @@ class EventForm extends Component {
     }
 
     handleCancelEvent = async (cancelled, eventId) => {
-        await this.props.eventCancel(cancelled, eventId);
-        this.props.history.push('/events/');
+        const message = cancelled ? "Are you sure you want to cancel this event?" :
+        "This will reactivate the event, are you sure?";
+        toastr.confirm(message, {
+            onOk: async () => await this.props.eventCancel(cancelled, eventId)
+        })
     }
 
   render() {

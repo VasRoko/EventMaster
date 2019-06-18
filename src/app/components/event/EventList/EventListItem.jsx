@@ -1,6 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Header, Label, Image, Dimmer, Grid, Icon, Button, Card } from 'semantic-ui-react';
-import EventListAttendee from './EventListAttendee';
 import { Link } from 'react-router-dom';
 import format from 'date-fns/format';
 
@@ -20,6 +19,12 @@ class EventListItem extends Component {
           </Dimmer>
         </Dimmer.Dimmable>
         <Card.Content>
+        { event.cancelled && 
+          <Fragment>
+            <Label color='red' ribbon>
+              This event has been cancelled
+            </Label><hr />
+          </Fragment> }
           <Grid>
               <Grid.Column width={6}>
                 <Card.Meta>
@@ -32,9 +37,6 @@ class EventListItem extends Component {
           </Grid>
         </Card.Content>
         <Card.Content>
-          { event.cancelled && <Label color='red' ribbon>
-              This event has been cancelled 
-            </Label>}
           <Card.Description>
               { event.description.slice(0, 45) + ( event.description.length > 45 ? " ..." : "") }
           </Card.Description>
@@ -44,7 +46,6 @@ class EventListItem extends Component {
         </Card.Content>
         <Card.Content>
           <Button size="small" as={ Link } to={`/events/${event.id}`} color="blue" floated="right" content="View" />
-          {/* <Button size="small" as="a" color="red" floated="right" onClick={deleteEvent(event.id)} content="Delete" /> */}
         </Card.Content>
       </Card>
     )
