@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, withRouter  } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 import ReduxToastr from 'react-redux-toastr'
 

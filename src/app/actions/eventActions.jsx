@@ -1,9 +1,9 @@
-import { DELETE_EVENT, UPDATE_EVENT } from '../../const';
-import { successNotification, errorNotification } from '../common/notifications/notification';
+import { DELETE_EVENT } from '../../const';
 import { createNewEvent } from '../common/util/helpers';
+import { successNotification } from '../common/notifications/notification';
 
-export const createEvent = (event) => {
-    return async (dispatch, getState, {getFirebase, getFirestore}) => {
+export const createEvent = (event) => 
+    async (dispatch, getState, {getFirebase, getFirestore}) => {
         const firebase = getFirebase();
         const firestore = getFirestore();
         const user = firebase.auth().currentUser;
@@ -19,6 +19,7 @@ export const createEvent = (event) => {
                 eventDate: event.date,
                 host: true,
             }) 
+            successNotification('Success!', 'You have created a new event!');
             return createdEvent;
         
         } catch (e) {
@@ -27,23 +28,19 @@ export const createEvent = (event) => {
             })
         }
     }
-}
 
-export const updateEvent = (event) => {
-    return async dispatch => {
+export const updateEvent = (event) =>
+    async (dispatch, getState, {getFirestore}) => {
+        const firestore = getFirestore();
         try {
-            dispatch({
-                type: UPDATE_EVENT,
-                payload: {
-                    event
-                }
-            });
-            successNotification('Success!', 'Event has been updated');
+            await firestore.update(`events/${event.id}`, event);
+            successNotification('Success!', 'Your event has been updated!');
         } catch (e) {
-            errorNotification();
+            throw new Error({
+                _error: e.message
+            })
         }
     }
-}
 
 export const deleteEvent = (eventId) => {
     return {

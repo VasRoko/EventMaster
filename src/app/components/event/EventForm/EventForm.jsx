@@ -10,16 +10,17 @@ import { renderDateInput, renderTextInput, renderSelectInput, renderTextArea  } 
 import PlaceInput from '../../../common/form/PlaceInput';
 
 import { composeValidators, combineValidators, isRequired, hasLengthGreaterThan  } from 'revalidate';
-import { errorNotification, successNotification } from '../../../common/notifications/notification';
+import { errorNotification } from '../../../common/notifications/notification';
+import { withFirestore } from 'react-redux-firebase';
 
 const mapState = (state, ownProps) => {
     const eventId = ownProps.match.params.id;
 
     let event = {}
 
-    if (eventId && state.events.length > 0) {
-        event = state.events.find(event => event.id === eventId);
-    } 
+    if (state.firestore.ordered.events && state.firestore.ordered.events.length > 0) {
+        event = state.firestore.ordered.events.filter(event => event.id === eventId)[0] || {};
+    }
 
     return {
         initialValues: event
@@ -53,11 +54,23 @@ const validate = combineValidators({
 })
 
 class EventForm extends Component {
+
     state = {
         event: Object.assign({}, this.props.event),
         cityLatLng: {},
-        vanueLatLng: {},
+        venueLatLng: {},
         scriptLoaded: false
+    }
+
+    async componentDidMount() {
+        const {firestore, match  }  = this.props;
+        let storeEvent = await firestore.get(`events/${match.params.id}`);
+
+        if (storeEvent.exists) {
+            this.setState({
+                venueLatLng: storeEvent.data().venueLatLng
+            })
+        }
     }
 
     handleCitySelect = (selectedCity) => {
@@ -87,16 +100,16 @@ class EventForm extends Component {
     }
 
     onFormSubmit = async (vales) => {
-        vales.venueLatLng = this.state.venueLatLng;
         try {
+            vales.venueLatLng = this.state.venueLatLng;
+
             if (this.props.initialValues.id){
                 this.props.updateEvent(vales);
-                this.props.history.goBack();
+                this.props.history.push('/events/');
             } else {
-                let createdEvent = await this.props.createEvent(vales);
-                this.props.history.push(`/events/${createdEvent.id}`);
+                await this.props.createEvent(vales);
+                this.props.history.push('/events/');
             }
-            successNotification('Success!', 'You have created a new event!');
         } catch(e) {
             console.log(e.message);
             errorNotification();
@@ -104,7 +117,7 @@ class EventForm extends Component {
     }
 
     handleCancel = () => {
-        this.props.history.push('/events');
+        this.props.history.push('/events/');
     }
 
   render() {
@@ -157,4 +170,6 @@ class EventForm extends Component {
   }
 }
 
-export default connect(mapState, actions)(reduxForm({form: 'eventForm', enableReinitialize: true, validate})(EventForm));
+export default withFirestore(
+    connect(mapState, actions)(reduxForm({form: 'eventForm', enableReinitialize: true, validate})(EventForm))
+);

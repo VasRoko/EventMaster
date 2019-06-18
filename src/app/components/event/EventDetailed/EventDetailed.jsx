@@ -13,7 +13,7 @@ const mapState = (state, ownProps) => {
     let event = {};
 
     if (state.firestore.ordered.events && state.firestore.ordered.events.length > 0) {
-        event = state.firestore.ordered.events.filter(event => event.id === eventId)[0];
+        event = state.firestore.ordered.events.filter(event => event.id === eventId)[0] || {};
     }
     
     return {
@@ -32,8 +32,8 @@ class EventDetailed extends Component  {
         }
 }
     render() {
-        const {event} = this.props;
-        const attendees = Object.entries(event.attendees).map(attendee => 
+        const { event } = this.props;
+        const attendees = event && event.attendees && Object.entries(event.attendees).map(attendee => 
             Object.assign({}, attendee[1], {id: attendee[0]})
         );
 
