@@ -8,6 +8,11 @@ import EventDetailedSidebar from './EventDetailedSidebar';
 import { withFirestore } from 'react-redux-firebase';
 import { errorNotification } from '../../../common/notifications/notification';
 import { auth } from 'firebase';
+import { goingToEvent } from '../../../actions/userActions';
+
+const actions = {
+    goingToEvent
+}
 
 const mapState = (state, ownProps) => {
     const eventId = ownProps.match.params.id;
@@ -25,16 +30,16 @@ const mapState = (state, ownProps) => {
 
 class EventDetailed extends Component  {
     async componentDidMount() {
-        const {firestore, match, history  }  = this.props;
-        let storeEvent = await firestore.get(`events/${match.params.id}`);
+        const {firestore, match }  = this.props;
+        await firestore.setListener(`events/${match.params.id}`);
+    }
 
-        if (storeEvent.exists !== true ) {
-            history.push('/events/');
-            errorNotification();
-        }
-}
+    async componentWillUnmount() {
+        const {firestore, match }  = this.props;
+        await firestore.unsetListener(`events/${match.params.id}`);
+    }
     render() {
-        const { event, auth } = this.props;
+        const { event, auth, goingToEvent } = this.props;
         const attendees = event && event.attendees && Object.entries(event.attendees).map(attendee => 
             Object.assign({}, attendee[1], {id: attendee[0]})
         );
@@ -43,7 +48,7 @@ class EventDetailed extends Component  {
         return (
             <Grid>
                 <Grid.Column width={10}>
-                    <EventDetailedHeader event={event} isHost={isHost} isGoing={isGoing} /> 
+                    <EventDetailedHeader event={event} isHost={isHost} isGoing={isGoing} goingToEvent={goingToEvent} /> 
                     <EventDetailedInfo event={event} />
                     <EventDetailedChat />
                 </Grid.Column>
@@ -55,4 +60,4 @@ class EventDetailed extends Component  {
     }
 }
 
-export default withFirestore(connect(mapState)(EventDetailed));
+export default withFirestore(connect(mapState, actions)(EventDetailed));

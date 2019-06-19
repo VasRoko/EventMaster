@@ -107,3 +107,37 @@ export const setMainPhoto = photo =>
             })
         }
     }
+
+export const goingToEvent = (event) => 
+    async (dispatch, getState, {getFirebase, getFirestore}) => {
+        const firestore = getFirestore();
+        const firebase = getFirebase();
+        const user = firebase.auth().currentUser;
+        const userProfile = getState().firebase.profile;
+
+        const attendee = {
+            going: true,
+            host: false,
+            joinDate: firestore.FieldValue.serverTimestamp(),
+            photoURL: userProfile.photoURL || '/assets/user.png',
+            displayName: userProfile.displayName,
+        }
+        try {
+            await firestore.update(`events/${event.id}`, {
+                [`attendees.${user.id}`]: attendee
+            });
+            await firestore.set(`event_attendee/${event.id}_${user.uid}`, {
+                eventId: event.id,
+                userUid: user.uid,
+                eventDate: event.date,
+                host: false
+            });
+            successNotification();
+        } catch (e) {
+            errorNotification();
+            throw new Error({
+                _error: e.message
+            })
+        }
+
+    }
