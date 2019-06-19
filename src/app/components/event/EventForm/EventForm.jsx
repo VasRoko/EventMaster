@@ -133,62 +133,62 @@ class EventForm extends Component {
         })
     }
 
-  render() {
-    const { invalid, submitting, pristine, event } = this.props;
-    
-    return (
-        <Grid>
-            <Grid.Column width={10}>
-                <Segment>
-                    <Header sub color='teal' content='Event Details' /> 
-                    <br />
-                    <Form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
-                        <Field name='title' type='text' component={renderTextInput} placeholder='Event Title' />
-                        <Field name='category' type='text' options={category} component={renderSelectInput} placeholder='Event Category' />
-                        <Field name='description' type='text' rows={4} component={renderTextArea} placeholder='Event Description' />
-                        <Header sub color='teal' content='Event Location Details' /> 
-                        <Divider />
-                            <Field 
-                            name='city' type='text' 
-                            component={PlaceInput} 
-                            onSelect={this.handleCitySelect} 
-                            options={{type: ['(cities)']}} 
-                            placeholder='Event City' />
-                            <Field 
-                                name='venue' 
-                                type='text' 
+    render() {
+        const { invalid, submitting, pristine, event } = this.props;
+        
+        return (
+            <Grid>
+                <Grid.Column width={10}>
+                    <Segment>
+                        <Header sub color='teal' content='Event Details' /> 
+                        <br />
+                        <Form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
+                            <Field name='title' type='text' component={renderTextInput} placeholder='Event Title' />
+                            <Field name='category' type='text' options={category} component={renderSelectInput} placeholder='Event Category' />
+                            <Field name='description' type='text' rows={4} component={renderTextArea} placeholder='Event Description' />
+                            <Header sub color='teal' content='Event Location Details' /> 
+                            <Divider />
+                                <Field 
+                                name='city' type='text' 
                                 component={PlaceInput} 
-                                options={{
-                                    location: new google.maps.LatLng(this.state.cityLatLng),
-                                    radius: 1000,
-                                    type: ['establishment']
-                                }} 
-                                onSelect={this.handleVenueSelect}
-                                placeholder='Event Venue' />
-                            <Field 
-                                name='date'
-                                component={renderDateInput}
-                                dateFormat='dd LLL yyyy h:mm a'
-                                placeholder='Date and Time of Event'
-                                showTimeSelect
-                                timeFormat='HH:mm'                           
-                            />
-                        <Button positive disabled={ invalid || submitting || pristine } type="submit">Submit</Button>
-                        <Button type="button" onClick={this.handleCancel}>Cancel</Button>
-                    </Form>
-                </Segment>
-            </Grid.Column>
-            <Grid.Column width={6}>
-                <Segment style={{ position: 'relative' }}>
-                    <Button 
-                        type="button" 
-                        color={event.cancelled ? 'green' : 'red'} 
-                        onClick={() => this.handleCancelEvent(!event.cancelled, event.id)}>{ event.cancelled ? 'Reactivate' : 'Cancel' } Event</Button>
-                </Segment>
-            </Grid.Column>
-        </Grid>
-    )
-  }
+                                onSelect={this.handleCitySelect} 
+                                options={{type: ['(cities)']}} 
+                                placeholder='Event City' />
+                                <Field 
+                                    name='venue' 
+                                    type='text' 
+                                    component={PlaceInput} 
+                                    options={{
+                                        location: new google.maps.LatLng(this.state.cityLatLng),
+                                        radius: 1000,
+                                        type: ['establishment']
+                                    }} 
+                                    onSelect={this.handleVenueSelect}
+                                    placeholder='Event Venue' />
+                                <Field 
+                                    name='date'
+                                    component={renderDateInput}
+                                    dateFormat='dd LLL yyyy h:mm a'
+                                    placeholder='Date and Time of Event'
+                                    showTimeSelect
+                                    timeFormat='HH:mm'                           
+                                />
+                            <Button positive disabled={ invalid || submitting || pristine } type="submit">Submit</Button>
+                            <Button type="button" onClick={this.handleCancel}>Cancel</Button>
+                        </Form>
+                    </Segment>
+                </Grid.Column>
+                <Grid.Column width={6}>
+                    <Segment style={{ position: 'relative' }}>
+                        <Button 
+                            type="button" 
+                            color={event.cancelled ? 'green' : 'red'} 
+                            onClick={() => this.handleCancelEvent(!event.cancelled, event.id)}>{ event.cancelled ? 'Reactivate' : 'Cancel' } Event</Button>
+                    </Segment>
+                </Grid.Column>
+            </Grid>
+        )
+    }
 }
 
 export default withFirestore(

@@ -7,6 +7,7 @@ import EventDetailedChat from './EventDetailedChat';
 import EventDetailedSidebar from './EventDetailedSidebar';
 import { withFirestore } from 'react-redux-firebase';
 import { errorNotification } from '../../../common/notifications/notification';
+import { auth } from 'firebase';
 
 const mapState = (state, ownProps) => {
     const eventId = ownProps.match.params.id;
@@ -17,7 +18,8 @@ const mapState = (state, ownProps) => {
     }
     
     return {
-        event
+        event,
+        auth: state.firebase.auth
     }
 }
 
@@ -32,16 +34,17 @@ class EventDetailed extends Component  {
         }
 }
     render() {
-        const { event } = this.props;
+        const { event, auth } = this.props;
         const attendees = event && event.attendees && Object.entries(event.attendees).map(attendee => 
             Object.assign({}, attendee[1], {id: attendee[0]})
         );
-
+        const isHost = event.hostUid === auth.uid
+        const isGoing = attendees && attendees.some(a => a.id === auth.uid)
         return (
             <Grid>
                 <Grid.Column width={10}>
-                    <EventDetailedHeader event={event} /> 
-                    <EventDetailedInfo event={event}/>
+                    <EventDetailedHeader event={event} isHost={isHost} isGoing={isGoing} /> 
+                    <EventDetailedInfo event={event} />
                     <EventDetailedChat />
                 </Grid.Column>
                 <Grid.Column width={6}>
