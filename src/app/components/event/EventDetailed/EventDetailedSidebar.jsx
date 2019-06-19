@@ -16,17 +16,12 @@ const EventDetailedSidebar = ({ attendees }) => {
             <Segment attached>
                 <List relaxed divided>
                     { attendees && Object.values(attendees).map((attendee) => 
-                        <Item key={attendee.id} style={{ position: 'relative'}} >
-                            <Label color="blue" ribbon="right" style={{ position: 'absolute'}}>
-                                Host
-                            </Label>
-                            <Image size='tiny' circular src={ attendee.photoURL } />
-                            <Item.Content>
-                                <Item.Header as="h3" style={{ margin: '25px 0px', }}>
-                                    <a href="/">{ attendee.displayName }</a>
-                                </Item.Header>
-                            </Item.Content>
-                        </Item>
+
+                        <Label as='a' image color={ attendee.host && 'blue' }>
+                            <Image  size='tiny' src={ attendee.photoURL || '/assets/img/user.png'} />
+                            { attendee.displayName }
+                            { attendee.host && <Label.Detail>Host</Label.Detail> }
+                        </Label>                    
                     )} 
                 </List>
             </Segment>

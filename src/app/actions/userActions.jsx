@@ -124,7 +124,7 @@ export const goingToEvent = (event) =>
         }
         try {
             await firestore.update(`events/${event.id}`, {
-                [`attendees.${user.id}`]: attendee
+                [`attendees.${user.uid}`]: attendee
             });
             await firestore.set(`event_attendee/${event.id}_${user.uid}`, {
                 eventId: event.id,
