@@ -6,12 +6,11 @@ import EventDetailedInfo from './EventDetailedInfo';
 import EventDetailedChat from './EventDetailedChat';
 import EventDetailedSidebar from './EventDetailedSidebar';
 import { withFirestore } from 'react-redux-firebase';
-import { errorNotification } from '../../../common/notifications/notification';
-import { auth } from 'firebase';
-import { goingToEvent } from '../../../actions/userActions';
+import { goingToEvent, cancleGoingToEvent } from '../../../actions/userActions';
 
 const actions = {
-    goingToEvent
+    goingToEvent,
+    cancleGoingToEvent
 }
 
 const mapState = (state, ownProps) => {
@@ -39,7 +38,7 @@ class EventDetailed extends Component  {
         await firestore.unsetListener(`events/${match.params.id}`);
     }
     render() {
-        const { event, auth, goingToEvent } = this.props;
+        const { event, auth, goingToEvent, cancleGoingToEvent } = this.props;
         const attendees = event && event.attendees && Object.entries(event.attendees).map(attendee => 
             Object.assign({}, attendee[1], {id: attendee[0]})
         );
@@ -48,7 +47,7 @@ class EventDetailed extends Component  {
         return (
             <Grid>
                 <Grid.Column width={10}>
-                    <EventDetailedHeader event={event} isHost={isHost} isGoing={isGoing} goingToEvent={goingToEvent} /> 
+                    <EventDetailedHeader event={event} isHost={isHost} isGoing={isGoing} goingToEvent={goingToEvent} cancleGoingToEvent={cancleGoingToEvent} /> 
                     <EventDetailedInfo event={event} />
                     <EventDetailedChat />
                 </Grid.Column>

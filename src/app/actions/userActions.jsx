@@ -141,3 +141,24 @@ export const goingToEvent = (event) =>
         }
 
     }
+
+    export const cancleGoingToEvent = (event) => 
+        async (dispatch, getState, {getFirestore, getFirebase}) => {
+            const firebase = getFirebase();
+            const firestore = getFirestore();
+
+            const user = firebase.auth().currentUser;
+            try {
+                await firestore.update(`events/${event.id}`, {
+                    [`attendees.${user.uid}`]: firestore.FieldValue.delete()
+                })
+                await firestore.delete(`event_attendee/${event.id}_${user.uid}`);
+                successNotification();
+            } catch (e) {
+                errorNotification();
+                throw new Error({
+                    _error: e.message
+                })
+            }
+        }
+ 
