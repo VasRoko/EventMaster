@@ -28,7 +28,7 @@ class EventListItem extends Component {
           <Grid>
               <Grid.Column width={6}>
                 <Card.Meta>
-                    Hosted by <Link to="#">{event.hostedBy}</Link>
+                    Hosted by <Link to={`/profile/${event.hostUid}`}>{event.hostedBy}</Link>
                 </Card.Meta>
               </Grid.Column>
               <Grid.Column width={10}>
