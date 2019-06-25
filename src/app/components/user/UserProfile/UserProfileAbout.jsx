@@ -1,6 +1,5 @@
 import React from 'react';
-import { format } from 'date-fns';
-import { Segment, Header, List, Label, Divider,Item, Icon } from 'semantic-ui-react';
+import { Segment, Header, List, Label, Divider } from 'semantic-ui-react';
 
 const UserProfileAbout = ({ user }) => {
     return (
