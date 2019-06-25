@@ -1,5 +1,5 @@
 import React from 'react'
-import { Segment, List, Item, Label, Image } from 'semantic-ui-react';
+import { Segment, List, Label, Image } from 'semantic-ui-react';
 
 const EventDetailedSidebar = ({ attendees }) => {
     return (
@@ -16,8 +16,7 @@ const EventDetailedSidebar = ({ attendees }) => {
             <Segment attached>
                 <List relaxed divided>
                     { attendees && Object.values(attendees).map((attendee) => 
-
-                        <Label as='a' image color={ attendee.host && 'blue' }>
+                        <Label key={attendee.id} as='a' image color={ attendee.host ? 'blue' : 'grey' }>
                             <Image  size='tiny' src={ attendee.photoURL || '/assets/img/user.png'} />
                             { attendee.displayName }
                             { attendee.host && <Label.Detail>Host</Label.Detail> }

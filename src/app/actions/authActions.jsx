@@ -13,7 +13,8 @@ export const Register = (user) =>
                 createdUser.user.sendEmailVerification();
                 firebase.logout();
                 await createdUser.user.updateProfile({
-                    displayName: user.displayName
+                    displayName: user.displayName,
+                    photoURL: '/assets/img/user.png'
                 });
             }
 

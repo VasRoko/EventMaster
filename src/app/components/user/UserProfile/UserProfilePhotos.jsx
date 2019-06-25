@@ -1,9 +1,9 @@
 import React from 'react'
 import { Segment, Header, Image } from 'semantic-ui-react';
 
-const UserProfilePhotos = ({ photos, user }) => {
+const UserProfilePhotos = ({ photos }) => {
     return (
-        <Segment attached>
+        <Segment>
             <Header icon="image" content="Photos"/>
             <Image.Group size="small">
                 { photos.map(photo =>

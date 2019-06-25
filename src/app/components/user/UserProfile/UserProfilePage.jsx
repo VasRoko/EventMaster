@@ -1,13 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { firestoreConnect, isEmpty } from 'react-redux-firebase';
-import { Grid, Segment, Button } from 'semantic-ui-react';
+import { Grid, Segment, Button, Divider, Header } from 'semantic-ui-react';
 import UserProfilePhotos from './UserProfilePhotos';
 import UserProfileEvents from './UserProfileEvents';
 import UserProfileAbout from './UserProfileAbout';
 import UserProfileHeader from './UserProfileHeader';
+import LoadingComponent from '../../loading/LoadingComponent';
+import UserProfileAvatar from './UserProfileAvatar';
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -60,8 +62,7 @@ const queryFirebase = ({ auth, userId }) => {
 
 class UserProfilePage extends Component {
     render() {
-        const { photos, profile } = this.props;
-        console.log(profile)
+        const { photos, profile, userId } = this.props;
         let filteredPhotos;
 
         if (photos) {
@@ -71,28 +72,34 @@ class UserProfilePage extends Component {
         }
 
         return (
-            <Grid>
-                <Grid.Column width={16}>
-                    <UserProfileHeader user={profile} />
-                </Grid.Column>
-                <Grid.Column width={12}>
-                    <UserProfileAbout user={profile}/>                   
-                </Grid.Column>
-                <Grid.Column width={4}>
-                    <Segment attached>
-                        <Button as={ Link } to="/settings/basic" icon="edit" positive fluid content="Edit Profile" />
-                    </Segment>
-                </Grid.Column>
-                    {
-                        filteredPhotos && filteredPhotos.length > 0 && 
-                        <Grid.Column width={12}>
-                            <UserProfilePhotos photos={filteredPhotos} />
+            <Fragment>
+                { !profile && <LoadingComponent content="Please wait ..." /> }
+                 <Grid>
+                    <Grid.Row>
+                        <Grid.Column width={4}>
+                            <UserProfileAvatar user={profile}/>
                         </Grid.Column>
-                    }
-                <Grid.Column width={12}>
-                    <UserProfileEvents />
-                </Grid.Column>
-            </Grid>
+                        <Grid.Column width={12}>
+                            <UserProfileHeader user={profile} />
+                            { 
+                                photos && photos.length > 1 ? <UserProfilePhotos photos={filteredPhotos} /> :
+                                <Segment>
+                                    <Header style={{ textAlign: 'center', margin: '10.5% 0px' }} as="h1" content="No photos to display" />
+                                </Segment>
+                            }
+                        </Grid.Column>
+                    </Grid.Row>
+
+
+                    <Grid.Column width={4}>
+                        <UserProfileAbout user={profile}/>                   
+                    </Grid.Column>
+
+                    <Grid.Column width={12}>
+                        <UserProfileEvents />
+                    </Grid.Column> 
+                </Grid>
+            </Fragment>
         )
     }
 }

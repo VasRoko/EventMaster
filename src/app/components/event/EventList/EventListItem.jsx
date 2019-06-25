@@ -41,10 +41,10 @@ class EventListItem extends Component {
               { event.description.slice(0, 45) + ( event.description.length > 45 ? " ..." : "") }
           </Card.Description>
         </Card.Content>
-        <Card.Content>
+        <Card.Content extra>
           <Icon name="marker" /> {event.venue.slice(0, 30) + ( event.description.length > 30 ? " ..." : "")}
         </Card.Content>
-        <Card.Content>
+        <Card.Content extra>
           <Button size="small" as={ Link } to={`/events/${event.id}`} color="blue" floated="right" content="View" />
         </Card.Content>
       </Card>
