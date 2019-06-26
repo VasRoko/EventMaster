@@ -1,6 +1,7 @@
 import { DELETE_EVENT } from '../../const';
 import { createNewEvent } from '../common/util/helpers';
 import { successNotification } from '../common/notifications/notification';
+import firebase from '../config/firebase';
 
 export const createEvent = (event) => 
     async (dispatch, getState, {getFirebase, getFirestore}) => {
@@ -64,3 +65,25 @@ export const deleteEvent = (eventId) => {
         }
     }
 }
+
+export const getEvents = () => 
+    async (dispatch, getState) => {
+        let today = new Date();
+        const firestore = firebase.firestore();
+        const eventsQuery = firestore.collection('events').where('date', '>=', today );
+        try {
+            let query = await eventsQuery.get()
+            let events = []
+
+            for (let i = 0; i < query.docs.length; i++) {
+                let evt = {...query.docs[i].data(), id: query.docs[i].id}
+                events.push(evt)
+            }
+            console.log(events)
+        } catch (e) {
+            throw new Error({
+                _error: e.message
+            })
+        }
+
+    }

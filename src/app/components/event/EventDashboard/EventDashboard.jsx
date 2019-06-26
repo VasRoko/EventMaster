@@ -3,23 +3,23 @@ import { connect } from 'react-redux';
 import { firestoreConnect, isLoaded } from 'react-redux-firebase';
 import { Grid } from 'semantic-ui-react';
 import EventList from '../EventList/EventList';
-import { deleteEvent } from '../../../actions/eventActions';
+import { getEvents } from '../../../actions/eventActions';
 import LoadingComponent from '../../loading/LoadingComponent';
 import EventActivity from '../EventActivity/EventActivity';
 
 const mapStateToProps = (state) => ({
-  events: state.firestore.ordered.events,
+  events: state.events
 })
 
 
 const actions ={
-  deleteEvent
+  getEvents
 }
 
 class EventDashboard extends Component {
 
-  handleDeleteEvent = (eventId) => () => {
-    this.props.deleteEvent(eventId);
+  componentDidMount() {
+    this.props.getEvents();
   }
 
   handleEditEvent = (event) => () => {
@@ -42,7 +42,7 @@ class EventDashboard extends Component {
             <EventActivity />
           </Grid.Column>
           <Grid.Column width={13}>
-            <EventList events={events} deleteEvent={this.handleDeleteEvent}/>
+            <EventList events={events}/>
           </Grid.Column>
       </Grid>
     )

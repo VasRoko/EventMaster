@@ -58,9 +58,8 @@ const queryFirebase = ({ auth, userId }) => {
     }
 } 
 
-
-
 class UserProfilePage extends Component {
+    
     render() {
         const { photos, profile, userId, requesting } = this.props;
         let filteredPhotos;
