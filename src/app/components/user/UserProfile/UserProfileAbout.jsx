@@ -5,7 +5,6 @@ const UserProfileAbout = ({ user }) => {
     return (
         <Segment>
             <Header icon="info circle" content="Interests" />
-            <Divider />
             <List divided selection>
                 {
                     user.interests ? user.interests.map((val, index ) => 
@@ -14,7 +13,11 @@ const UserProfileAbout = ({ user }) => {
                                 {val.toUpperCase()}
                             </Label>
                         </List.Item>
-                    ) : "No interests"
+                    ) :
+                    <div>
+                        <Divider />
+                        <p>No interests</p>
+                    </div>
                 }
             </List>
         </Segment>

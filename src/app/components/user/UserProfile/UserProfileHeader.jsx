@@ -20,9 +20,9 @@ const UserProfileHeader = ({ user }) => {
                                 <p><strong>Lives In: </strong>{ user.city || 'Unknown' }</p>
                             </Grid.Column>
                             <Grid.Column>
-                                <p>Originally from: <strong>{ user.origin || 'Unknown' }</strong></p>
-                                <p>Member Since: <strong> { user.createdAt ? format(user.createdAt.toDate().toString(), 'MMM YYYY') : 'Unknown' } </strong></p>
-                                <p>Description: <strong>{ user.about &&  user.about }</strong></p>
+                                <p><strong>Originally from: </strong>{ user.origin || 'Unknown' }</p>
+                                <p><strong>Member Since: </strong> { user.createdAt ? format(user.createdAt.toDate().toString(), 'MMM YYYY') : 'Unknown' } </p>
+                                <p><strong>Description: </strong>{ user.about || 'No description'  }</p>
                             </Grid.Column>
                         </Grid>
                     </Item.Description>

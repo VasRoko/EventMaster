@@ -6,6 +6,7 @@ import format from 'date-fns/format';
 class EventListItem extends Component {
   render() {
     const {event} = this.props;
+    const eventaAtendees = Object.keys(event.attendees).length;
     return (
       <Card>
         <Dimmer.Dimmable blurring>
@@ -45,7 +46,17 @@ class EventListItem extends Component {
           <Icon name="marker" /> {event.venue.slice(0, 30) + ( event.description.length > 30 ? " ..." : "")}
         </Card.Content>
         <Card.Content extra>
-          <Button size="small" as={ Link } to={`/events/${event.id}`} color="blue" floated="right" content="View" />
+            <Grid>
+              <Grid.Column style={{ padding: '20px 12px'}} width={8}>
+                { eventaAtendees > 1 ?
+                  <p><Icon name="users"/>{eventaAtendees} People attending </p> : 
+                  <p><Icon name="user"/>{eventaAtendees} Person is going</p> 
+                }
+              </Grid.Column>
+              <Grid.Column width={8}>
+                  <Button size="small" as={ Link } to={`/events/${event.id}`} color="blue" floated="right" content="View" />
+              </Grid.Column>
+            </Grid>
         </Card.Content>
       </Card>
     )

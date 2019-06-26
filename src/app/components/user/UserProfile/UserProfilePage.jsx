@@ -26,7 +26,8 @@ const mapStateToProps = (state, ownProps) => {
         profile,
         userId,
         auth: state.firebase.auth,
-        photos: state.firestore.ordered.photos
+        photos: state.firestore.ordered.photos,
+        requesting: state.firestore.status.requesting
     }
 }
 
@@ -61,8 +62,11 @@ const queryFirebase = ({ auth, userId }) => {
 
 class UserProfilePage extends Component {
     render() {
-        const { photos, profile, userId } = this.props;
+        const { photos, profile, userId, requesting } = this.props;
         let filteredPhotos;
+        const loading = Object.values(requesting).some(a => a === true);
+
+        if(loading) return <LoadingComponent />
 
         if (photos) {
             filteredPhotos = photos.filter( photo => {
@@ -79,24 +83,25 @@ class UserProfilePage extends Component {
                             <UserProfileAvatar user={profile} userId={userId} />
                         </Grid.Column>
                         <Grid.Column width={12}>
-                            <UserProfileHeader user={profile} />
                             { 
                                 photos && photos.length > 1 ? <UserProfilePhotos photos={filteredPhotos} /> :
                                 <Segment>
                                     <Header style={{ textAlign: 'center', margin: '10.5% 0px' }} as="h1" content="No photos to display" />
                                 </Segment>
                             }
+                            <UserProfileHeader user={profile} />
                         </Grid.Column>
                     </Grid.Row>
 
+                    <Grid.Row>
+                        <Grid.Column width={4}>
+                            <UserProfileAbout user={profile}/>                   
+                        </Grid.Column>
 
-                    <Grid.Column width={4}>
-                        <UserProfileAbout user={profile}/>                   
-                    </Grid.Column>
-
-                    <Grid.Column width={12}>
-                        <UserProfileEvents />
-                    </Grid.Column> 
+                        <Grid.Column width={12}>
+                            <UserProfileEvents />
+                        </Grid.Column> 
+                    </Grid.Row>
                 </Grid>
             </Fragment>
         )
