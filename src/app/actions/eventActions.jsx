@@ -67,29 +67,43 @@ export const deleteEvent = (eventId) => {
     }
 }
 
-export const getEvents = (getAllEvents) => 
+export const getEvents = (getAllEvents, lastEvent) => 
     async (dispatch, getState) => {
-        dispatch(asyncActionStart());
         let today = new Date();
-        let eventsQuery = undefined;
         const firestore = firebase.firestore();
-        if(getAllEvents) {
-            eventsQuery = firestore.collection('events');
-        } else {
-            eventsQuery = firestore.collection('events').where('date', '>=', today );
-        }
+        const eventsRef = firestore.collection('events');
 
         try {
-            let query = await eventsQuery.get()
+            dispatch(asyncActionStart());
+            let query;
+            let startAfter = lastEvent && await firestore.collection('events').doc(lastEvent.id).get();            
+            
+            if(!getAllEvents) {
+                lastEvent ? 
+                    query = eventsRef.where('date', '>=', today ).orderBy('date').startAfter(startAfter).limit(2) : 
+                    query = eventsRef.where('date', '>=', today ).orderBy('date').limit(2)
+            } else {
+                lastEvent ? 
+                    query = eventsRef.orderBy('date').startAfter(startAfter).limit(2) : 
+                    query = eventsRef.orderBy('date').limit(2)
+            }
+
+            let querySnap = await query.get()
             let events = []
 
-            for (let i = 0; i < query.docs.length; i++) {
-                let evt = {...query.docs[i].data(), id: query.docs[i].id}
+            if (querySnap.docs.length === 0) {
+                dispatch(asyncActionFinish())
+                return querySnap;
+            }
+
+            for (let i = 0; i < querySnap.docs.length; i++) {
+                let evt = {...querySnap.docs[i].data(), id: querySnap.docs[i].id}
                 events.push(evt)
             }
+
             dispatch({type: FETCH_EVENTS, payload: { events }})
             dispatch(asyncActionFinish())
-
+            return querySnap;
         } catch (e) {
             dispatch(asyncActionError())
             throw new Error({

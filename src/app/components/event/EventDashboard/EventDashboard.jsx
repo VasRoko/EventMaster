@@ -19,10 +19,31 @@ const actions ={
 class EventDashboard extends Component {
   state = { 
     getAllEvents: false,
+    moreEvents: false,
   }
 
-  componentDidMount() {
-    this.props.getEvents(this.state.getAllEvents);
+  async componentDidMount() {
+    let next = await this.props.getEvents(this.state.getAllEvents);
+    console.log(next)
+
+    if (next && next.docs && next.docs.length > 1) {
+      this.setState({
+        moreEvents: true
+      })
+    }
+  }
+
+  getMoreEvents = async () => {
+    const { events } = this.props;
+    let lastEvent = events && events[events.length -1];
+    console.log(lastEvent)
+    let next = await this.props.getEvents(this.state.getAllEvents, lastEvent);
+    console.log(next)
+    if (next && next.docs && next.docs.length <= 1) {
+      this.setState({
+        moreEvents: false
+      })
+    }
   }
 
   handleEditEvent = (event) => () => {
@@ -66,7 +87,10 @@ class EventDashboard extends Component {
                 <Button active={this.state.getAllEvents} onClick={this.handleGetAllEvents}>All Events</Button>
               </Button.Group>
             </Segment>
+
             <EventList events={events}/>
+
+              <Button onClick={this.getMoreEvents} disabled={!this.state.moreEvents} color='green' content="More Events" />
           </Grid.Column>
       </Grid>
     )
