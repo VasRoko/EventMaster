@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import EventListItem from './EventListItem';
-import { Card } from 'semantic-ui-react';
+import { Card, Segment } from 'semantic-ui-react';
 
 class EventList extends Component {
   render() {

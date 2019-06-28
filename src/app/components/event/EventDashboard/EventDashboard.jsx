@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
-import { Grid, Segment, Button } from 'semantic-ui-react';
+import { Grid, Segment, Button, Divider } from 'semantic-ui-react';
 import EventList from '../EventList/EventList';
 import { getEvents } from '../../../actions/eventActions';
 import LoadingComponent from '../../loading/LoadingComponent';
@@ -20,6 +20,7 @@ class EventDashboard extends Component {
   state = { 
     getAllEvents: false,
     moreEvents: false,
+    loadingInitial: true,
   }
 
   async componentDidMount() {
@@ -28,7 +29,8 @@ class EventDashboard extends Component {
 
     if (next && next.docs && next.docs.length > 1) {
       this.setState({
-        moreEvents: true
+        moreEvents: true,
+        loadingInitial: false
       })
     }
   }
@@ -36,9 +38,7 @@ class EventDashboard extends Component {
   getMoreEvents = async () => {
     const { events } = this.props;
     let lastEvent = events && events[events.length -1];
-    console.log(lastEvent)
     let next = await this.props.getEvents(this.state.getAllEvents, lastEvent);
-    console.log(next)
     if (next && next.docs && next.docs.length <= 1) {
       this.setState({
         moreEvents: false
@@ -55,6 +55,7 @@ class EventDashboard extends Component {
   handleGetAllEvents = () => {
     this.setState({
       getAllEvents: true,
+      moreEvents: true
     }, () => {
       this.props.getEvents(this.state.getAllEvents);
     })
@@ -63,6 +64,7 @@ class EventDashboard extends Component {
   handleGetFutureEvents = () => {
     this.setState({
       getAllEvents: false,
+      moreEvents: true
     }, () => {
       this.props.getEvents(this.state.getAllEvents);
     })
@@ -71,7 +73,7 @@ class EventDashboard extends Component {
   render() {
     const {events, loading} = this.props;
 
-    if (loading) {
+    if (this.state.loadingInitial) {
       return <LoadingComponent />
     } 
 
@@ -81,16 +83,14 @@ class EventDashboard extends Component {
             <EventActivity />
           </Grid.Column>
           <Grid.Column width={13}>
-            <Segment>
               <Button.Group basic>
                 <Button active={!this.state.getAllEvents} onClick={this.handleGetFutureEvents}>Future Events</Button>
                 <Button active={this.state.getAllEvents} onClick={this.handleGetAllEvents}>All Events</Button>
               </Button.Group>
-            </Segment>
-
-            <EventList events={events}/>
-
-              <Button onClick={this.getMoreEvents} disabled={!this.state.moreEvents} color='green' content="More Events" />
+              <Divider />
+              <EventList events={events}/>
+              <Divider />
+              <Button onClick={this.getMoreEvents} disabled={!this.state.moreEvents} color='green' loading={loading} content="More Events" />
           </Grid.Column>
       </Grid>
     )
