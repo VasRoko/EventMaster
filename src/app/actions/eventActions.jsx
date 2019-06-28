@@ -1,7 +1,8 @@
-import { DELETE_EVENT } from '../../const';
+import { DELETE_EVENT, FETCH_EVENTS } from '../../const';
 import { createNewEvent } from '../common/util/helpers';
 import { successNotification } from '../common/notifications/notification';
 import firebase from '../config/firebase';
+import { asyncActionStart, asyncActionFinish, asyncActionError } from '../async/asyncActions';
 
 export const createEvent = (event) => 
     async (dispatch, getState, {getFirebase, getFirestore}) => {
@@ -66,11 +67,18 @@ export const deleteEvent = (eventId) => {
     }
 }
 
-export const getEvents = () => 
+export const getEvents = (getAllEvents) => 
     async (dispatch, getState) => {
+        dispatch(asyncActionStart());
         let today = new Date();
+        let eventsQuery = undefined;
         const firestore = firebase.firestore();
-        const eventsQuery = firestore.collection('events').where('date', '>=', today );
+        if(getAllEvents) {
+            eventsQuery = firestore.collection('events');
+        } else {
+            eventsQuery = firestore.collection('events').where('date', '>=', today );
+        }
+
         try {
             let query = await eventsQuery.get()
             let events = []
@@ -79,8 +87,11 @@ export const getEvents = () =>
                 let evt = {...query.docs[i].data(), id: query.docs[i].id}
                 events.push(evt)
             }
-            console.log(events)
+            dispatch({type: FETCH_EVENTS, payload: { events }})
+            dispatch(asyncActionFinish())
+
         } catch (e) {
+            dispatch(asyncActionError())
             throw new Error({
                 _error: e.message
             })
