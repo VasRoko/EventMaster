@@ -69,7 +69,7 @@ export const deleteEvent = (eventId) => {
 
 export const getEvents = (getAllEvents, lastEvent) => 
     async (dispatch, getState) => {
-        let today = new Date();
+        // let today = new Date();
         const firestore = firebase.firestore();
         const eventsRef = firestore.collection('events');
 
@@ -78,15 +78,15 @@ export const getEvents = (getAllEvents, lastEvent) =>
             let query;
             let startAfter = lastEvent && await firestore.collection('events').doc(lastEvent.id).get();            
             
-            if(!getAllEvents) {
+            // if(!getAllEvents) {
+            //     lastEvent ? 
+            //         query = eventsRef.where('date', '>=', today ).orderBy('date').startAfter(startAfter).limit(2) : 
+            //         query = eventsRef.where('date', '>=', today ).orderBy('date').limit(2)
+            // } else {
                 lastEvent ? 
-                    query = eventsRef.where('date', '>=', today ).orderBy('date').startAfter(startAfter).limit(2) : 
-                    query = eventsRef.where('date', '>=', today ).orderBy('date').limit(2)
-            } else {
-                lastEvent ? 
-                    query = eventsRef.orderBy('date').startAfter(startAfter).limit(2) : 
-                    query = eventsRef.orderBy('date').limit(2)
-            }
+                    query = eventsRef.orderBy('date').startAfter(startAfter).limit(3) : 
+                    query = eventsRef.orderBy('date').limit(3)
+            // }
 
             let querySnap = await query.get()
             let events = []

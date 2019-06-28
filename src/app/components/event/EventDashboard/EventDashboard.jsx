@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
-import { Grid, Segment, Button, Divider } from 'semantic-ui-react';
+import { Grid, Button, Divider } from 'semantic-ui-react';
 import EventList from '../EventList/EventList';
 import { getEvents } from '../../../actions/eventActions';
 import LoadingComponent from '../../loading/LoadingComponent';
@@ -21,16 +21,24 @@ class EventDashboard extends Component {
     getAllEvents: false,
     moreEvents: false,
     loadingInitial: true,
+    loadedEvents: [],
   }
 
   async componentDidMount() {
     let next = await this.props.getEvents(this.state.getAllEvents);
-    console.log(next)
 
     if (next && next.docs && next.docs.length > 1) {
       this.setState({
         moreEvents: true,
         loadingInitial: false
+      })
+    }
+  }
+
+  componentDidUpdate = (prevProps) => {
+    if(this.props.events !== prevProps.events) {
+      this.setState({
+        loadedEvents: [...this.state.loadedEvents, ...this.props.events]
       })
     }
   }
@@ -56,8 +64,6 @@ class EventDashboard extends Component {
     this.setState({
       getAllEvents: true,
       moreEvents: true
-    }, () => {
-      this.props.getEvents(this.state.getAllEvents);
     })
   }
 
@@ -65,13 +71,11 @@ class EventDashboard extends Component {
     this.setState({
       getAllEvents: false,
       moreEvents: true
-    }, () => {
-      this.props.getEvents(this.state.getAllEvents);
     })
   }
 
   render() {
-    const {events, loading} = this.props;
+    const {loading} = this.props;
 
     if (this.state.loadingInitial) {
       return <LoadingComponent />
@@ -88,7 +92,7 @@ class EventDashboard extends Component {
                 <Button active={this.state.getAllEvents} onClick={this.handleGetAllEvents}>All Events</Button>
               </Button.Group>
               <Divider />
-              <EventList events={events}/>
+              <EventList events={this.state.loadedEvents}/>
               <Divider />
               <Button onClick={this.getMoreEvents} disabled={!this.state.moreEvents} color='green' loading={loading} content="More Events" />
           </Grid.Column>
