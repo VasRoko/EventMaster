@@ -76,7 +76,7 @@ class EventDashboard extends Component {
 
   render() {
     const {loading} = this.props;
-
+    const { moreEvents, loadedEvents } = this.state;
     if (this.state.loadingInitial) {
       return <LoadingComponent />
     } 
@@ -92,9 +92,9 @@ class EventDashboard extends Component {
                 <Button active={this.state.getAllEvents} onClick={this.handleGetAllEvents}>All Events</Button>
               </Button.Group>
               <Divider />
-              <EventList events={this.state.loadedEvents}/>
+              <EventList loading={loading} getMoreEvents={this.getMoreEvents} moreEvents={moreEvents} events={loadedEvents}/>
               <Divider />
-              <Button onClick={this.getMoreEvents} disabled={!this.state.moreEvents} color='green' loading={loading} content="More Events" />
+              {/* <Button onClick={this.getMoreEvents} disabled={!this.state.moreEvents} color='green' loading={loading} content="More Events" /> */}
           </Grid.Column>
       </Grid>
     )
