@@ -94,7 +94,9 @@ class EventDashboard extends Component {
               <Divider />
               <EventList loading={loading} getMoreEvents={this.getMoreEvents} moreEvents={moreEvents} events={loadedEvents}/>
               <Divider />
-              {/* <Button onClick={this.getMoreEvents} disabled={!this.state.moreEvents} color='green' loading={loading} content="More Events" /> */}
+          </Grid.Column>
+          <Grid.Column style={{ textAlign: 'center'}} width={13}>
+              <LoadingComponent active={loading} /> 
           </Grid.Column>
       </Grid>
     )
