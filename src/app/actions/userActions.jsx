@@ -1,6 +1,7 @@
 import { asyncActionStart, asyncActionFinish, asyncActionError } from '../async/asyncActions';
 import { successNotification, errorNotification } from '../common/notifications/notification';
 import firebase from '../config/firebase';
+import { FETCH_EVENTS } from '../../const';
 
 import cuid from 'cuid';
 
@@ -200,7 +201,14 @@ export const getUserEvents = (userUid, activeTab) =>
 
         try {
             let querySnap = await query.get();
-            console.log(querySnap);
+            let events = [];
+
+            for (let i = 0; i < querySnap.docs.length; i++) {
+                let event = await firestore.collection('events').doc(querySnap.docs[i].date().eventId.get())
+                events.push({ ...event.data(), id: event.id })
+
+                dispatch({type: FETCH_EVENTS, payload: events});
+            }
             dispatch(asyncActionFinish());
         } catch(e) {
             dispatch(asyncActionError());
