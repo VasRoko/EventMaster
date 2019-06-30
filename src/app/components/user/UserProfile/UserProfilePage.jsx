@@ -30,6 +30,8 @@ const mapStateToProps = (state, ownProps) => {
     return {
         profile,
         userId,
+        events: state.events,
+        eventsLoading: state.async.loading,
         auth: state.firebase.auth,
         photos: state.firestore.ordered.photos,
         requesting: state.firestore.status.requesting
@@ -66,19 +68,15 @@ const queryFirebase = ({ auth, userId }) => {
 class UserProfilePage extends Component {
     
     async componentDidMount() {
-        let Uid;
-
-        if (this.props.userId !== null) {
-            Uid = this.props.userId;
-        } else {
-            Uid = this.props.auth.uid;
-        } 
-
-        let events = await this.props.getUserEvents(Uid);
-        console.log(events)
+        let events = await this.props.getUserEvents(this.props.userId || this.props.auth.uid);
     }
+
+    changeTab = (e, data) => {
+        this.props.getUserEvents(this.props.userId || this.props.auth.uid, data.activeIndex );
+    }
+    
     render() {
-        const { photos, profile, userId, requesting } = this.props;
+        const { photos, profile, userId, requesting, events, eventsLoading } = this.props;
         let filteredPhotos;
         const loading = Object.values(requesting).some(a => a === true);
 
@@ -115,7 +113,7 @@ class UserProfilePage extends Component {
                         </Grid.Column>
 
                         <Grid.Column width={12}>
-                            <UserProfileEvents />
+                            <UserProfileEvents changeTab={this.changeTab} events={events} eventsLoading={eventsLoading} />
                         </Grid.Column> 
                     </Grid.Row>
                 </Grid>
