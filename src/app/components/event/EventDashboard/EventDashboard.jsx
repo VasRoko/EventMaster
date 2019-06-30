@@ -95,8 +95,11 @@ class EventDashboard extends Component {
               <EventList loading={loading} getMoreEvents={this.getMoreEvents} moreEvents={moreEvents} events={loadedEvents}/>
               <Divider />
           </Grid.Column>
+          <Grid.Column width={3}></Grid.Column>
           <Grid.Column style={{ textAlign: 'center'}} width={13}>
-              <LoadingComponent active={loading} /> 
+              {
+                loading && <LoadingComponent style={{ textAlign: 'center'}} /> 
+              }
           </Grid.Column>
       </Grid>
     )
