@@ -9,6 +9,11 @@ import UserProfileAbout from './UserProfileAbout';
 import UserProfileHeader from './UserProfileHeader';
 import LoadingComponent from '../../loading/LoadingComponent';
 import UserProfileAvatar from './UserProfileAvatar';
+import { getUserEvents } from '../../../actions/userActions'
+
+const actions = {
+    getUserEvents
+}
 
 
 const mapStateToProps = (state, ownProps) => {
@@ -60,6 +65,18 @@ const queryFirebase = ({ auth, userId }) => {
 
 class UserProfilePage extends Component {
     
+    async componentDidMount() {
+        let Uid;
+
+        if (this.props.userId !== null) {
+            Uid = this.props.userId;
+        } else {
+            Uid = this.props.auth.uid;
+        } 
+
+        let events = await this.props.getUserEvents(Uid);
+        console.log(events)
+    }
     render() {
         const { photos, profile, userId, requesting } = this.props;
         let filteredPhotos;
@@ -108,6 +125,6 @@ class UserProfilePage extends Component {
 }
 
 export default compose(
-    connect(mapStateToProps),
+    connect(mapStateToProps, actions),
     firestoreConnect((auth, userId) => queryFirebase(auth, userId))
 )(UserProfilePage);

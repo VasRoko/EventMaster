@@ -1,5 +1,7 @@
 import { asyncActionStart, asyncActionFinish, asyncActionError } from '../async/asyncActions';
 import { successNotification, errorNotification } from '../common/notifications/notification';
+import firebase from '../config/firebase';
+
 import cuid from 'cuid';
 
 export const updateProfile = (user) => 
@@ -162,3 +164,46 @@ export const goingToEvent = (event) =>
             }
         }
  
+export const getUserEvents = (userUid, activeTab) => 
+    async (dispatch, getState) => {
+        dispatch(asyncActionStart());
+        const firestore = firebase.firestore();
+        const today = new Date();
+        let eventsRef = firestore.collection('event_attendee');
+        let query;
+
+        switch(activeTab) {
+            case 1: 
+                query = eventsRef
+                    .where('userUid', '==', userUid)
+                    .where('eventDate', '<=', today)
+                    .orderBy('eventDate', 'desc');
+                break;
+            case 2: 
+                query = eventsRef
+                    .where('userUid', '==', userUid)
+                    .where('eventDate', '>=', today)
+                    .orderBy('eventDate');
+                break;
+            case 3: 
+                query = eventsRef
+                    .where('userUid', '==', userUid)
+                    .where('host', '==', true)
+                    .orderBy('eventDate', 'desc');
+                    break;
+            default: 
+                query = eventsRef
+                    .where('userUid', '==', userUid)
+                    .orderBy('eventDate', 'desc');
+                break;
+        }
+
+        try {
+            let querySnap = await query.get();
+            console.log(querySnap);
+            dispatch(asyncActionFinish());
+        } catch(e) {
+            dispatch(asyncActionError());
+            console.log(e.message)
+        }
+    }
