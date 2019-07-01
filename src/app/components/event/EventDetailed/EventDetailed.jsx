@@ -5,7 +5,7 @@ import EventDetailedHeader from './EventDetailedHeader';
 import EventDetailedInfo from './EventDetailedInfo';
 import EventDetailedChat from './EventDetailedChat';
 import EventDetailedSidebar from './EventDetailedSidebar';
-import { withFirestore, firebaseConnect } from 'react-redux-firebase';
+import { withFirestore, firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { goingToEvent, cancleGoingToEvent } from '../../../actions/userActions';
 import { compose } from 'redux';
 import { addEventComment } from '../../../actions/eventActions'
@@ -26,6 +26,10 @@ const mapState = (state, ownProps) => {
     
     return {
         event,
+        eventChat: !isEmpty(state.firebase.data.event_chat) && 
+            Object.entries(state.firebase.data.event_chat[ownProps.match.params.id]).map(comment => 
+                Object.assign({}, comment[1], {id: comment[0]})
+            ),
         auth: state.firebase.auth
     }
 }
@@ -42,7 +46,7 @@ class EventDetailed extends Component  {
     }
     render() {
         
-        const { event, auth, goingToEvent, cancleGoingToEvent, addEventComment } = this.props;
+        const { event, auth, goingToEvent, cancleGoingToEvent, addEventComment, eventChat } = this.props;
         const attendees = event && event.attendees && Object.entries(event.attendees).map(attendee => 
             Object.assign({}, attendee[1], {id: attendee[0]})
         );
@@ -54,7 +58,7 @@ class EventDetailed extends Component  {
                 <Grid.Column width={10}>
                     <EventDetailedHeader event={event} isHost={isHost} isGoing={isGoing} goingToEvent={goingToEvent} cancleGoingToEvent={cancleGoingToEvent} /> 
                     <EventDetailedInfo event={event} />
-                    <EventDetailedChat addEventComment={addEventComment} eventId={event.id} />
+                    <EventDetailedChat addEventComment={addEventComment} eventId={event.id} eventChat={eventChat} />
                 </Grid.Column>
                 <Grid.Column width={6}>
                     <EventDetailedSidebar attendees={attendees} />

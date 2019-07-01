@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { Field, reduxForm } from 'redux-form';
+import { Link } from 'react-router-dom';
+import distanceInWords from 'date-fns/distance_in_words'; 
 import { Segment, Header, Comment, Button, Form } from 'semantic-ui-react';
 import { renderTextArea } from '../../../common/form/formComponents';
 
@@ -11,6 +13,7 @@ class EventDetailedChat extends Component {
     } 
     
     render() {
+        const {eventChat} = this.props;
         return (
             <div>
                 <Segment 
@@ -23,19 +26,23 @@ class EventDetailedChat extends Component {
                 </Segment>
                 <Segment attached>
                     <Comment.Group>
-                        <Comment>
-                            <Comment.Avatar src="/assets/img/user.png"/>
-                            <Comment.Content>
-                                <Comment.Author as="a">Matt</Comment.Author>
-                                <Comment.Metadata>
-                                    <div>Today at 5:42PM</div>
-                                </Comment.Metadata>
-                                <Comment.Text>How artistic!</Comment.Text>
-                                <Comment.Actions>
-                                    <Comment.Action>Reply</Comment.Action>
-                                </Comment.Actions>
-                            </Comment.Content>
-                        </Comment>
+                        {
+                            eventChat && eventChat.map(comment => 
+                                <Comment key={comment.id}>
+                                    <Comment.Avatar src={ comment.photoURL || "/assets/img/user.png"}/>
+                                    <Comment.Content>
+                                        <Comment.Author as={Link} to={`/profile/${comment.uid}`}>{comment.displayName}</Comment.Author>
+                                        <Comment.Metadata>
+                                            <div>{ distanceInWords(comment.date, Date.now()) }</div>
+                                        </Comment.Metadata>
+                                        <Comment.Text>{ comment.text }</Comment.Text>
+                                        <Comment.Actions>
+                                            <Comment.Action>Reply</Comment.Action>
+                                        </Comment.Actions>
+                                    </Comment.Content>
+                                </Comment>
+                            )
+                        }
                     </Comment.Group>
     
                     <Form onSubmit={this.props.handleSubmit(this.hundleCommentSubmit)} reply>
