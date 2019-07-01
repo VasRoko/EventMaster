@@ -114,11 +114,21 @@ export const getEvents = (getAllEvents, lastEvent) =>
 
     }
 
-export const addEventComment = (eventId, comment) => 
+export const addEventComment = (eventId, values) => 
     async (dispatch, getState, {getFirebase}) => {
         const firebase = getFirebase();
+        const profile = getState().firebase.profile;
+        const user = firebase.auth().currentUser;
+        let newComment = {
+            displayName: profile.displayName,
+            photoURL: profile.photoURL || '/assets/img/user.png',
+            uid: user.uid,
+            text: values.comment,
+            date: Date.now()
+        }
         try {
-            await firebase.push(`event_chat/${eventId}`, comment);
+            await firebase.push(`event_chat/${eventId}`, newComment);
+            successNotification('Success!', 'Your comment has been submitted' )
         } catch (ex) {
             errorNotification();
             throw new Error({
