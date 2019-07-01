@@ -5,11 +5,14 @@ import EventDetailedHeader from './EventDetailedHeader';
 import EventDetailedInfo from './EventDetailedInfo';
 import EventDetailedChat from './EventDetailedChat';
 import EventDetailedSidebar from './EventDetailedSidebar';
-import { withFirestore } from 'react-redux-firebase';
+import { withFirestore, firebaseConnect } from 'react-redux-firebase';
 import { goingToEvent, cancleGoingToEvent } from '../../../actions/userActions';
+import { compose } from 'redux';
+import { addEventComment } from '../../../actions/eventActions'
 
 const actions = {
     goingToEvent,
+    addEventComment,
     cancleGoingToEvent
 }
 
@@ -38,18 +41,20 @@ class EventDetailed extends Component  {
         await firestore.unsetListener(`events/${match.params.id}`);
     }
     render() {
-        const { event, auth, goingToEvent, cancleGoingToEvent } = this.props;
+        
+        const { event, auth, goingToEvent, cancleGoingToEvent, addEventComment } = this.props;
         const attendees = event && event.attendees && Object.entries(event.attendees).map(attendee => 
             Object.assign({}, attendee[1], {id: attendee[0]})
         );
         const isHost = event.hostUid === auth.uid
         const isGoing = attendees && attendees.some(a => a.id === auth.uid)
+
         return (
             <Grid>
                 <Grid.Column width={10}>
                     <EventDetailedHeader event={event} isHost={isHost} isGoing={isGoing} goingToEvent={goingToEvent} cancleGoingToEvent={cancleGoingToEvent} /> 
                     <EventDetailedInfo event={event} />
-                    <EventDetailedChat />
+                    <EventDetailedChat addEventComment={addEventComment} eventId={event.id} />
                 </Grid.Column>
                 <Grid.Column width={6}>
                     <EventDetailedSidebar attendees={attendees} />
@@ -59,4 +64,8 @@ class EventDetailed extends Component  {
     }
 }
 
-export default withFirestore(connect(mapState, actions)(EventDetailed));
+export default compose(
+    withFirestore,
+    connect(mapState, actions),
+    firebaseConnect((props) => ([`event_chat/${props.match.params.id}`]))
+)(EventDetailed);

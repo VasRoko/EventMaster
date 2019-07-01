@@ -52,6 +52,7 @@ class EventDashboard extends Component {
         moreEvents: false
       })
     }
+
   }
 
   handleEditEvent = (event) => () => {

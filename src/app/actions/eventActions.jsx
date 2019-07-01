@@ -1,6 +1,6 @@
 import { DELETE_EVENT, FETCH_EVENTS } from '../../const';
 import { createNewEvent } from '../common/util/helpers';
-import { successNotification } from '../common/notifications/notification';
+import { successNotification, errorNotification } from '../common/notifications/notification';
 import firebase from '../config/firebase';
 import { asyncActionStart, asyncActionFinish, asyncActionError } from '../async/asyncActions';
 
@@ -105,10 +105,24 @@ export const getEvents = (getAllEvents, lastEvent) =>
             dispatch(asyncActionFinish())
             return querySnap;
         } catch (e) {
-            dispatch(asyncActionError())
+            dispatch(asyncActionError());
+            errorNotification();
             throw new Error({
                 _error: e.message
             })
         }
 
+    }
+
+export const addEventComment = (eventId, comment) => 
+    async (dispatch, getState, {getFirebase}) => {
+        const firebase = getFirebase();
+        try {
+            await firebase.push(`event_chat/${eventId}`, comment);
+        } catch (ex) {
+            errorNotification();
+            throw new Error({
+                _error: ex.message
+            })
+        }
     }
