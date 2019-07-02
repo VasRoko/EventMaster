@@ -9,6 +9,7 @@ import { withFirestore, firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { goingToEvent, cancleGoingToEvent } from '../../../actions/userActions';
 import { compose } from 'redux';
 import { addEventComment } from '../../../actions/eventActions'
+import { objectToArray } from '../../../common/util/helpers';
 
 const actions = {
     goingToEvent,
@@ -26,10 +27,7 @@ const mapState = (state, ownProps) => {
     
     return {
         event,
-        eventChat: !isEmpty(state.firebase.data.event_chat) && 
-            Object.entries(state.firebase.data.event_chat[ownProps.match.params.id]).map(comment => 
-                Object.assign({}, comment[1], {id: comment[0]})
-            ),
+        eventChat: !isEmpty(state.firebase.data.event_chat) && objectToArray(state.firebase.data.event_chat[ownProps.match.params.id]),
         auth: state.firebase.auth
     }
 }

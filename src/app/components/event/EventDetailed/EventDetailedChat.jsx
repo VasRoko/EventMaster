@@ -1,19 +1,34 @@
 import React, { Component } from 'react'
-import { Field, reduxForm } from 'redux-form';
 import { Link } from 'react-router-dom';
 import distanceInWords from 'date-fns/distance_in_words'; 
-import { Segment, Header, Comment, Button, Form } from 'semantic-ui-react';
-import { renderTextArea } from '../../../common/form/formComponents';
+import { Segment, Header, Comment } from 'semantic-ui-react';
+import EventCommentForm from './EventCommentForm';
 
 class EventDetailedChat extends Component {
-    hundleCommentSubmit = values => {
-        const { addEventComment, eventId, reset } = this.props;
-        addEventComment(eventId, values);
-        reset();
-    } 
+
+    state = {
+        showReplyForm: false,
+        selectedCommentId: null
+    }
+    
+
+    handleOpenReplyForm = (id) => () => {
+        this.setState({
+            showReplyForm: true,
+            selectedCommentId: id
+        })
+    }
+
+    handleCloseReplyForm = () => {
+        this.setState({
+            selectedCommentId: null,
+            showReplyForm: false
+        })
+    }
     
     render() {
-        const {eventChat} = this.props;
+        const { eventChat, eventId, addEventComment } = this.props;
+        const { showReplyForm, selectedCommentId } = this.state;
         return (
             <div>
                 <Segment 
@@ -27,7 +42,7 @@ class EventDetailedChat extends Component {
                 <Segment attached>
                     <Comment.Group>
                         {
-                            eventChat && eventChat.map(comment => 
+                             eventChat && eventChat.map(comment => 
                                 <Comment key={comment.id}>
                                     <Comment.Avatar src={ comment.photoURL || "/assets/img/user.png"}/>
                                     <Comment.Content>
@@ -37,7 +52,17 @@ class EventDetailedChat extends Component {
                                         </Comment.Metadata>
                                         <Comment.Text>{ comment.text }</Comment.Text>
                                         <Comment.Actions>
-                                            <Comment.Action>Reply</Comment.Action>
+                                            <Comment.Action onClick={this.handleOpenReplyForm(comment.id)}>Reply</Comment.Action>
+                                            { showReplyForm && selectedCommentId === comment.id &&      
+                                                <EventCommentForm 
+                                                    closeForm={this.handleCloseReplyForm}
+                                                    addEventComment={addEventComment}
+                                                    form={`reply_${comment.id}`} 
+                                                    eventId={eventId}
+                                                    parentId={comment.id}
+                                                    content="Reply"
+                                                    />
+                                            }
                                         </Comment.Actions>
                                     </Comment.Content>
                                 </Comment>
@@ -45,24 +70,17 @@ class EventDetailedChat extends Component {
                         }
                     </Comment.Group>
     
-                    <Form onSubmit={this.props.handleSubmit(this.hundleCommentSubmit)} reply>
-                        <Field 
-                            name='comment'
-                            type='text'
-                            component={renderTextArea}
-                            rows={2}
-                        />
-                        <Button
-                            content="Add Comment"
-                            labelPosition="left"
-                            icon="edit"
-                            primary 
-                        />
-                    </Form>
+                    <EventCommentForm 
+                        parentId={0} 
+                        eventId={eventId} 
+                        form={`newComment`}
+                        closeForm={this.handleCloseReplyForm} 
+                        addEventComment={addEventComment} 
+                    />
                 </Segment>
             </div>
         )
     }
 }
 
-export default reduxForm({ form: 'eventChat' })(EventDetailedChat);
+export default (EventDetailedChat);
