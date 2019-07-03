@@ -23,3 +23,21 @@ export const objectToArray = (object) => {
         return Object.entries(object).map(e => Object.assign({}, e[1], {id: e[0]}))
     }
 }
+
+export const createDataTree = data => {
+    let hashTable = Object.create(null);
+    let dataTree = [];
+
+    data.forEach(item => 
+        hashTable[item.id] = {...item, childItems: []});
+
+    data.forEach(item => {
+        if (item.parentId) {
+            hashTable[item.parentId].childItems.push(hashTable[item.id]);
+        } else {
+            dataTree.push(hashTable[item.id])
+        }
+    })
+
+    return dataTree;
+}

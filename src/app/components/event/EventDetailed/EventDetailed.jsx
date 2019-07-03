@@ -9,7 +9,7 @@ import { withFirestore, firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { goingToEvent, cancleGoingToEvent } from '../../../actions/userActions';
 import { compose } from 'redux';
 import { addEventComment } from '../../../actions/eventActions'
-import { objectToArray } from '../../../common/util/helpers';
+import { objectToArray, createDataTree } from '../../../common/util/helpers';
 
 const actions = {
     goingToEvent,
@@ -45,18 +45,17 @@ class EventDetailed extends Component  {
     render() {
         
         const { event, auth, goingToEvent, cancleGoingToEvent, addEventComment, eventChat } = this.props;
-        const attendees = event && event.attendees && Object.entries(event.attendees).map(attendee => 
-            Object.assign({}, attendee[1], {id: attendee[0]})
-        );
+        const attendees = event && event.attendees && objectToArray(event.attendees);
         const isHost = event.hostUid === auth.uid
         const isGoing = attendees && attendees.some(a => a.id === auth.uid)
-
+        const chatData = !isEmpty(eventChat) && createDataTree(eventChat);
+        
         return (
             <Grid>
                 <Grid.Column width={10}>
                     <EventDetailedHeader event={event} isHost={isHost} isGoing={isGoing} goingToEvent={goingToEvent} cancleGoingToEvent={cancleGoingToEvent} /> 
                     <EventDetailedInfo event={event} />
-                    <EventDetailedChat addEventComment={addEventComment} eventId={event.id} eventChat={eventChat} />
+                    <EventDetailedChat addEventComment={addEventComment} eventId={event.id} eventChat={chatData} />
                 </Grid.Column>
                 <Grid.Column width={6}>
                     <EventDetailedSidebar attendees={attendees} />

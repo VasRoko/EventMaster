@@ -9,7 +9,7 @@ class EventCommentForm extends Component {
         const { addEventComment, eventId, reset, closeForm, parentId } = this.props;
         addEventComment(eventId, values, parentId);
         reset();
-        if(parentId > 0) {
+        if(parentId !== 0) {
             closeForm();
         }
     }

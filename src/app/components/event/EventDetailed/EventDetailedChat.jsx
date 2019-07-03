@@ -65,6 +65,35 @@ class EventDetailedChat extends Component {
                                             }
                                         </Comment.Actions>
                                     </Comment.Content>
+
+                                    {/* Comment Reply */}
+                                    <Comment.Group>
+                                        { comment.childItems && comment.childItems.map(reply => 
+                                            <Comment key={reply.id}>
+                                                <Comment.Avatar src={ reply.photoURL || "/assets/img/user.png"}/>
+                                                <Comment.Content>
+                                                    <Comment.Author as={Link} to={`/profile/${reply.uid}`}>{reply.displayName}</Comment.Author>
+                                                    <Comment.Metadata>
+                                                        <div>{ distanceInWords(comment.date, Date.now()) }</div>
+                                                    </Comment.Metadata>
+                                                    <Comment.Text>{ reply.text }</Comment.Text>
+                                                    <Comment.Actions>
+                                                        <Comment.Action onClick={this.handleOpenReplyForm(reply.id)}>Reply</Comment.Action>
+                                                        { showReplyForm && selectedCommentId === reply.id &&      
+                                                            <EventCommentForm 
+                                                                closeForm={this.handleCloseReplyForm}
+                                                                addEventComment={addEventComment}
+                                                                form={`reply_${reply.id}`} 
+                                                                eventId={eventId}
+                                                                parentId={reply.parentId}
+                                                                content="Reply"
+                                                                />
+                                                        }
+                                                    </Comment.Actions>
+                                                </Comment.Content>
+                                            </Comment>  
+                                        )}
+                                    </Comment.Group>
                                 </Comment>
                             )
                         }
