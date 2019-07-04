@@ -9,13 +9,14 @@ class EventCommentForm extends Component {
         const { addEventComment, eventId, reset, closeForm, parentId } = this.props;
         addEventComment(eventId, values, parentId);
         reset();
+        
         if(parentId !== 0) {
             closeForm();
         }
     }
 
     render() {
-        const { content, parentId } = this.props;
+        const { content } = this.props;
         return (
             <Form onSubmit={this.props.handleSubmit(this.hundleCommentSubmit)} reply>
                 <Field name='comment' type='text' component={renderTextArea} rows={0} />
