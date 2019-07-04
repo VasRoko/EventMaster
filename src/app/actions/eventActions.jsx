@@ -84,8 +84,8 @@ export const getEvents = (getAllEvents, lastEvent) =>
             //         query = eventsRef.where('date', '>=', today ).orderBy('date').limit(2)
             // } else {
                 lastEvent ? 
-                    query = eventsRef.orderBy('date').startAfter(startAfter).limit(3) : 
-                    query = eventsRef.orderBy('date').limit(3)
+                    query = eventsRef.orderBy('date').startAfter(startAfter).limit(4) : 
+                    query = eventsRef.orderBy('date').limit(4)
             // }
 
             let querySnap = await query.get()
@@ -106,6 +106,21 @@ export const getEvents = (getAllEvents, lastEvent) =>
             return querySnap;
         } catch (e) {
             dispatch(asyncActionError());
+            errorNotification();
+            throw new Error({
+                _error: e.message
+            })
+        }
+
+    }
+
+export const getSingleEvent = ( eventId ) => 
+    async (dispatch, getState) => {
+        const firestore = firebase.firestore();
+        try {
+            const event =  await firestore.collection('events').doc(eventId).get()
+            return event.data();
+        } catch (e) {
             errorNotification();
             throw new Error({
                 _error: e.message

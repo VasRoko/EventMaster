@@ -9,12 +9,19 @@ import EventActivity from '../EventActivity/EventActivity';
 
 const mapStateToProps = (state) => ({
   events: state.events,
-  loading: state.async.loading
+  loading: state.async.loading,
+  activities: state.firestore.ordered.activity
 })
 
 const actions ={
   getEvents
 }
+
+const query = [{
+  collection: 'activity',
+  orderBy: ['timestamp', 'desc'],
+  limit: 5
+}]
 
 class EventDashboard extends Component {
   state = { 
@@ -76,18 +83,19 @@ class EventDashboard extends Component {
   }
 
   render() {
-    const {loading} = this.props;
+    const {loading, activities} = this.props;
     const { moreEvents, loadedEvents } = this.state;
+    
     if (this.state.loadingInitial) {
       return <LoadingComponent />
     } 
 
     return (
       <Grid>
-          <Grid.Column width={3}>
-            <EventActivity />
+          <Grid.Column width={5}>
+            <EventActivity activities={activities} />
           </Grid.Column>
-          <Grid.Column width={13}>
+          <Grid.Column width={11}>
               <Button.Group basic>
                 <Button active={!this.state.getAllEvents} onClick={this.handleGetFutureEvents}>Future Events</Button>
                 <Button active={this.state.getAllEvents} onClick={this.handleGetAllEvents}>All Events</Button>
@@ -108,5 +116,5 @@ class EventDashboard extends Component {
 }
 
 export default connect(mapStateToProps, actions)(
-  firestoreConnect([{collection: 'events'}])(EventDashboard)
+  firestoreConnect(query)(EventDashboard)
 );  

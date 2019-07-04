@@ -23,7 +23,7 @@ class App extends Component {
           <Route path='/' component={HomePage} exact />
         </Switch>
         <Route path='/(.+)' render={() => (
-          <Container className="main">
+          <Container fluid className="main">
               <div>
                 <NavBar />
                 <ModelManager />
@@ -38,13 +38,13 @@ class App extends Component {
                 <Switch>
                   <Route path='/' component={HomePage} exact />
                   <Route path='/events' component={EventDashboard} exact />
-                  <Route path='/events/:id' component={EventDetailedPage} />
-                  <Route path='/manage/:id' component={EventForm} />
-                  <Route path='/people' component={PeopleDashboard} />
-                  <Route path='/profile/:id' component={UserProfilePage} />
-                  <Route path='/settings' component={SettingsDashboard} />
-                  <Route path='/createEvent' component={EventForm} />
-                  <Route component={PageNotFound} />
+                    <Route path='/events/:id' component={EventDetailedPage} />
+                    <Route path='/manage/:id' component={EventForm} />
+                    <Route path='/people' component={PeopleDashboard} />
+                    <Route path='/profile/:id' component={UserProfilePage} />
+                    <Route path='/settings' component={SettingsDashboard} />
+                    <Route path='/createEvent' component={EventForm} />
+                    <Route component={PageNotFound} />
                 </Switch>
               </div>
           </Container>

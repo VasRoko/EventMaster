@@ -1,8 +1,8 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { firestoreConnect, isEmpty } from 'react-redux-firebase';
-import { Grid, Segment, Header } from 'semantic-ui-react';
+import { Grid, Segment, Header, Container } from 'semantic-ui-react';
 import UserProfilePhotos from './UserProfilePhotos';
 import UserProfileEvents from './UserProfileEvents';
 import UserProfileAbout from './UserProfileAbout';
@@ -68,7 +68,7 @@ const queryFirebase = ({ auth, userId }) => {
 class UserProfilePage extends Component {
     
     async componentDidMount() {
-        let events = await this.props.getUserEvents(this.props.userId || this.props.auth.uid);
+        await this.props.getUserEvents(this.props.userId || this.props.auth.uid);
     }
 
     changeTab = (e, data) => {
@@ -89,8 +89,7 @@ class UserProfilePage extends Component {
         }
 
         return (
-            <Fragment>
-                { !profile && <LoadingComponent content="Please wait ..." /> }
+            <Container>
                  <Grid>
                     <Grid.Row>
                         <Grid.Column width={4}>
@@ -117,7 +116,7 @@ class UserProfilePage extends Component {
                         </Grid.Column> 
                     </Grid.Row>
                 </Grid>
-            </Fragment>
+            </Container>
         )
     }
 }

@@ -9,6 +9,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 .main.container {
+  padding: 0em 6em;
   margin-top: 7em;
 }
 
