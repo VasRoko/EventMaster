@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { Grid, Button, Divider } from 'semantic-ui-react';
@@ -24,6 +24,9 @@ const query = [{
 }]
 
 class EventDashboard extends Component {
+
+  contextRef = createRef();
+
   state = { 
     getAllEvents: false,
     moreEvents: false,
@@ -42,7 +45,7 @@ class EventDashboard extends Component {
     }
   }
 
-  componentDidUpdate = (prevProps) => {
+  async componentDidUpdate(prevProps) {
     if(this.props.events !== prevProps.events) {
       this.setState({
         loadedEvents: [...this.state.loadedEvents, ...this.props.events]
@@ -54,6 +57,7 @@ class EventDashboard extends Component {
     const { events } = this.props;
     let lastEvent = events && events[events.length -1];
     let next = await this.props.getEvents(this.state.getAllEvents, lastEvent);
+    
     if (next && next.docs && next.docs.length <= 1) {
       this.setState({
         moreEvents: false
@@ -66,19 +70,23 @@ class EventDashboard extends Component {
     this.setState({
       selectedEvent: event,
     })
+    
   }
 
   handleGetAllEvents = () => {
     this.setState({
       getAllEvents: true,
-      moreEvents: true
+    }, () => {
+      // this.props.getEvents(this.state.getAllEvents)
     })
   }
 
   handleGetFutureEvents = () => {
     this.setState({
       getAllEvents: false,
-      moreEvents: true
+    }, () => {
+      console.log(this.state.getAllEvents)
+      // this.props.getMoreEvents()
     })
   }
 
@@ -93,7 +101,7 @@ class EventDashboard extends Component {
     return (
       <Grid>
           <Grid.Column width={5}>
-            <EventActivity activities={activities} />
+            <EventActivity createRef={this.createRef} activities={activities} />
           </Grid.Column>
           <Grid.Column width={11}>
               <Button.Group basic>
@@ -101,7 +109,9 @@ class EventDashboard extends Component {
                 <Button active={this.state.getAllEvents} onClick={this.handleGetAllEvents}>All Events</Button>
               </Button.Group>
               <Divider />
+              <div ref={this.createRef}>
               <EventList loading={loading} getMoreEvents={this.getMoreEvents} moreEvents={moreEvents} events={loadedEvents}/>
+              </div>
               <Divider />
           </Grid.Column>
           <Grid.Column width={3}></Grid.Column>

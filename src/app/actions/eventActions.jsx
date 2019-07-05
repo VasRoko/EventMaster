@@ -72,20 +72,21 @@ export const getEvents = (getAllEvents, lastEvent) =>
         // let today = new Date();
         const firestore = firebase.firestore();
         const eventsRef = firestore.collection('events');
+        const state = getState();
 
+        console.log(state)
         try {
             dispatch(asyncActionStart());
             let query;
             let startAfter = lastEvent && await firestore.collection('events').doc(lastEvent.id).get();            
-            
-            // if(!getAllEvents) {
-            //     lastEvent ? 
-            //         query = eventsRef.where('date', '>=', today ).orderBy('date').startAfter(startAfter).limit(2) : 
-            //         query = eventsRef.where('date', '>=', today ).orderBy('date').limit(2)
+
+            // if (getAllEvents) {
+                lastEvent ? query = eventsRef.orderBy('date').startAfter(startAfter).limit(4) : 
+                query = eventsRef.orderBy('date').limit(4)
+                
             // } else {
-                lastEvent ? 
-                    query = eventsRef.orderBy('date').startAfter(startAfter).limit(4) : 
-                    query = eventsRef.orderBy('date').limit(4)
+            //     lastEvent ? query = eventsRef.where('date', '>=', today ).orderBy('date').startAfter(startAfter).limit(4) : 
+            //         query = eventsRef.where('date', '>=', today ).orderBy('date').limit(4)
             // }
 
             let querySnap = await query.get()
