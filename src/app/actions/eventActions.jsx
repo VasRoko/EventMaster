@@ -81,8 +81,8 @@ export const getEvents = (getAllEvents, lastEvent) =>
             let startAfter = lastEvent && await firestore.collection('events').doc(lastEvent.id).get();            
 
             // if (getAllEvents) {
-                lastEvent ? query = eventsRef.orderBy('date').startAfter(startAfter).limit(4) : 
-                query = eventsRef.orderBy('date').limit(4)
+            lastEvent ? query = eventsRef.orderBy('date').startAfter(startAfter).limit(4) : 
+            query = eventsRef.orderBy('date').limit(4)
                 
             // } else {
             //     lastEvent ? query = eventsRef.where('date', '>=', today ).orderBy('date').startAfter(startAfter).limit(4) : 
