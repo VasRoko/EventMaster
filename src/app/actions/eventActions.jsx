@@ -72,9 +72,8 @@ export const getEvents = (getAllEvents, lastEvent) =>
         // let today = new Date();
         const firestore = firebase.firestore();
         const eventsRef = firestore.collection('events');
-        const state = getState();
+        // const state = getState();
 
-        console.log(state)
         try {
             dispatch(asyncActionStart());
             let query;

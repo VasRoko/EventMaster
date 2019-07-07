@@ -100,7 +100,7 @@ export const deletePhoto = (photo) =>
 export const setMainPhoto = photo => 
     async(dispatch, getState, {getFirebase}) => {
         const firestore = firebase.firestore();
-        const user  = firestore.auth().currentUser;
+        const user  = firebase.auth().currentUser;
         const today = new Date();
 
         let userDoc = firestore.collection('users').doc(user.uid);
@@ -116,7 +116,7 @@ export const setMainPhoto = photo =>
 
             let eventQuery = await eventAttedneeRef
             .where('userUid', '==',  user.uid)
-            .where('eventData', '>=', today);
+            .where('eventDate', '>=', today);
 
             let eventQuerySnap = await eventQuery.get();
 
@@ -139,6 +139,7 @@ export const setMainPhoto = photo =>
             dispatch(asyncActionFinish());
 
         } catch (e) {
+            console.log(e.message)
             dispatch(asyncActionError());
             throw new Error({
                 _error: e.message
