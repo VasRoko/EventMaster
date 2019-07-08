@@ -25,6 +25,7 @@ const mapState = (state, ownProps) => {
 
     return {
         initialValues: event,
+        loading: state.async.loading,
         event
     }
 }
@@ -134,7 +135,7 @@ class EventForm extends Component {
     }
 
     render() {
-        const { invalid, submitting, pristine, event } = this.props;
+        const { invalid, submitting, pristine, event, loading } = this.props;
         
         return (
             <Grid>
@@ -173,8 +174,8 @@ class EventForm extends Component {
                                     showTimeSelect
                                     timeFormat='HH:mm'                           
                                 />
-                            <Button positive disabled={ invalid || submitting || pristine } type="submit">Submit</Button>
-                            <Button type="button" onClick={this.handleCancel}>Cancel</Button>
+                            <Button positive loading={loading} disabled={ invalid || submitting || pristine } type="submit">Submit</Button>
+                            <Button type="button" onClick={this.handleCancel} disabled={loading}>Cancel</Button>
                         </Form>
                     </Segment>
                 </Grid.Column>

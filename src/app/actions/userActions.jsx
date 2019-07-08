@@ -13,6 +13,7 @@ export const updateProfile = (user) =>
 
         try {
             firebase.updateProfile(updatedUser);
+            
             successNotification('Success', 'You profile updated');
         } catch (e) {
             errorNotification();

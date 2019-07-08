@@ -32,12 +32,39 @@ export const createEvent = (event) =>
     }
 
 export const updateEvent = (event) =>
-    async (dispatch, getState, {getFirestore}) => {
-        const firestore = getFirestore();
+    async (dispatch, getState) => {
+        const firestore = firebase.firestore();
+
         try {
-            await firestore.update(`events/${event.id}`, event);
+            dispatch(asyncActionStart());
+            let eventDoc = firestore.collection('events').doc(event.id);
+            let dateEqual = getState().firestore.ordered.events[0].date.isEqual(event.date);
+
+            if(!dateEqual) {
+                let batch = firestore.batch()
+                batch.update(eventDoc, event)
+
+                let eventAttendee = firestore.collection('event_attendee');
+                let eventAttendeeQuery = await eventAttendee.where('eventId', '==', event.id);
+                let eventAttendeeQuerySnap = await eventAttendeeQuery.get();
+
+                for(let i = 0; i < eventAttendeeQuerySnap.docs.length; i++) {
+                    let eventAttendee = await firestore.collection('event_attendee').doc(eventAttendeeQuerySnap.docs[i].id);
+
+                    batch.update(eventAttendee, {
+                        eventDate: event.date
+                    })
+                }
+
+                await batch.commit()
+            } else {
+                await eventDoc.update(event);
+            }
             successNotification('Success!', 'Your event has been updated!');
+            dispatch(asyncActionFinish());
         } catch (e) {
+            dispatch(asyncActionError());
+            console.log(e.message)
             throw new Error({
                 _error: e.message
             })
