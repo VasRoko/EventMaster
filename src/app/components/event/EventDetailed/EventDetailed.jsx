@@ -36,9 +36,13 @@ class EventDetailed extends Component  {
 
     async componentDidMount() {
         let eventData = await this.props.getSingleEvent(this.props.match.params.id);
+        const eventId = this.props.match.params.id;
 
         this.setState({
-            event: eventData
+            event: {
+                id: eventId,
+                ...eventData
+            }
         })
     }
 
@@ -46,10 +50,10 @@ class EventDetailed extends Component  {
         
         const { auth, goingToEvent, cancleGoingToEvent, addEventComment, eventChat } = this.props;
         const { event } = this.state;
-        
         const attendees = event && event.attendees && objectToArray(event.attendees);
         const isHost = event.hostUid === auth.uid
-        const isGoing = attendees && attendees.some(a => a.id === auth.uid)
+        const isGoing = attendees && attendees.some(a => a.id === auth.uid);
+        console.log(isGoing)
         const chatData = !isEmpty(eventChat) && createDataTree(eventChat);
 
         if(Object.entries(event).length === 0) {

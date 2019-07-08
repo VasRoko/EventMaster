@@ -121,6 +121,7 @@ export const getSingleEvent = ( eventId ) =>
             const event =  await firestore.collection('events').doc(eventId).get()
             return event.data();
         } catch (e) {
+            console.log(e.message);
             errorNotification();
             throw new Error({
                 _error: e.message

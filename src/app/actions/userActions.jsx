@@ -98,9 +98,9 @@ export const deletePhoto = (photo) =>
     }
 
 export const setMainPhoto = photo => 
-    async(dispatch, getState, {getFirebase}) => {
+    async(dispatch, getState) => {
         const firestore = firebase.firestore();
-        const user  = firebase.auth().currentUser;
+        const user = firebase.auth().currentUser;
         const today = new Date();
 
         let userDoc = firestore.collection('users').doc(user.uid);
@@ -114,15 +114,13 @@ export const setMainPhoto = photo =>
                 photoURL: photo.url
             });
 
-            let eventQuery = await eventAttedneeRef
-            .where('userUid', '==',  user.uid)
-            .where('eventDate', '>=', today);
-
+            let eventQuery = await eventAttedneeRef.where('userUid', '==',  user.uid).where('eventDate', '>=', today);
             let eventQuerySnap = await eventQuery.get();
 
             for ( let i = 0; i < eventQuerySnap.docs.length; i++ ) {
-                let eventDocRef = await firestore.collection('events').doc(eventQuerySnap.doc[i].data().eventId)
+                let eventDocRef = await firestore.collection('events').doc(eventQuerySnap.docs[i].data().eventId)
                 let event = await eventDocRef.get();
+
                 if (event.data().hostUid === user.uid) {
                     batch.update(eventDocRef, {
                         hostPhotoUrl: photo.url,
@@ -134,7 +132,7 @@ export const setMainPhoto = photo =>
                     }) 
                 }
             }
-
+            console.log(batch);
             await batch.commit();
             dispatch(asyncActionFinish());
 
@@ -153,7 +151,7 @@ export const goingToEvent = (event) =>
         const firebase = getFirebase();
         const user = firebase.auth().currentUser;
         const userProfile = getState().firebase.profile;
-
+        
         const attendee = {
             going: true,
             host: false,
@@ -161,6 +159,10 @@ export const goingToEvent = (event) =>
             photoURL: userProfile.photoURL || '/assets/user.png',
             displayName: userProfile.displayName,
         }
+
+        console.log(event.id);
+        debugger;
+
         try {
             await firestore.update(`events/${event.id}`, {
                 [`attendees.${user.uid}`]: attendee
@@ -173,6 +175,7 @@ export const goingToEvent = (event) =>
             });
             successNotification();
         } catch (e) {
+            console.log(e.message)
             errorNotification();
             throw new Error({
                 _error: e.message
