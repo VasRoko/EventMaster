@@ -10,7 +10,7 @@ const newActivity = (type, event, id) => {
         photoURL: event.hostPhotoUrl,
         timestamp: admin.firestore.FieldValue.serverTimestamp(),
         hostUid: event.hostUid,
-        eventId: event.id
+        eventId: id
     }
 }
 
@@ -35,7 +35,7 @@ exports.createActivity = functions.firestore.document('events/{eventId}').onCrea
 exports.cancelActivity = functions.firestore.document('events/{eventId}').onUpdate((event, context) => {
     let updatedEventData = event.after.data();
     let previousEventData = event.before.data();
-
+    
     console.log({event});
     console.log({context});
     console.log({updatedEventData});
@@ -50,6 +50,30 @@ exports.cancelActivity = functions.firestore.document('events/{eventId}').onUpda
 
     return admin.firestore().collection('activity').add(activity).then((docRef) => {
         return console.log('Activity deleted with ID: ', docRef.id)
+    }).catch((e) => {
+        return console.log('Error adding activity ', e);
+    })
+});
+
+
+exports.reActivatedActivity = functions.firestore.document('events/{eventId}').onUpdate((event, context) => {
+    let updatedEventData = event.after.data();
+    let previousEventData = event.before.data();
+    
+    console.log({event});
+    console.log({context});
+    console.log({updatedEventData});
+    console.log({previousEventData});
+
+    if (updatedEventData.cancelled || updatedEventData.cancelled === previousEventData.cancelled) {
+        return false;
+    }
+
+    const activity = newActivity('reActivatedEvent', updatedEventData, context.params.eventId );
+    console.log({activity});
+
+    return admin.firestore().collection('activity').add(activity).then((docRef) => {
+        return console.log('Activity reactivated with ID: ', docRef.id)
     }).catch((e) => {
         return console.log('Error adding activity ', e);
     })

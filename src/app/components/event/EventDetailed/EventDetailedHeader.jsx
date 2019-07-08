@@ -42,7 +42,9 @@ const EventDetailedHeader = ({event, isHost, isGoing, goingToEvent, cancleGoingT
                 {
                     !isHost &&  
                     <Fragment>
-                        { isGoing ? <Button onClick={() => cancleGoingToEvent(event)}>Cancel My Place</Button> :  <Button onClick={() => goingToEvent(event)} color="teal">JOIN THIS EVENT</Button> }
+                        { isGoing ? 
+                        <Button onClick={() => cancleGoingToEvent(event)}>Cancel My Place</Button> :  
+                        <Button onClick={() => goingToEvent(event)} color="teal">JOIN THIS EVENT</Button> }
                     </Fragment>
                 }
                 {

@@ -124,15 +124,15 @@ export const setMainPhoto = photo =>
                 if (event.data().hostUid === user.uid) {
                     batch.update(eventDocRef, {
                         hostPhotoUrl: photo.url,
-                        [`attendees.${user.id}.photoUrl`]: photo.url
+                        [`attendees.${user.uid}.photoURL`]: photo.url
                     }) 
                 } else {
                     batch.update(eventDocRef, {
-                        [`attendees.${user.id}.photoUrl`]: photo.url
+                        [`attendees.${user.uid}.photoURL`]: photo.url
                     }) 
                 }
             }
-            console.log(batch);
+            
             await batch.commit();
             dispatch(asyncActionFinish());
 

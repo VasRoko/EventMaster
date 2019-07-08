@@ -1,7 +1,7 @@
 import React, { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
-import { Grid, Button, Divider } from 'semantic-ui-react';
+import { Grid, Button, Divider, Header } from 'semantic-ui-react';
 import EventList from '../EventList/EventList';
 import { getEvents } from '../../../actions/eventActions';
 import LoadingComponent from '../../loading/LoadingComponent';
@@ -17,7 +17,7 @@ const actions ={
   getEvents
 }
 
-const query = [{
+const activityQuery = [{
   collection: 'activity',
   orderBy: ['timestamp', 'desc'],
   limit: 5
@@ -85,18 +85,30 @@ class EventDashboard extends Component {
     this.setState({
       getAllEvents: false,
     }, () => {
-      console.log(this.state.getAllEvents)
       // this.props.getMoreEvents()
     })
   }
 
   render() {
     const {loading, activities} = this.props;
-    const { moreEvents, loadedEvents } = this.state;
-    
-    if (this.state.loadingInitial) {
+    const { moreEvents, loadedEvents, loadingInitial } = this.state;
+
+    if(loadedEvents && loadedEvents.length === 0) {
+      return (
+        <Grid>
+            <Grid.Column width={5}>
+              <EventActivity createRef={this.createRef} activities={activities} />
+            </Grid.Column>
+            <Grid.Column style={{ textAlign: 'Center', padding: '10%' }} width={11}>
+                <Header as='h1'>No events</Header>
+            </Grid.Column>
+        </Grid>
+      )
+    }
+
+    if (loadingInitial && Object.entries(loadedEvents).length < 1) {
       return <LoadingComponent />
-    } 
+    }
 
     return (
       <Grid>
@@ -121,10 +133,11 @@ class EventDashboard extends Component {
               }
           </Grid.Column>
       </Grid>
+
     )
   }
 }
 
 export default connect(mapStateToProps, actions)(
-  firestoreConnect(query)(EventDashboard)
+  firestoreConnect(activityQuery)(EventDashboard)
 );  

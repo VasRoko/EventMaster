@@ -53,13 +53,12 @@ class EventDetailed extends Component  {
         const attendees = event && event.attendees && objectToArray(event.attendees);
         const isHost = event.hostUid === auth.uid
         const isGoing = attendees && attendees.some(a => a.id === auth.uid);
-        console.log(isGoing)
         const chatData = !isEmpty(eventChat) && createDataTree(eventChat);
 
         if(Object.entries(event).length === 0) {
             return <LoadingComponent content="Loading event..." />
         }
-
+        console.log(attendees)
         return (
             <Container>
                 <Grid>

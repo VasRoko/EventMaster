@@ -17,7 +17,7 @@ class EventActivityItem extends Component {
                         >
                             {activity.hostedBy}
                         </Feed.User>
-                        is hosting{' '}
+                        {' '}is hosting{' '}
                         <Link to={{ pathname: '/event/' + activity.eventId }}>
                             {activity.title}
                         </Link>
@@ -34,6 +34,22 @@ class EventActivityItem extends Component {
                             {activity.hostedBy}
                         </Feed.User>
                         {' '}has canceled{' '}
+                        <Link to={{ pathname: '/events/' + activity.eventId }}>
+                            {activity.title}
+                        </Link>
+                    </div>
+                )
+            case 'reActivatedEvent':
+                return (
+                    <div>
+                        Event Recreated!{' '}
+                        <Feed.User
+                            as={Link}
+                            to={{ pathname: '/profile/' + activity.hostUid }}
+                        >
+                            {activity.hostedBy}
+                        </Feed.User>
+                        {' '}has recreated {' '}
                         <Link to={{ pathname: '/events/' + activity.eventId }}>
                             {activity.title}
                         </Link>

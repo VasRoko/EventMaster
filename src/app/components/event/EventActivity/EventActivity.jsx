@@ -8,7 +8,7 @@ const EventActivity = ({ activities, createRef }) => {
             <Header attached='top' content='Recent Activity' />
             <Segment attached>
                 <Feed>
-                    { activities.length > 0 ? activities.map(item => 
+                    { activities && activities.length > 0 ? activities.map(item => 
                         <EventActivityItem key={item.id} activity={item} />
                     ) : <div>
                         <Header style={{ textAlign: 'center' }} as="h4" content="No Activities" />

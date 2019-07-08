@@ -112,7 +112,7 @@ const PhotosPage = ({ uploadAvatar, loading, photos, profile, deletePhoto, setMa
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
-                <PhotosCollection photos={photos} profile={profile} handleSetMainPhoto={handleSetMainPhoto} handleDeletePhoto={handleDeletePhoto} />
+                <PhotosCollection loading={loading} photos={photos} profile={profile} handleSetMainPhoto={handleSetMainPhoto} handleDeletePhoto={handleDeletePhoto} />
             </Segment>
         </Fragment>
     )
