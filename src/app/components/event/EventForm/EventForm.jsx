@@ -110,7 +110,7 @@ class EventForm extends Component {
                 if (Object.keys(values.venueLatLng).length === 0) {
                     values.venueLatLng = this.props.event.venueLatLng;
                 }
-                this.props.updateEvent(values);
+                await this.props.updateEvent(values);
                 this.props.history.push('/events/');
             } else {
                 await this.props.createEvent(values);
