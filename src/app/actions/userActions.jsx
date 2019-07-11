@@ -202,10 +202,12 @@ export const goingToEvent = (event) =>
                 })
             })
             const eventObj = await eventDoc.get();
-
             dispatch(asyncActionFinish());
             successNotification();
-            return eventObj.data(); 
+            return {
+                id: eventObj.id,
+                ...eventObj.data()
+            }; 
         } catch (e) {
             dispatch(asyncActionError());
             errorNotification();
@@ -233,7 +235,10 @@ export const goingToEvent = (event) =>
                 const eventObj = await firestore.collection('events').doc(event.id).get();
                 dispatch(asyncActionFinish());
                 successNotification();
-                return eventObj.data();
+                return {
+                    id: eventObj.id,
+                    ...eventObj.data()
+                }; 
             } catch (e) {
                 dispatch(asyncActionError());
                 errorNotification();
