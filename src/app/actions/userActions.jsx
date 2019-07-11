@@ -171,7 +171,6 @@ export const goingToEvent = (event) =>
 
             dispatch(asyncActionFinish());
             successNotification();
-            
             return eventObj.data(); 
         } catch (e) {
             dispatch(asyncActionError());
@@ -190,15 +189,19 @@ export const goingToEvent = (event) =>
 
             const firebase = getFirebase();
             const firestore = getFirestore();
-
             const user = firebase.auth().currentUser;
             try {
+                dispatch(asyncActionStart());
                 await firestore.update(`events/${event.id}`, {
                     [`attendees.${user.uid}`]: firestore.FieldValue.delete()
                 })
                 await firestore.delete(`event_attendee/${event.id}_${user.uid}`);
+                const eventObj = await firestore.collection('events').doc(event.id).get();
+                dispatch(asyncActionFinish());
                 successNotification();
+                return eventObj.data();
             } catch (e) {
+                dispatch(asyncActionError());
                 errorNotification();
                 throw new Error(e.message)
             }

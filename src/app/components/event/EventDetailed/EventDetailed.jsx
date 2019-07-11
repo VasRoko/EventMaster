@@ -55,11 +55,9 @@ class EventDetailed extends Component  {
     }
 
     handleCancleGoingToEvent = async (event) => {
-        await this.props.cancleGoingToEvent(event);
-        await this.props.getSingleEvent(event.id);
-        
+        const UpdatedEvent = await this.props.cancleGoingToEvent(event);        
         this.setState({
-            event: event
+            event: UpdatedEvent
         })
 
     }

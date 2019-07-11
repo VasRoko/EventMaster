@@ -76,16 +76,12 @@ class EventDashboard extends Component {
   handleGetAllEvents = () => {
     this.setState({
       getAllEvents: true,
-    }, () => {
-      // this.props.getEvents(this.state.getAllEvents)
     })
   }
 
   handleGetFutureEvents = () => {
     this.setState({
       getAllEvents: false,
-    }, () => {
-      // this.props.getMoreEvents()
     })
   }
 
@@ -93,7 +89,11 @@ class EventDashboard extends Component {
     const {loading, activities} = this.props;
     const { moreEvents, loadedEvents, loadingInitial } = this.state;
 
-    if(loadedEvents && loadedEvents.length === 0) {
+    if (loadingInitial) {
+      return <LoadingComponent content="Please wait..." />
+    }
+    
+    if(loadedEvents.length === 0) {
       return (
         <Grid>
             <Grid.Column width={5}>
@@ -104,10 +104,6 @@ class EventDashboard extends Component {
             </Grid.Column>
         </Grid>
       )
-    }
-
-    if (loadingInitial && Object.entries(loadedEvents).length < 1) {
-      return <LoadingComponent />
     }
 
     return (
