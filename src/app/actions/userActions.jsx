@@ -10,37 +10,42 @@ export const updateProfile = (user) =>
         
         const { isLoaded, isEmpty, ...updatedUser } = user;        
         const firestore = firebase.firestore();
-        const userId = firebase.auth().currentUser.uid;
+        const currentUser = firebase.auth().currentUser;
         const today = new Date();
 
         try {
-            // firebase.updateProfile(updatedUser);
-            let userDoc = firestore.collection('users').doc(userId);
-            let eventAttedneeRef = firestore.collection('event_attendee');
-
-            dispatch(asyncActionStart());
-            let batch = firestore.batch();
-            batch.update(userDoc, updatedUser);
-
-            let eventsQuery = await eventAttedneeRef.where('userUid', '==',  userId).where('eventDate', '>=', today);
-            let eventsQuerySnap = await eventsQuery.get();
-
-            for ( let i = 0; i < eventsQuerySnap.docs.length; i++ ) {
-                let eventDocRef = await firestore.collection('events').doc(eventsQuerySnap.docs[i].data().eventId)
-                let event = await eventDocRef.get();
-
-                if (event.data().hostUid === userId) {
-                    batch.update(eventDocRef, {
-                        hostedBy: updatedUser.displayName,
-                        [`attendees.${userId}.displayName`]: updatedUser.displayName
-                    }) 
-                } else {
-                    batch.update(eventDocRef, {
-                        [`attendees.${userId}.displayName`]: updatedUser.displayName
-                    }) 
+            if (currentUser.displayName !== updatedUser.displayName ) {
+                let userDoc = firestore.collection('users').doc(currentUser.uid);
+                let eventAttedneeRef = firestore.collection('event_attendee');
+                
+                dispatch(asyncActionStart());
+                let batch = firestore.batch();
+                batch.update(userDoc, updatedUser);
+                await firebase.auth().currentUser.updateProfile(updatedUser);
+    
+                let eventsQuery = await eventAttedneeRef.where('userUid', '==',  currentUser.uid).where('eventDate', '>=', today);
+                let eventsQuerySnap = await eventsQuery.get();
+    
+                for ( let i = 0; i < eventsQuerySnap.docs.length; i++ ) {
+                    let eventDocRef = await firestore.collection('events').doc(eventsQuerySnap.docs[i].data().eventId)
+                    let event = await eventDocRef.get();
+    
+                    if (event.data().hostUid === currentUser.uid) {
+                        batch.update(eventDocRef, {
+                            hostedBy: updatedUser.displayName,
+                            [`attendees.${currentUser.uid}.displayName`]: updatedUser.displayName
+                        }) 
+                    } else {
+                        batch.update(eventDocRef, {
+                            [`attendees.${currentUser.uid}.displayName`]: updatedUser.displayName
+                        }) 
+                    }
                 }
+                await batch.commit();
+            } else {
+                firebase.updateProfile(updatedUser);
             }
-            await batch.commit();
+
             successNotification('Success', 'Your profile updated');
             dispatch(asyncActionFinish());
         } catch (e) {
@@ -215,7 +220,7 @@ export const goingToEvent = (event) =>
             if(event === null || event === undefined) {
                 throw new Error('Event object must be provided');
             } else {
-
+                
             const firebase = getFirebase();
             const firestore = getFirestore();
             const user = firebase.auth().currentUser;

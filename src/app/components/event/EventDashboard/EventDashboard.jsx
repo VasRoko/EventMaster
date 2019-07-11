@@ -89,11 +89,11 @@ class EventDashboard extends Component {
     const {loading, activities} = this.props;
     const { moreEvents, loadedEvents, loadingInitial } = this.state;
 
-    if (loadingInitial) {
+    if (loading && loadingInitial) {
       return <LoadingComponent content="Please wait..." />
     }
     
-    if(loadedEvents.length === 0) {
+    if ( loadedEvents.length === 0) {
       return (
         <Grid>
             <Grid.Column width={5}>
@@ -104,7 +104,7 @@ class EventDashboard extends Component {
             </Grid.Column>
         </Grid>
       )
-    }
+    } 
 
     return (
       <Grid>

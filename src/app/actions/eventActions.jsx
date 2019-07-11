@@ -9,13 +9,12 @@ export const createEvent = (event) =>
         const firebase = getFirebase();
         const firestore = getFirestore();
         const user = firebase.auth().currentUser;
-
         const photoURL = getState().firebase.profile.photoURL;
         const newEvent = createNewEvent(user, photoURL, event);
         
         try {
             let createdEvent = await firestore.add('events', newEvent);
-            await firestore.set(`event_attendee/${createdEvent.id}_${user.id}`, {
+            await firestore.set(`event_attendee/${createdEvent.id}_${user.uid}`, {
                 eventId: createdEvent.id,
                 userUid: user.uid,
                 eventDate: event.date,
@@ -25,9 +24,7 @@ export const createEvent = (event) =>
             return createdEvent;
         
         } catch (e) {
-            throw new Error({
-                _error: e.message
-            })
+            throw new Error(e.message)
         }
     }
 
@@ -65,9 +62,7 @@ export const updateEvent = (event) =>
         } catch (e) {
             dispatch(asyncActionError());
             console.log(e.message)
-            throw new Error({
-                _error: e.message
-            })
+            throw new Error(e.message)
         }
     }
 export const eventCancel = (cancelled, eventId) =>
@@ -79,9 +74,7 @@ export const eventCancel = (cancelled, eventId) =>
             })
             successNotification('Success!', 'Your have cancelled you event!');
         } catch(e) {
-            throw Error({
-                _error: e.message
-            })
+            throw new Error(e.message)
         }
     }
 
@@ -134,9 +127,7 @@ export const getEvents = (getAllEvents, lastEvent) =>
         } catch (e) {
             dispatch(asyncActionError());
             errorNotification();
-            throw new Error({
-                _error: e.message
-            })
+            throw new Error(e.message)
         }
 
     }
@@ -150,9 +141,8 @@ export const getSingleEvent = ( eventId ) =>
         } catch (e) {
             console.log(e.message);
             errorNotification();
-            throw new Error({
-                _error: e.message
-            })
+            throw new Error(e.message)
+
         }
 
     }
@@ -175,8 +165,6 @@ export const addEventComment = (eventId, values, parentId) =>
             successNotification('Success!', 'Your comment has been submitted' )
         } catch (ex) {
             errorNotification();
-            throw new Error({
-                _error: ex.message
-            })
+            throw new Error(ex.message)
         }
     }

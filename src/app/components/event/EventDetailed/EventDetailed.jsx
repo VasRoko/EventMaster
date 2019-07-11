@@ -74,7 +74,7 @@ class EventDetailed extends Component  {
         if(Object.entries(event).length === 0) {
             return <LoadingComponent content="Loading event..." />
         }
-        console.log(event)
+        
         return (
             <Container>
                 <Grid>
