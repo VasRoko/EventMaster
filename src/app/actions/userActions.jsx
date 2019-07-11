@@ -17,9 +17,7 @@ export const updateProfile = (user) =>
             successNotification('Success', 'You profile updated');
         } catch (e) {
             errorNotification();
-            throw new Error({
-                _error: e.message
-            })
+            throw new Error(e.message)
         }
     }
 
@@ -69,9 +67,7 @@ export const uploadAvatar = (file, fileName) =>
             dispatch(asyncActionFinish())
         } catch (e) {
             dispatch(asyncActionError());
-            throw new Error({
-                _error: e.message
-            })
+            throw new Error(e.message)
         }
     }      
 
@@ -92,9 +88,7 @@ export const deletePhoto = (photo) =>
             })
             dispatch(asyncActionFinish());
         } catch(e) {
-            throw new Error({
-                _error: e.message
-            })
+            throw new Error(e.message)
         }
     }
 
@@ -140,53 +134,60 @@ export const setMainPhoto = photo =>
         } catch (e) {
             console.log(e.message)
             dispatch(asyncActionError());
-            throw new Error({
-                _error: e.message
-            })
+            throw new Error(e.message)
         }
     }
 
 export const goingToEvent = (event) => 
-    async (dispatch, getState, {getFirebase, getFirestore}) => {
-        const firestore = getFirestore();
-        const firebase = getFirebase();
+    async (dispatch, getState) => {
+        dispatch(asyncActionStart());
+        const firestore = firebase.firestore();
         const user = firebase.auth().currentUser;
         const userProfile = getState().firebase.profile;
-        
         const attendee = {
             going: true,
             host: false,
-            joinDate: firestore.FieldValue.serverTimestamp(),
+            joinDate: new Date(),
             photoURL: userProfile.photoURL || '/assets/user.png',
             displayName: userProfile.displayName,
         }
-
-        console.log(event.id);
-        debugger;
-
         try {
-            await firestore.update(`events/${event.id}`, {
-                [`attendees.${user.uid}`]: attendee
-            });
-            await firestore.set(`event_attendee/${event.id}_${user.uid}`, {
-                eventId: event.id,
-                userUid: user.uid,
-                eventDate: event.date,
-                host: false
-            });
-            successNotification();
-        } catch (e) {
-            console.log(e.message)
-            errorNotification();
-            throw new Error({
-                _error: e.message
+            let eventDoc = firestore.collection('events').doc(event.id);
+            let eventAttendeeDoc = firestore.collection('event_attendee').doc(`${event.id}_${user.uid}`);
+
+            await firestore.runTransaction(async(transaction) => {
+                await transaction.get(eventDoc);
+                await transaction.update(eventDoc, {
+                    [`attendees.${user.uid}`]: attendee
+                })
+                await transaction.set(eventAttendeeDoc, {
+                    eventId: event.id,
+                    userUid: user.uid,
+                    eventDate: event.date,
+                    host: false
+                })
             })
+            const eventObj = await eventDoc.get();
+
+            dispatch(asyncActionFinish());
+            successNotification();
+            
+            return eventObj.data(); 
+        } catch (e) {
+            dispatch(asyncActionError());
+            errorNotification();
+            throw new Error(e.message)
+
         }
 
     }
 
     export const cancleGoingToEvent = (event) => 
-        async (dispatch, getState, {getFirestore, getFirebase}) => {
+        async (dispatch, getState, {getFirebase, getFirestore} ) => {
+            if(event === null || event === undefined) {
+                throw new Error('Event object must be provided');
+            } else {
+
             const firebase = getFirebase();
             const firestore = getFirestore();
 
@@ -199,11 +200,10 @@ export const goingToEvent = (event) =>
                 successNotification();
             } catch (e) {
                 errorNotification();
-                throw new Error({
-                    _error: e.message
-                })
+                throw new Error(e.message)
             }
         }
+    }
  
 export const getUserEvents = (userUid, activeTab) => 
     async (dispatch, getState) => {

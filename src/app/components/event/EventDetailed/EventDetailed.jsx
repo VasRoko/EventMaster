@@ -25,7 +25,8 @@ const actions = {
 const mapState = (state, ownProps) => {
     return {
         eventChat: !isEmpty(state.firebase.data.event_chat) && objectToArray(state.firebase.data.event_chat[ownProps.match.params.id]),
-        auth: state.firebase.auth
+        auth: state.firebase.auth,
+        loading: state.async.loading, 
     }
 }
 
@@ -46,9 +47,26 @@ class EventDetailed extends Component  {
         })
     }
 
+    handleGoingToEvent = async () => {
+        const UpdatedEvent = await this.props.goingToEvent(this.state.event);
+        this.setState({
+            event: UpdatedEvent
+        })
+    }
+
+    handleCancleGoingToEvent = async (event) => {
+        await this.props.cancleGoingToEvent(event);
+        await this.props.getSingleEvent(event.id);
+        
+        this.setState({
+            event: event
+        })
+
+    }
+
     render() {
         
-        const { auth, goingToEvent, cancleGoingToEvent, addEventComment, eventChat } = this.props;
+        const { loading, auth, addEventComment, eventChat } = this.props;
         const { event } = this.state;
         const attendees = event && event.attendees && objectToArray(event.attendees);
         const isHost = event.hostUid === auth.uid
@@ -58,11 +76,18 @@ class EventDetailed extends Component  {
         if(Object.entries(event).length === 0) {
             return <LoadingComponent content="Loading event..." />
         }
+
         return (
             <Container>
                 <Grid>
                     <Grid.Column width={10}>
-                        <EventDetailedHeader event={event} isHost={isHost} isGoing={isGoing} goingToEvent={goingToEvent} cancleGoingToEvent={cancleGoingToEvent} /> 
+                        <EventDetailedHeader 
+                        event={event} 
+                        isHost={isHost} 
+                        loading={loading}
+                        isGoing={isGoing} 
+                        goingToEvent={() => this.handleGoingToEvent(event)} 
+                        cancleGoingToEvent={() =>  this.handleCancleGoingToEvent(event)} /> 
                         <EventDetailedInfo event={event} />
                         <EventDetailedChat addEventComment={addEventComment} eventId={event.id} eventChat={chatData} />
                     </Grid.Column>
