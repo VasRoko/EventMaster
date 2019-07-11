@@ -19,9 +19,10 @@ const actions = {
 const mapState = (state) => ({
     providerId: state.firebase.auth.providerData[0].providerId,
     user: state.firebase.profile,
-    account: state.firebase.auth
+    account: state.firebase.auth,
+    loading: state.async.loading,
 })
-const SettingsDashboard = ({ updateEmail, updatePassword, providerId, account, user, updateProfile }) => {
+const SettingsDashboard = ({ loading, updateEmail, updatePassword, providerId, account, user, updateProfile }) => {
     return (
         <Container>
             <Grid>
@@ -31,7 +32,7 @@ const SettingsDashboard = ({ updateEmail, updatePassword, providerId, account, u
                 <Grid.Column width={12}>
                     <Switch>
                         <Redirect exact from='/settings' to='/settings/basic' />
-                        <Route path='/settings/basic' render={() => <BasicPage initialValues={user} updateProfile={updateProfile} />}/>
+                        <Route path='/settings/basic' render={() => <BasicPage initialValues={user} updateProfile={updateProfile} loading={loading} />}/>
                         <Route path='/settings/about' render={() => <AboutPage initialValues={user} updateProfile={updateProfile} /> }/>
                         <Route path='/settings/photos' component={PhotosPage}/>
                         <Route path='/settings/account' render={() => <AccountPage updatePassword={updatePassword} updateEmail={updateEmail} account={account} providerId={providerId} />}/>

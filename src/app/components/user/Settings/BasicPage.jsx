@@ -8,7 +8,7 @@ import { renderRadio, renderDateInput, renderTextInput } from '../../../common/f
 
 class BasicInfoPage extends Component {
     render() {
-        const {pristine, submitting, handleSubmit, updateProfile} = this.props;
+        const {pristine, submitting, handleSubmit, updateProfile, loading} = this.props;
         return (
             <Segment>
                 <Header dividing size="large" content="Basic Information"></Header>
@@ -32,7 +32,7 @@ class BasicInfoPage extends Component {
                     />
                     <Field width={8} name="city" options={{types: ['(cities)']}} component={PlaceInput} placeholder="City" />
                     <Divider />
-                    <Button disabled={pristine || submitting} positive size="large" content="Update Profile" />
+                    <Button loading={loading} disabled={pristine || submitting} positive size="large" content="Update Profile" />
                 </Form>
             </Segment>
         );

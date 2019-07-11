@@ -6,17 +6,46 @@ import { FETCH_EVENTS } from '../../const';
 import cuid from 'cuid';
 
 export const updateProfile = (user) => 
-    (dispatch, getState, {getFirebase}) => {
+    async (dispatch, getState) => {
         
-        const firebase = getFirebase();
-        const { isLoaded, isEmpty, ...updatedUser } = user;
+        const { isLoaded, isEmpty, ...updatedUser } = user;        
+        const firestore = firebase.firestore();
+        const userId = firebase.auth().currentUser.uid;
+        const today = new Date();
 
         try {
-            firebase.updateProfile(updatedUser);
-            
-            successNotification('Success', 'You profile updated');
+            // firebase.updateProfile(updatedUser);
+            let userDoc = firestore.collection('users').doc(userId);
+            let eventAttedneeRef = firestore.collection('event_attendee');
+
+            dispatch(asyncActionStart());
+            let batch = firestore.batch();
+            batch.update(userDoc, updatedUser);
+
+            let eventsQuery = await eventAttedneeRef.where('userUid', '==',  userId).where('eventDate', '>=', today);
+            let eventsQuerySnap = await eventsQuery.get();
+
+            for ( let i = 0; i < eventsQuerySnap.docs.length; i++ ) {
+                let eventDocRef = await firestore.collection('events').doc(eventsQuerySnap.docs[i].data().eventId)
+                let event = await eventDocRef.get();
+
+                if (event.data().hostUid === userId) {
+                    batch.update(eventDocRef, {
+                        hostedBy: updatedUser.displayName,
+                        [`attendees.${userId}.displayName`]: updatedUser.displayName
+                    }) 
+                } else {
+                    batch.update(eventDocRef, {
+                        [`attendees.${userId}.displayName`]: updatedUser.displayName
+                    }) 
+                }
+            }
+            await batch.commit();
+            successNotification('Success', 'Your profile updated');
+            dispatch(asyncActionFinish());
         } catch (e) {
             errorNotification();
+            dispatch(asyncActionError());
             throw new Error(e.message)
         }
     }

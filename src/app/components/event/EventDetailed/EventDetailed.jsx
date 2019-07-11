@@ -36,8 +36,8 @@ class EventDetailed extends Component  {
     }
 
     async componentDidMount() {
-        let eventData = await this.props.getSingleEvent(this.props.match.params.id);
         const eventId = this.props.match.params.id;
+        let eventData = await this.props.getSingleEvent(eventId);
 
         this.setState({
             event: {
@@ -47,8 +47,8 @@ class EventDetailed extends Component  {
         })
     }
 
-    handleGoingToEvent = async () => {
-        const UpdatedEvent = await this.props.goingToEvent(this.state.event);
+    handleGoingToEvent = async (event) => {
+        const UpdatedEvent = await this.props.goingToEvent(event);
         this.setState({
             event: UpdatedEvent
         })
@@ -74,7 +74,7 @@ class EventDetailed extends Component  {
         if(Object.entries(event).length === 0) {
             return <LoadingComponent content="Loading event..." />
         }
-
+        console.log(event)
         return (
             <Container>
                 <Grid>
