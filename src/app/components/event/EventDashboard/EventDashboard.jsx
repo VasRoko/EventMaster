@@ -20,7 +20,7 @@ const actions ={
 const activityQuery = [{
   collection: 'activity',
   orderBy: ['timestamp', 'desc'],
-  limit: 5
+  limit: 10
 }]
 
 class EventDashboard extends Component {
@@ -46,17 +46,19 @@ class EventDashboard extends Component {
   }
 
   async componentDidUpdate(prevProps) {
-    if(this.props.events !== prevProps.events) {
+    
+    if (this.props.events !== prevProps.events) {
       this.setState({
         loadedEvents: [...this.state.loadedEvents, ...this.props.events]
       })
     }
+
   }
 
   getMoreEvents = async () => {
     const { events } = this.props;
     let lastEvent = events && events[events.length -1];
-    let next = await this.props.getEvents(this.state.getAllEvents, lastEvent);
+    let next = await this.props.getEvents(lastEvent);
     
     if (next && next.docs && next.docs.length <= 1) {
       this.setState({
@@ -71,18 +73,6 @@ class EventDashboard extends Component {
       selectedEvent: event,
     })
     
-  }
-
-  handleGetAllEvents = () => {
-    this.setState({
-      getAllEvents: true,
-    })
-  }
-
-  handleGetFutureEvents = () => {
-    this.setState({
-      getAllEvents: false,
-    })
   }
 
   render() {
@@ -113,12 +103,12 @@ class EventDashboard extends Component {
           </Grid.Column>
           <Grid.Column width={11}>
               <Button.Group basic>
-                <Button active={!this.state.getAllEvents} onClick={this.handleGetFutureEvents}>Future Events</Button>
-                <Button active={this.state.getAllEvents} onClick={this.handleGetAllEvents}>All Events</Button>
+                <Button active={!this.state.getAllEvents}>Future Events</Button>
+                <Button active={this.state.getAllEvents}>All Events</Button>
               </Button.Group>
               <Divider />
               <div ref={this.createRef}>
-              <EventList loading={loading} getMoreEvents={this.getMoreEvents} moreEvents={moreEvents} events={loadedEvents}/>
+                <EventList loading={loading} getMoreEvents={this.getMoreEvents} moreEvents={moreEvents} events={loadedEvents}/>
               </div>
               <Divider />
           </Grid.Column>

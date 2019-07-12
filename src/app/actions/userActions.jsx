@@ -178,6 +178,7 @@ export const goingToEvent = (event) =>
         const firestore = firebase.firestore();
         const user = firebase.auth().currentUser;
         const userProfile = getState().firebase.profile;
+
         const attendee = {
             going: true,
             host: false,
@@ -185,6 +186,7 @@ export const goingToEvent = (event) =>
             photoURL: userProfile.photoURL || '/assets/user.png',
             displayName: userProfile.displayName,
         }
+
         try {
             let eventDoc = firestore.collection('events').doc(event.id);
             let eventAttendeeDoc = firestore.collection('event_attendee').doc(`${event.id}_${user.uid}`);
@@ -201,6 +203,7 @@ export const goingToEvent = (event) =>
                     host: false
                 })
             })
+            
             const eventObj = await eventDoc.get();
             dispatch(asyncActionFinish());
             successNotification();
@@ -208,11 +211,11 @@ export const goingToEvent = (event) =>
                 id: eventObj.id,
                 ...eventObj.data()
             }; 
+
         } catch (e) {
             dispatch(asyncActionError());
             errorNotification();
             throw new Error(e.message)
-
         }
 
     }

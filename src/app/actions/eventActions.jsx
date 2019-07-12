@@ -87,7 +87,7 @@ export const deleteEvent = (eventId) => {
     }
 }
 
-export const getEvents = (getAllEvents, lastEvent) => 
+export const getEvents = (lastEvent) => 
     async (dispatch, getState) => {
         // let today = new Date();
         const firestore = firebase.firestore();
