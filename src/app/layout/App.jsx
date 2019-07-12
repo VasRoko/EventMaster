@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 import ReduxToastr from 'react-redux-toastr'
+import { UserAuthenticated } from '../auth/AuthWrapper';
 
 import NavBar from '../components/nav/NavBar/NavBar';
 import HomePage from '../components/home/HomePage';
@@ -39,11 +40,11 @@ class App extends Component {
                   <Route path='/' component={HomePage} exact />
                   <Route path='/events' component={EventDashboard} exact />
                     <Route path='/events/:id' component={EventDetailedPage} />
-                    <Route path='/manage/:id' component={EventForm} />
-                    <Route path='/people' component={PeopleDashboard} />
-                    <Route path='/profile/:id' component={UserProfilePage} />
-                    <Route path='/settings' component={SettingsDashboard} />
-                    <Route path='/createEvent' component={EventForm} />
+                    <Route path='/manage/:id' component={UserAuthenticated(EventForm)} />
+                    <Route path='/people' component={UserAuthenticated(PeopleDashboard)} />
+                    <Route path='/profile/:id' component={UserAuthenticated(UserProfilePage)} />
+                    <Route path='/settings' component={UserAuthenticated(SettingsDashboard)} />
+                    <Route path='/createEvent' component={UserAuthenticated(EventForm)} />
                     <Route component={PageNotFound} />
                 </Switch>
               </div>

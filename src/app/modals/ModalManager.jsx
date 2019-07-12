@@ -3,11 +3,13 @@ import { connect } from 'react-redux';
 import LoginModal from '../modals/LoginModal';
 import InfoModal from '../modals/InfoModal';
 import RegisterModal from '../modals/RegisterModal';
+import UnAuthModal from './UnAuthModal';
 import PasswordResetModal from './PasswordResetModal';
 
 const modalLookup = {
     InfoModal,
     LoginModal,
+    UnAuthModal,
     RegisterModal,
     PasswordResetModal,
 }
