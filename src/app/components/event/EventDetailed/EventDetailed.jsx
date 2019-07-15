@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Grid, Container } from 'semantic-ui-react';
+import { Grid, Container, Segment } from 'semantic-ui-react';
 import EventDetailedHeader from './EventDetailedHeader';
 import EventDetailedInfo from './EventDetailedInfo';
 import EventDetailedChat from './EventDetailedChat';
@@ -10,11 +10,13 @@ import { goingToEvent, cancleGoingToEvent } from '../../../actions/userActions';
 import { getSingleEvent} from '../../../actions/eventActions';
 
 import { compose } from 'redux';
+import { openModal } from '../../../actions/modalActions';
 import { addEventComment } from '../../../actions/eventActions'
 import { objectToArray, createDataTree } from '../../../common/util/helpers';
 import LoadingComponent from '../../loading/LoadingComponent';
 
 const actions = {
+    openModal,
     goingToEvent,
     getSingleEvent,
     addEventComment,
@@ -64,12 +66,13 @@ class EventDetailed extends Component  {
 
     render() {
         
-        const { loading, auth, addEventComment, eventChat } = this.props;
+        const { openModal, loading, auth, addEventComment, eventChat } = this.props;
         const { event } = this.state;
         const attendees = event && event.attendees && objectToArray(event.attendees);
         const isHost = event.hostUid === auth.uid
         const isGoing = attendees && attendees.some(a => a.id === auth.uid);
         const chatData = !isEmpty(eventChat) && createDataTree(eventChat);
+        const authenticated = auth.isLoaded && !auth.isEmpty; 
 
         if(Object.entries(event).length === 0) {
             return <LoadingComponent content="Loading event..." />
@@ -85,9 +88,14 @@ class EventDetailed extends Component  {
                         loading={loading}
                         isGoing={isGoing} 
                         goingToEvent={() => this.handleGoingToEvent(event)} 
-                        cancleGoingToEvent={() =>  this.handleCancleGoingToEvent(event)} /> 
+                        cancleGoingToEvent={() =>  this.handleCancleGoingToEvent(event)}
+                        authenticated={authenticated}
+                        openModal={openModal}
+                        /> 
                         <EventDetailedInfo event={event} />
-                        <EventDetailedChat addEventComment={addEventComment} eventId={event.id} eventChat={chatData} />
+                        { authenticated ? <EventDetailedChat addEventComment={addEventComment} eventId={event.id} eventChat={chatData} /> :
+                            <Segment style={{ textAlign: 'center' }}> Please login to make a comment !  </Segment>
+                        }
                     </Grid.Column>
                     <Grid.Column width={6}>
                         <EventDetailedSidebar attendees={attendees} />

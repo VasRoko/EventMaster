@@ -16,7 +16,7 @@ const imageTestStyle = {
     color: 'white',
 }; 
 
-const EventDetailedHeader = ({event, isHost, isGoing, loading, goingToEvent, cancleGoingToEvent }) => {
+const EventDetailedHeader = ({event, authenticated, openModal, isHost, isGoing, loading, goingToEvent, cancleGoingToEvent }) => {
     return (
         <Segment.Group>
             <Segment basic attached="top" style={{ padding: '0'}}>
@@ -41,11 +41,13 @@ const EventDetailedHeader = ({event, isHost, isGoing, loading, goingToEvent, can
             <Segment attached="bottom">
                 {
                     !isHost &&  
-                    <Fragment>
-                        { isGoing ? 
-                        <Button loading={loading} onClick={() => cancleGoingToEvent(event)}>Cancel My Place</Button> :  
-                        <Button loading={loading} onClick={() => goingToEvent(event)} color="teal">JOIN THIS EVENT</Button> }
-                    </Fragment>
+                        <Fragment>
+                            { isGoing ? 
+                            <Button loading={loading} onClick={() => cancleGoingToEvent(event)}>Cancel My Place</Button> :  
+                                authenticated ? <Button loading={loading} onClick={() => goingToEvent(event)} color="teal">JOIN THIS EVENT</Button> 
+                                : <Button loading={loading} onClick={() => openModal('UnAuthModal')} color="teal">JOIN THIS EVENT</Button>
+                            }
+                        </Fragment>
                 }
                 {
                     isHost && <Button as={Link} to={`/manage/${event.id}`} color="orange" >
