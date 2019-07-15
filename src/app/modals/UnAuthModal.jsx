@@ -2,15 +2,24 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Modal, Button, Divider } from 'semantic-ui-react';
 import { closeModal, openModal } from '../actions/modalActions';
+import { withRouter } from 'react-router-dom';
 
 const actions = {
+    openModal,
     closeModal
 };
 
 class UnAuthModal extends Component {
+
+  handleCloseModal = () => {
+    this.props.history.goBack();
+    this.props.closeModal()
+  }
+
   render() {
+    const { openModal } = this.props;
     return (
-      <Modal size="mini" open={true} onClose={this.props.closeModal}>
+      <Modal size="mini" open={true} onClose={this.handleCloseModal}>
           <Modal.Header> You need to be signed in to do this! </Modal.Header>
           <Modal.Content>
               <Modal.Description>
@@ -22,7 +31,7 @@ class UnAuthModal extends Component {
                   <Divider />
                   <div style={{ textAlign: 'center' }}>
                     <p>Or Click tcancel to continue as a guest</p>
-                    <Button onClick={closeModal}>Cancel</Button>
+                    <Button onClick={this.handleCloseModal}>Cancel</Button>
                   </div>
               </Modal.Description>
              
@@ -32,4 +41,4 @@ class UnAuthModal extends Component {
   }
 }
 
-export default connect(null, actions)(UnAuthModal);
+export default withRouter(connect(null, actions)(UnAuthModal));
