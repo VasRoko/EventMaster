@@ -8,7 +8,7 @@ import LoadingComponent from '../../loading/LoadingComponent';
 import EventActivity from '../EventActivity/EventActivity';
 
 const mapStateToProps = (state) => ({
-  events: state.events,
+  events: state.events.data,
   loading: state.async.loading,
   activities: state.firestore.ordered.activity
 })

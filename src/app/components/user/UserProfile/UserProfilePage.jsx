@@ -10,6 +10,7 @@ import UserProfileHeader from './UserProfileHeader';
 import LoadingComponent from '../../loading/LoadingComponent';
 import UserProfileAvatar from './UserProfileAvatar';
 import { getUserEvents } from '../../../actions/userActions'
+import PageNotFound from '../../pagenotfound/PageNotFound';
 
 const actions = {
     getUserEvents
@@ -30,7 +31,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         profile,
         userId,
-        events: state.events,
+        events: state.events.userEvents,
         eventsLoading: state.async.loading,
         auth: state.firebase.auth,
         photos: state.firestore.ordered.photos,
@@ -89,34 +90,40 @@ class UserProfilePage extends Component {
         }
 
         return (
-            <Container>
-                 <Grid>
-                    <Grid.Row>
-                        <Grid.Column width={4}>
-                            <UserProfileAvatar user={profile} userId={userId} />
-                        </Grid.Column>
-                        <Grid.Column width={12}>
-                            { 
-                                photos && photos.length > 1 ? <UserProfilePhotos photos={filteredPhotos} /> :
-                                <Segment>
-                                    <Header style={{ textAlign: 'center', margin: '10.5% 0px' }} as="h1" content="No photos to display" />
-                                </Segment>
-                            }
-                            <UserProfileHeader user={profile} />
-                        </Grid.Column>
-                    </Grid.Row>
-
-                    <Grid.Row>
-                        <Grid.Column width={4}>
-                            <UserProfileAbout user={profile}/>                   
-                        </Grid.Column>
-
-                        <Grid.Column width={12}>
-                            <UserProfileEvents changeTab={this.changeTab} events={events} eventsLoading={eventsLoading} />
-                        </Grid.Column> 
-                    </Grid.Row>
-                </Grid>
-            </Container>
+            <div>
+                {
+                    profile ? 
+                        <Container>
+                            <Grid>
+                                <Grid.Row>
+                                    <Grid.Column width={4}>
+                                        <UserProfileAvatar user={profile} userId={userId} />
+                                    </Grid.Column>
+                                    <Grid.Column width={12}>
+                                        { 
+                                            photos && photos.length > 1 ? <UserProfilePhotos photos={filteredPhotos} /> :
+                                            <Segment>
+                                                <Header style={{ textAlign: 'center', margin: '10.5% 0px' }} as="h1" content="No photos to display" />
+                                            </Segment>
+                                        }
+                                        <UserProfileHeader user={profile} />
+                                    </Grid.Column>
+                                </Grid.Row>
+            
+                                <Grid.Row>
+                                    <Grid.Column width={4}>
+                                        <UserProfileAbout user={profile}/>                   
+                                    </Grid.Column>
+            
+                                    <Grid.Column width={12}>
+                                        <UserProfileEvents changeTab={this.changeTab} events={events} eventsLoading={eventsLoading} />
+                                    </Grid.Column> 
+                                </Grid.Row>
+                            </Grid>
+                        </Container> 
+                    : <PageNotFound />
+                }
+            </div>
         )
     }
 }

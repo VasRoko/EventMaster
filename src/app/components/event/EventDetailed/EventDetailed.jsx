@@ -14,6 +14,7 @@ import { openModal } from '../../../actions/modalActions';
 import { addEventComment } from '../../../actions/eventActions'
 import { objectToArray, createDataTree } from '../../../common/util/helpers';
 import LoadingComponent from '../../loading/LoadingComponent';
+import PageNotFound from '../../pagenotfound/PageNotFound';
 
 const actions = {
     openModal,
@@ -40,7 +41,6 @@ class EventDetailed extends Component  {
     async componentDidMount() {
         const eventId = this.props.match.params.id;
         let eventData = await this.props.getSingleEvent(eventId);
-
         this.setState({
             event: {
                 id: eventId,
@@ -74,12 +74,14 @@ class EventDetailed extends Component  {
         const chatData = !isEmpty(eventChat) && createDataTree(eventChat);
         const authenticated = auth.isLoaded && !auth.isEmpty; 
 
-        if(Object.entries(event).length === 0) {
-            return <LoadingComponent content="Loading event..." />
+        if (Object.entries(event).length === 0 ) {
+            return <LoadingComponent content="Loading event..." /> 
         }
         
         return (
-            <Container>
+            !event.isLoaded ? 
+                <PageNotFound />
+            : <Container>
                 <Grid>
                     <Grid.Column width={10}>
                         <EventDetailedHeader 

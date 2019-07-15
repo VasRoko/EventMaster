@@ -137,7 +137,19 @@ export const getSingleEvent = ( eventId ) =>
         const firestore = firebase.firestore();
         try {
             const event =  await firestore.collection('events').doc(eventId).get()
-            return event.data();
+
+
+
+            if(event.data() === undefined) {
+                return {
+                    isLoaded: false,
+                }    
+            } else {
+                return {
+                    isLoaded: true,
+                    ...event.data()
+                }
+            }
         } catch (e) {
             console.log(e.message);
             errorNotification();
