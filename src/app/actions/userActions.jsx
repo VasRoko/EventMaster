@@ -80,9 +80,11 @@ export const uploadAvatar = (file, fileName) =>
 
 
             if (!userDoc.data().photoURL) {
+
                 await firebase.updateProfile({
                     photoURL: photoURL
                 });
+
                 await user.updateProfile({
                     photoURL: photoURL
                 });
@@ -209,6 +211,7 @@ export const goingToEvent = (event) =>
             successNotification();
             return {
                 id: eventObj.id,
+                isLoaded: true,
                 ...eventObj.data()
             }; 
 
@@ -220,35 +223,36 @@ export const goingToEvent = (event) =>
 
     }
 
-    export const cancleGoingToEvent = (event) => 
-        async (dispatch, getState, {getFirebase, getFirestore} ) => {
-            if(event === null || event === undefined) {
-                throw new Error('Event object must be provided');
-            } else {
-                
-            const firebase = getFirebase();
-            const firestore = getFirestore();
-            const user = firebase.auth().currentUser;
-            try {
-                dispatch(asyncActionStart());
-                await firestore.update(`events/${event.id}`, {
-                    [`attendees.${user.uid}`]: firestore.FieldValue.delete()
-                })
-                await firestore.delete(`event_attendee/${event.id}_${user.uid}`);
-                const eventObj = await firestore.collection('events').doc(event.id).get();
-                dispatch(asyncActionFinish());
-                successNotification();
-                return {
-                    id: eventObj.id,
-                    ...eventObj.data()
-                }; 
-            } catch (e) {
-                dispatch(asyncActionError());
-                errorNotification();
-                throw new Error(e.message)
-            }
+export const cancleGoingToEvent = (event) => 
+    async (dispatch, getState, {getFirebase, getFirestore} ) => {
+        if(event === null || event === undefined) {
+            throw new Error('Event object must be provided');
+        } else {
+            
+        const firebase = getFirebase();
+        const firestore = getFirestore();
+        const user = firebase.auth().currentUser;
+        try {
+            dispatch(asyncActionStart());
+            await firestore.update(`events/${event.id}`, {
+                [`attendees.${user.uid}`]: firestore.FieldValue.delete()
+            })
+            await firestore.delete(`event_attendee/${event.id}_${user.uid}`);
+            const eventObj = await firestore.collection('events').doc(event.id).get();
+            dispatch(asyncActionFinish());
+            successNotification();
+            return {
+                id: eventObj.id,
+                isLoaded: true,
+                ...eventObj.data()
+            }; 
+        } catch (e) {
+            dispatch(asyncActionError());
+            errorNotification();
+            throw new Error(e.message)
         }
     }
+}
  
 export const getUserEvents = (userUid, activeTab) => 
     async (dispatch, getState) => {
@@ -297,5 +301,68 @@ export const getUserEvents = (userUid, activeTab) =>
         } catch(e) {
             dispatch(asyncActionError());
             console.log(e.message)
+        }
+    }
+
+export const followUser = (followeeId) => 
+    async (dispatch, getState, {getFirebase, getFirestore}) => {
+        const firebase = getFirebase();
+        const firestore = getFirestore();
+        const currentUser = firebase.auth().currentUser;
+        const followeeDoc = await firestore.collection('users').doc(followeeId).get();
+        const followee = followeeDoc.data();
+
+        try {
+            await firestore.add({
+                collection: 'users',
+                doc: followeeId,
+                subcollections: [{collection: 'followers'}]
+            }, {
+                uid: currentUser.uid,
+                photoURL: currentUser.photoURL || '/assets/user.png',
+                displayName: currentUser.displayName,
+            });
+
+            await firestore.add({
+                collection: 'users',
+                doc: currentUser.uid,
+                subcollections: [{collection: 'following'}]
+            }, {
+                uid: followeeId,
+                photoURL: followee.photoURL || '/assets/user.png',
+                displayName: followee.displayName,
+            });
+
+            successNotification();
+        } catch(e) {
+            throw new Error(e.message)
+        }
+    }
+
+
+export const unfollowUser = (followerId, followerDocId, followeeDocId) => 
+    async (dispatch, getState, {getFirebase, getFirestore}) => {
+        const firebase = getFirebase();
+        const firestore = getFirestore();
+        const currentUser = firebase.auth().currentUser;
+
+        try {
+            
+            await firestore.delete({
+                collection: 'users',
+                doc: followerId,
+                subcollections: [{ collection: 'followers', doc: followerDocId }]
+            })
+
+
+            await firestore.delete({
+                collection: 'users',
+                doc: currentUser.uid,
+                subcollections: [{ collection: 'following', doc: followeeDocId }]
+            })
+
+            successNotification();
+        } catch(e) {
+            throw new Error(e.message)
         }
     }

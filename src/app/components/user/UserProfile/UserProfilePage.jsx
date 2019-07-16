@@ -9,11 +9,13 @@ import UserProfileAbout from './UserProfileAbout';
 import UserProfileHeader from './UserProfileHeader';
 import LoadingComponent from '../../loading/LoadingComponent';
 import UserProfileAvatar from './UserProfileAvatar';
-import { getUserEvents } from '../../../actions/userActions'
+import { getUserEvents, followUser, unfollowUser } from '../../../actions/userActions'
 import PageNotFound from '../../pagenotfound/PageNotFound';
 
 const actions = {
-    getUserEvents
+    getUserEvents,
+    followUser,
+    unfollowUser
 }
 
 
@@ -35,6 +37,8 @@ const mapStateToProps = (state, ownProps) => {
         eventsLoading: state.async.loading,
         auth: state.firebase.auth,
         photos: state.firestore.ordered.photos,
+        followers: state.firestore.ordered.followers,
+        following: state.firestore.ordered.following,
         requesting: state.firestore.status.requesting
     }
 }
@@ -52,6 +56,18 @@ const queryFirebase = ({ auth, userId }) => {
                 doc: userId,
                 subcollections: [{ collection: 'photos' }],
                 storeAs: 'photos'
+            }, 
+            {
+                collection: 'users',
+                doc: userId,
+                subcollections: [{ collection: 'followers' }],
+                storeAs: 'followers'
+            }, 
+            {
+                collection: 'users',
+                doc: auth.uid,
+                subcollections: [{ collection: 'following' }],
+                storeAs: 'following'
             }
         ]
     } else {
@@ -61,6 +77,18 @@ const queryFirebase = ({ auth, userId }) => {
                 doc: auth.uid,
                 subcollections: [{ collection: 'photos' }],
                 storeAs: 'photos'
+            }, 
+            {
+                collection: 'users',
+                doc: auth.uid,
+                subcollections: [{ collection: 'followers' }],
+                storeAs: 'followers'
+            }, 
+            {
+                collection: 'users',
+                doc: auth.uid,
+                subcollections: [{ collection: 'following' }],
+                storeAs: 'following'
             }
         ]
     }
@@ -76,9 +104,20 @@ class UserProfilePage extends Component {
         this.props.getUserEvents(this.props.userId || this.props.auth.uid, data.activeIndex );
     }
     
+    handleFollowUser = (userId) => {
+        this.props.followUser(userId);
+    }
+
+    handleUnFollowUser = (followerId, followerDocId, followeeDocId) => {
+        this.props.unfollowUser(followerId, followerDocId, followeeDocId);
+    }
+    
     render() {
-        const { photos, profile, userId, requesting, events, eventsLoading } = this.props;
+        const { photos, profile, userId, requesting, events, followers, following, eventsLoading } = this.props;
         let filteredPhotos;
+        let filteredFollowing;
+        let isFollowing;
+
         const loading = Object.values(requesting).some(a => a === true);
 
         if(loading) return <LoadingComponent />
@@ -89,6 +128,18 @@ class UserProfilePage extends Component {
             })
         }
 
+        if(followers) {
+            isFollowing = followers.filter(follower => {
+                return follower.uid === this.props.auth.uid;
+            })
+        }
+
+        if(following)  {
+            filteredFollowing = following.filter(followee => {
+                return followee.uid === userId;
+            })
+        }
+        
         return (
             <div>
                 {
@@ -97,7 +148,14 @@ class UserProfilePage extends Component {
                             <Grid>
                                 <Grid.Row>
                                     <Grid.Column width={4}>
-                                        <UserProfileAvatar user={profile} userId={userId} />
+                                        <UserProfileAvatar 
+                                            isFollowing={isFollowing} 
+                                            following={filteredFollowing} 
+                                            followers={followers} 
+                                            unfollowUser={this.handleUnFollowUser} 
+                                            followUser={this.handleFollowUser} 
+                                            user={profile} 
+                                            userId={userId} />
                                     </Grid.Column>
                                     <Grid.Column width={12}>
                                         { 

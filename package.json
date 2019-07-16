@@ -29,9 +29,12 @@
     "redux-thunk": "^2.3.0",
     "revalidate": "^1.2.0",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.84.0"
+    "semantic-ui-react": "^0.84.0",
+    "source-map-explorer": "^2.0.1"
   },
   "scripts": {
+    "analyze": "source-map-explorer 'build/static/js/*.js",
+    "deploy": "npm run build && firebase deploy",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
