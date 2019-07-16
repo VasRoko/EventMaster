@@ -139,7 +139,6 @@ class UserProfilePage extends Component {
                 return followee.uid === userId;
             })
         }
-        
         return (
             <div>
                 {

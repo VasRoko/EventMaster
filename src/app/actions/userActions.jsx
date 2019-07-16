@@ -308,29 +308,33 @@ export const followUser = (followeeId) =>
     async (dispatch, getState, {getFirebase, getFirestore}) => {
         const firebase = getFirebase();
         const firestore = getFirestore();
-        const currentUser = firebase.auth().currentUser;
         const followeeDoc = await firestore.collection('users').doc(followeeId).get();
+        const currentUserDoc = await firestore.collection('users').doc(firebase.auth().currentUser.uid).get();
+        const currentUser = currentUserDoc.data();
         const followee = followeeDoc.data();
 
         try {
+
             await firestore.add({
                 collection: 'users',
                 doc: followeeId,
                 subcollections: [{collection: 'followers'}]
             }, {
-                uid: currentUser.uid,
-                photoURL: currentUser.photoURL || '/assets/user.png',
+                uid: currentUserDoc.id,
+                photoURL: currentUser.photoURL || '/assets/img/user.png',
                 displayName: currentUser.displayName,
+                createdAt: followee.createdAt
             });
 
             await firestore.add({
                 collection: 'users',
-                doc: currentUser.uid,
+                doc: currentUserDoc.id,
                 subcollections: [{collection: 'following'}]
             }, {
                 uid: followeeId,
-                photoURL: followee.photoURL || '/assets/user.png',
+                photoURL: followee.photoURL || '/assets/img/user.png',
                 displayName: followee.displayName,
+                createdAt: followee.createdAt
             });
 
             successNotification();

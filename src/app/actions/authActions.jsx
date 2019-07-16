@@ -12,25 +12,26 @@ export const Register = (user) =>
             if (createdUser) {
                 createdUser.user.sendEmailVerification();
                 firebase.logout();
+
                 await createdUser.user.updateProfile({
                     displayName: user.displayName,
                     photoURL: '/assets/img/user.png'
                 });
-            }
+                                    
+                let newUser = {
+                    displayName: user.displayName,
+                    createdAt: firestore.FieldValue.serverTimestamp()
+                }
+                
+                await firestore.set(`users/${createdUser.user.uid}`, {...newUser});
 
-            let newUser = {
-                displayName: user.displayName,
-                createdAt: firestore.FieldValue.serverTimestamp()
+                dispatch(openModal('InfoModal', {
+                    header: 'Check Your Email',
+                    message: 'Please check and verify your Email address.',
+                }));
             }
-            
-            await firestore.set(`users/${createdUser.user.uid}`, {...newUser});
-            dispatch(openModal('InfoModal', {
-                header: 'Check Your Email',
-                message: 'Please check and verify your Email address.',
-            }));
 
         } catch(e) {
-            
             throw new SubmissionError({
                 _error: e.message
             })
