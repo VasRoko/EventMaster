@@ -1,7 +1,7 @@
 import React, { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
-import { Grid, Button, Divider, Header } from 'semantic-ui-react';
+import { Grid, Button, Divider, Header, Form } from 'semantic-ui-react';
 import EventList from '../EventList/EventList';
 import { getEvents } from '../../../actions/eventActions';
 import LoadingComponent from '../../loading/LoadingComponent';
@@ -29,6 +29,7 @@ class EventDashboard extends Component {
 
   state = { 
     getAllEvents: false,
+    seachField: '',
     moreEvents: false,
     loadingInitial: true,
     loadedEvents: [],
@@ -77,8 +78,12 @@ class EventDashboard extends Component {
 
   render() {
     const {loading, activities} = this.props;
-    const { moreEvents, loadedEvents, loadingInitial } = this.state;
+    const { seachField, moreEvents, loadedEvents, loadingInitial } = this.state;
 
+    const filteredLoadedEvents = loadedEvents && loadedEvents.filter(event =>
+        event.title.toLowerCase().includes(seachField.toLowerCase()) 
+      )
+    
     if (loading && loadingInitial) {
       return <LoadingComponent content="Please wait..." />
     }
@@ -102,13 +107,22 @@ class EventDashboard extends Component {
             <EventActivity createRef={this.createRef} activities={activities} />
           </Grid.Column>
           <Grid.Column width={11}>
-              <Button.Group basic>
-                <Button active={!this.state.getAllEvents}>Future Events</Button>
-                <Button active={this.state.getAllEvents}>All Events</Button>
-              </Button.Group>
+            <Grid>
+              <Grid.Column width={8}>
+                <Button.Group basic>
+                  <Button active={!this.state.getAllEvents}>Future Events</Button>
+                  <Button active={this.state.getAllEvents}>All Events</Button>
+                </Button.Group>
+              </Grid.Column>
+              <Grid.Column width={8}>
+                  <input type="text" className="serchFiled" placeholder="Seach Event" onChange={e => 
+                    this.setState({ seachField: e.target.value })}
+                  />
+              </Grid.Column>
+            </Grid>
               <Divider />
               <div ref={this.createRef}>
-                <EventList loading={loading} getMoreEvents={this.getMoreEvents} moreEvents={moreEvents} events={loadedEvents}/>
+                <EventList loading={loading} getMoreEvents={this.getMoreEvents} moreEvents={moreEvents} events={filteredLoadedEvents}/>
               </div>
               <Divider />
           </Grid.Column>
