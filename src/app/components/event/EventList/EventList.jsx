@@ -18,7 +18,7 @@ class EventList extends Component {
           <Card.Group>
           { events && events.map((event) => (
             <EventListItem key={event.id} event={event} deleteEvent={deleteEvent} />
-          ))}
+          ))  }
           </Card.Group>
         </InfiniteScroll>  }
         </div>

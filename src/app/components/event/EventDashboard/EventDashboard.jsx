@@ -1,7 +1,7 @@
 import React, { Component, createRef } from 'react';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
-import { Grid, Button, Divider, Header, Form } from 'semantic-ui-react';
+import { Grid, Button, Divider, Header, Input, Icon, Item } from 'semantic-ui-react';
 import EventList from '../EventList/EventList';
 import { getEvents } from '../../../actions/eventActions';
 import LoadingComponent from '../../loading/LoadingComponent';
@@ -76,14 +76,17 @@ class EventDashboard extends Component {
     
   }
 
+
+
   render() {
     const {loading, activities} = this.props;
     const { seachField, moreEvents, loadedEvents, loadingInitial } = this.state;
 
     const filteredLoadedEvents = loadedEvents && loadedEvents.filter(event =>
-        event.title.toLowerCase().includes(seachField.toLowerCase()) 
+        event.title.toLowerCase().includes(seachField.toLowerCase())
       )
-    
+    console.log(filteredLoadedEvents)
+
     if (loading && loadingInitial) {
       return <LoadingComponent content="Please wait..." />
     }
@@ -108,15 +111,15 @@ class EventDashboard extends Component {
           </Grid.Column>
           <Grid.Column width={11}>
             <Grid>
-              <Grid.Column width={8}>
+              <Grid.Column width={12}>
                 <Button.Group basic>
                   <Button active={!this.state.getAllEvents}>Future Events</Button>
                   <Button active={this.state.getAllEvents}>All Events</Button>
                 </Button.Group>
               </Grid.Column>
-              <Grid.Column width={8}>
-                  <input type="text" className="serchFiled" placeholder="Seach Event" onChange={e => 
-                    this.setState({ seachField: e.target.value })}
+              <Grid.Column width={4}>
+                  <Input placeholder='Search...' fluid onChange={e => 
+                    this.setState({ seachField: e.target.value }, () => this.getMoreEvents) }
                   />
               </Grid.Column>
             </Grid>
@@ -124,6 +127,9 @@ class EventDashboard extends Component {
               <div ref={this.createRef}>
                 <EventList loading={loading} getMoreEvents={this.getMoreEvents} moreEvents={moreEvents} events={filteredLoadedEvents}/>
               </div>
+                {
+                  filteredLoadedEvents.length === 0 && <Header as='h2' style={{ textAlign: 'center' }}>No results found! </Header>
+                }
               <Divider />
           </Grid.Column>
           <Grid.Column width={3}></Grid.Column>
