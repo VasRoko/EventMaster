@@ -28,10 +28,10 @@ class EventDashboard extends Component {
   contextRef = createRef();
 
   state = { 
-    getAllEvents: false,
     seachField: '',
-    moreEvents: false,
+    getAllEvents: false,
     loadingInitial: true,
+    activeButton: false,
     loadedEvents: [],
   }
 
@@ -76,15 +76,30 @@ class EventDashboard extends Component {
     
   }
 
+  handleFutureEvents = async () => {
+    const today = new Date();
+    const { loadedEvents } = this.state;
 
+    const futureEvents = loadedEvents && loadedEvents.filter(event => 
+      event.date.toDate() > today
+    )
+
+    this.setState({
+        loadedEvents: futureEvents,
+    })  
+
+  }
 
   render() {
     const {loading, activities} = this.props;
     const { seachField, moreEvents, loadedEvents, loadingInitial } = this.state;
+    let filteredLoadedEvents; 
+    
+    filteredLoadedEvents = loadedEvents && loadedEvents.filter(event =>
+      event.title.toLowerCase().includes(seachField.toLowerCase())
+    )
+  
 
-    const filteredLoadedEvents = loadedEvents && loadedEvents.filter(event =>
-        event.title.toLowerCase().includes(seachField.toLowerCase())
-      )
     console.log(filteredLoadedEvents)
 
     if (loading && loadingInitial) {
@@ -113,7 +128,7 @@ class EventDashboard extends Component {
             <Grid>
               <Grid.Column width={12}>
                 <Button.Group basic>
-                  <Button active={!this.state.getAllEvents}>Future Events</Button>
+                  <Button onClick={this.handleFutureEvents}>Future Events</Button>
                   <Button active={this.state.getAllEvents}>All Events</Button>
                 </Button.Group>
               </Grid.Column>

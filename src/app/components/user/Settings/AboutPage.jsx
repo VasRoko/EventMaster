@@ -26,7 +26,7 @@ const AboutPage = ({ pristine, submitting, handleSubmit, updateProfile }) => {
                     <Field name="status" type="radio" label="Married"  component={renderRadio} value="married"/>
                 </Form.Group>
                 <Divider/>
-                <Field name="about" component={renderTextArea}  placeholder="About me" />
+                <Field name="about" component={renderTextArea}  placeholder="About me" />as
                 <Field name="interests" component={renderSelectInput} options={categories} multiple={true} value="interests" placeholder="Select your interests"  />
                 <Field name="occupation" type="text" component={renderTextInput}  placeholder="Occupation" />
                 <Field name="origin" type="text" options={{ types: ['(regions)']}} component={PlaceInput}  placeholder="Country of Origin" />

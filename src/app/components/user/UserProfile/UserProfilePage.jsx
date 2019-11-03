@@ -146,7 +146,7 @@ class UserProfilePage extends Component {
                         <Container>
                             <Grid>
                                 <Grid.Row>
-                                    <Grid.Column width={4}>
+                                    <Grid.Column width={4}>    
                                         <UserProfileAvatar 
                                             isFollowing={isFollowing} 
                                             following={filteredFollowing} 
